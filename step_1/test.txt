@@ -1,0 +1,18 @@
+byte short long float double when then else while for read return print
+<= >= == != && ||
+hahaha999
+999hahaha
+_um
+dois_tres
+quatro_999
+jasd_9asada_1231
+1231.123123
+124124123.123123123
+1.1
+2.2
+'a'
+'f'
+'-'
+"basdaaas"
+"casdas"
+"Mensagem!"

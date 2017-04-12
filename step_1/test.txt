@@ -15,4 +15,14 @@ jasd_9asada_1231
 '-'
 "basdaaas"
 "casdas"
-"Mensagem!"
+"Mensagem!" "seguido1"
+"seguido2""seguido3"
++
+-
+*
+/
+'*'
+' '
+'/'
+'$'
+'	'

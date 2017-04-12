@@ -16,4 +16,4 @@ lex.yy.c: scanner.l
 		  lex --header-file=lex.yy.h scanner.l
 
 clean:
-		rm etapa1 lex.yy.c *.o
+		rm etapa1 lex.yy.h lex.yy.c *.o

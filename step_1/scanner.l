@@ -1,7 +1,7 @@
 
 %{
 
-//#include "hash.c"
+#include "hash.h"
 #include "tokens.h"
 
 

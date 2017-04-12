@@ -1,6 +1,7 @@
-#include "lex.yy.h"
 #include <stdio.h>
+#include "lex.yy.h"
 #include "tokens.h"
+#include "hash.h"
 
 extern int getLineNumber();
 extern void initMe();

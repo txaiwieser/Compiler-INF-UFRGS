@@ -17,6 +17,8 @@ jasd_9asada_1231
 "casdas"
 "Mensagem!" "seguido1"
 "seguido2""seguido3"
+"string com \"aspas internas\""
+"string com \n break line\n"
 +
 -
 *

@@ -28,3 +28,10 @@ jasd_9asada_1231
 '/'
 '$'
 '	'
+// Comentario de uma linha <= float double oi
+/*
+	Comentario de multiplas linhas
+	foo bar
+	>= !=
+	53
+*/

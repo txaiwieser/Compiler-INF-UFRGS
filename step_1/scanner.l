@@ -40,7 +40,7 @@ print			{ return KW_PRINT; }
 [0-9]+										{ hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }
 [0-9]+.[0-9]+								{ hashInsert(yytext, LIT_REAL); return LIT_REAL; }
 '.'  			               				{ hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }
-\"[^\"]*\"                  				{ hashInsert(yytext, LIT_STRING); return LIT_STRING; }
+\"(\\.|[^"])*\"                  			{ hashInsert(yytext, LIT_STRING); return LIT_STRING; }
 
 [\-,\;\:\(\)\[\]\{\}\+\*\/\<\>\=\!\&\$\#]	{ return yytext[0]; }
 

@@ -35,3 +35,6 @@ jasd_9asada_1231
 	>= !=
 	53
 */
+long foo = 43
+float bar = 43.7
+for (long i; i <= 10; i = i+1) { print("test \"bar\" \n") }

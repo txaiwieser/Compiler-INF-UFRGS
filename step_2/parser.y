@@ -39,11 +39,20 @@
 
 %%
 
-program:
+program : cmdList
+	;
+
+cmdList : cmd ';' cmdList | cmd
+
+cmd : LIT_INTEGER | TK_IDENTIFIER '=' expr
+	;
+
+expr: expr '+' expr | '(' expr ')' | LIT_INTEGER | TK_IDENTIFIER
 	;
 
 %%
 
 void yyerror(char *s) {
+	fprintf(stderr, "Sintax Error\n");
     exit(3);
 }

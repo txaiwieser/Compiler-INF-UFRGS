@@ -13,7 +13,8 @@ int main(int argc, char ** argv) {
 		return 0;
 	}
 	initMe();
-
+	yyin = file;
+	
 	yyparse();
 
 	fprintf(stderr, "Programa Aceito\n");

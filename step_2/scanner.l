@@ -2,7 +2,6 @@
 %{
 
 #include "hash.h"
-#include "tokens.h"
 
 
 int nLines	= 1;

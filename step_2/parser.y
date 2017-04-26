@@ -37,7 +37,9 @@
 
 %token TOKEN_ERROR
 
-%left '-' '+'
+%right '='
+%left  '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE OPERATOR_AND OPERATOR_OR
+%left '+' '-'
 %left '*' '/'
 
 %%

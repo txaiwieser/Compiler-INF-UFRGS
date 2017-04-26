@@ -24,6 +24,7 @@ then			{ return KW_THEN; }
 else			{ return KW_ELSE; }
 while			{ return KW_WHILE; }
 for				{ return KW_FOR; }
+to				{ return KW_TO; }
 read			{ return KW_READ; }
 return			{ return KW_RETURN; }
 print			{ return KW_PRINT; }
@@ -37,7 +38,7 @@ print			{ return KW_PRINT; }
 
 [A-Za-z_][A-Za-z_0-9]*						{ hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
 [0-9]+										{ hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }
-[0-9]+'.'[0-9]+								{ hashInsert(yytext, LIT_REAL); return LIT_REAL; }
+[0-9]+"."[0-9]+								{ hashInsert(yytext, LIT_REAL); return LIT_REAL; }
 '.'  			               				{ hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }
 \"(\\.|[^"])*\"                  			{ hashInsert(yytext, LIT_STRING); return LIT_STRING; }
 

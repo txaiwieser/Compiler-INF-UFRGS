@@ -1,4 +1,4 @@
-// UFRGS - Compiladores - Marcelo Johann - 2017/1
+// UFRGS - Compiladores - Marcelo Johann - 2017/1 (modificado)
 
 a: short 0;
 i: long 0;
@@ -7,17 +7,20 @@ mat: long[10];
 f: float 10.55;
 c: byte 'x';
 d: byte 65;
+vchar: byte[3] 'a' 'b' 'c';
+vfloat: float[4] 10.0 0.3 999.99 15.001;
+
 
 long main()
-{
-
+  {
   a = 10;
-  
+  a = v[15-12+3];
+
   for (i = 1 to 10)
+    print i " ";
 
   print " Digite um numero: \n";
-  print i makefile;
-  read makefile;
+  read i;
   while (i<10)
     {
     a = incn(a,1);
@@ -33,9 +36,9 @@ long main()
   ;;;
   {;};
   {};
-};
+  };
 
 long incn (long x, long n)
-	return x+n;
+  return x+n;
 
 short voidfunc() ;

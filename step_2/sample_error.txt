@@ -8,16 +8,15 @@ f: float 10.55;
 c: byte 'x';
 d: byte 65;
 
-long main()
-{
 
+long main()
+  {
   a = 10;
   
   for (i = 1 to 10)
 
   print " Digite um numero: \n";
-  print i makefile;
-  read makefile;
+  read i makefile;
   while (i<10)
     {
     a = incn(a,1);
@@ -33,9 +32,9 @@ long main()
   ;;;
   {;};
   {};
-};
+  };
 
 long incn (long x, long n)
-	return x+n;
+  return x+n;
 
 short voidfunc() ;

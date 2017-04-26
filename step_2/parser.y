@@ -162,6 +162,6 @@ operator: OPERATOR_LE
 %%
 
 void yyerror(char *s) {
-	fprintf(stderr, "Sintax Error\n");
+    fprintf(stderr, "\nErro na linha %d!\n\n", getLineNumber());
     exit(3);
 }

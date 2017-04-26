@@ -37,6 +37,9 @@
 
 %token TOKEN_ERROR
 
+%left '-' '+'
+%left '*' '/'
+
 %%
 
 program: declarationList

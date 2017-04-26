@@ -3,7 +3,10 @@
     #include <stdio.h>
     #include <string.h>
     #include "hash.h"
-	void yyerror(char *s);
+
+    void yyerror(char *s);
+    int  yylex(void);
+    int  getLineNumber(void);
 %}
 
 %token KW_BYTE
@@ -28,12 +31,14 @@
 %token OPERATOR_AND
 %token OPERATOR_OR
 
+%union { HASH_NODE *symbol; }
+
 %token TK_IDENTIFIER
 
-%token LIT_INTEGER
-%token LIT_REAL
-%token LIT_CHAR
-%token LIT_STRING
+%token <symbol> LIT_INTEGER
+%token <symbol> LIT_REAL
+%token <symbol> LIT_CHAR
+%token <symbol> LIT_STRING
 
 %token TOKEN_ERROR
 
@@ -59,12 +64,12 @@ variableDeclaration: TK_IDENTIFIER ':' variableTypeAndValue ';'
 variableType: KW_BYTE | KW_SHORT | KW_LONG | KW_FLOAT | KW_DOUBLE
 	;
 
-variableTypeAndValue: KW_BYTE LIT_CHAR
-    | KW_BYTE LIT_INTEGER
-    | KW_SHORT LIT_INTEGER
-    | KW_LONG LIT_INTEGER
-    | KW_FLOAT LIT_REAL
-    | KW_DOUBLE LIT_INTEGER
+variableTypeAndValue: KW_BYTE LIT_CHAR           // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "byte",    $2->text); }
+    | KW_BYTE LIT_INTEGER                        // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "byte",    $2->text); }
+    | KW_SHORT LIT_INTEGER                       // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "short",   $2->text); }
+    | KW_LONG LIT_INTEGER                        // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "long",    $2->text); }
+    | KW_FLOAT LIT_REAL                          // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "float",   $2->text); }
+    | KW_DOUBLE LIT_INTEGER                      // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "double",  $2->text); }
     | KW_BYTE '[' LIT_INTEGER ']' intList
     | KW_BYTE '[' LIT_INTEGER ']' charList
     | KW_SHORT '[' LIT_INTEGER ']' intList

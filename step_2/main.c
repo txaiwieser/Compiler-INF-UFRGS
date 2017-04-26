@@ -2,9 +2,10 @@
 #include "lex.yy.h"
 #include "hash.h"
 
-extern int getLineNumber();
+extern int 	yyparse();
+extern int  getLineNumber();
 extern void initMe();
-extern int isRunning();
+extern int  isRunning();
 
 int main(int argc, char ** argv) {
 	FILE* file;
@@ -18,6 +19,8 @@ int main(int argc, char ** argv) {
 	yyparse();
 
 	fprintf(stderr, "Programa Aceito\n");
+
+	// hashPrint();
 
 	return 1;
 }

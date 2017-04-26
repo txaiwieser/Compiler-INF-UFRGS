@@ -25,4 +25,4 @@ lex.yy.c: scanner.l
 	lex --header-file=lex.yy.h scanner.l
 
 clean:
-	rm *.o etapa1 etapa2 lex.yy.h lex.yy.c y.tab.c y.tab.h
+	rm *.o etapa1 etapa2 lex.yy.h lex.yy.c y.tab.c y.tab.h y.output

@@ -33,7 +33,7 @@
 
 %union { HASH_NODE *symbol; }
 
-%token TK_IDENTIFIER
+%token <symbol> TK_IDENTIFIER
 
 %token <symbol> LIT_INTEGER
 %token <symbol> LIT_REAL
@@ -43,7 +43,7 @@
 %token TOKEN_ERROR
 
 %right '='
-%left  '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE OPERATOR_AND OPERATOR_OR
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE OPERATOR_AND OPERATOR_OR
 %left '+' '-'
 %left '*' '/'
 
@@ -64,12 +64,12 @@ variableDeclaration: TK_IDENTIFIER ':' variableTypeAndValue ';'
 variableType: KW_BYTE | KW_SHORT | KW_LONG | KW_FLOAT | KW_DOUBLE
 	;
 
-variableTypeAndValue: KW_BYTE LIT_CHAR           // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "byte",    $2->text); }
-    | KW_BYTE LIT_INTEGER                        // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "byte",    $2->text); }
-    | KW_SHORT LIT_INTEGER                       // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "short",   $2->text); }
-    | KW_LONG LIT_INTEGER                        // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "long",    $2->text); }
-    | KW_FLOAT LIT_REAL                          // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "float",   $2->text); }
-    | KW_DOUBLE LIT_INTEGER                      // { fprintf(stderr, "%d: %s %s\n", getLineNumber(), "double",  $2->text); }
+variableTypeAndValue: KW_BYTE LIT_CHAR            // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "byte",    $2->text, $2->type); }
+    | KW_BYTE LIT_INTEGER                         // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "byte",    $2->text, $2->type); }
+    | KW_SHORT LIT_INTEGER                        // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "short",   $2->text, $2->type); }
+    | KW_LONG LIT_INTEGER                         // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "long",    $2->text, $2->type); }
+    | KW_FLOAT LIT_REAL                           // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "float",   $2->text, $2->type); }
+    | KW_DOUBLE LIT_INTEGER                       // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "double",  $2->text, $2->type); }
     | KW_BYTE '[' LIT_INTEGER ']' intList
     | KW_BYTE '[' LIT_INTEGER ']' charList
     | KW_SHORT '[' LIT_INTEGER ']' intList
@@ -94,10 +94,7 @@ parameterList: variableType TK_IDENTIFIER ',' parameterList | variableType TK_ID
 	|
     ;
 
-functionDeclaration: variableType TK_IDENTIFIER '(' parameterList ')' functionBody
-	;
-
-functionBody: command
+functionDeclaration: variableType TK_IDENTIFIER '(' parameterList ')' command
 	;
 
 commandList: command
@@ -105,19 +102,21 @@ commandList: command
 	;
 
 command: attribute ';'
-    |
     | '{' commandList '}' ';'
     | ';'
     | control
 	| KW_READ TK_IDENTIFIER ';'
     | KW_PRINT printList ';'
 	| KW_RETURN expression ';'
+    |
     ;
 
-printList: printElement printList | printElement
+printList: printElement printList
+    | printElement
     ;
 
-printElement: LIT_STRING | expression
+printElement: LIT_STRING
+    | expression
     ;
 
 control: KW_WHEN '(' expression ')' KW_THEN command
@@ -134,18 +133,18 @@ attribute: TK_IDENTIFIER '=' expression
 expression:  '(' expression ')'
     | TK_IDENTIFIER
     | TK_IDENTIFIER '[' expression ']'
-    | TK_IDENTIFIER '(' args ')'
+    | TK_IDENTIFIER '(' argument ')'
     | LIT_INTEGER
     | LIT_CHAR
     | LIT_REAL
     | expression operator expression
     ;
 	
-args: expression argsTail
+argument: expression extraArgument
     |
     ;
 
-argsTail: ',' expression argsTail
+extraArgument: ',' expression extraArgument
 	|
 	;
 

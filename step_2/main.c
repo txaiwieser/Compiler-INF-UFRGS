@@ -18,7 +18,7 @@ int main(int argc, char ** argv) {
 	
 	yyparse();
 
-	fprintf(stderr, "Programa Aceito\n");
+	fprintf(stderr, "Programa aceito!\n");
 
 	// hashPrint();
 

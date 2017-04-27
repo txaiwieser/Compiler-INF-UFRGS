@@ -126,7 +126,7 @@ control: KW_WHEN '(' expression ')' KW_THEN command
     ;
 
 attribute: TK_IDENTIFIER '=' expression
-    | TK_IDENTIFIER'#'expression '=' expression
+    | TK_IDENTIFIER '#' expression '=' expression
     ;
 
 

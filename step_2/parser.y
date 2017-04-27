@@ -48,6 +48,9 @@
 %left '-' '+'
 %left '*' '/'
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc KW_ELSE
+
 %%
 
 program: declarationList
@@ -119,7 +122,7 @@ printElement: LIT_STRING
     | expression
     ;
 
-control: KW_WHEN '(' expression ')' KW_THEN command
+control: KW_WHEN '(' expression ')' KW_THEN command %prec LOWER_THAN_ELSE
     | KW_WHEN '(' expression ')' KW_THEN command KW_ELSE command
     | KW_WHILE '(' expression ')' command
     | KW_FOR '(' TK_IDENTIFIER '=' expression KW_TO expression ')' command

@@ -42,10 +42,11 @@
 
 %token TOKEN_ERROR
 
-%right '='
-%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE OPERATOR_AND OPERATOR_OR
-%left '+' '-'
-%left '*' '/'
++%left OPERATOR_AND OPERATOR_OR
++%left OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
++%left '<' '>' '!'
++%left '-' '+'
++%left '*' '/'
 
 %%
 

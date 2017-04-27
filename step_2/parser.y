@@ -95,20 +95,19 @@ parameterList: variableType TK_IDENTIFIER ',' parameterList | variableType TK_ID
 	|
     ;
 
-functionDeclaration: variableType TK_IDENTIFIER '(' parameterList ')' command
+functionDeclaration: variableType TK_IDENTIFIER '(' parameterList ')' command ';'
 	;
 
-commandList: command
-	| commandList command
-	;
+commandList: commandList command ';'
+     |
+     ;
 
-command: attribute ';'
-    | '{' commandList '}' ';'
-    | ';'
+command: attribute
+    | '{' commandList '}'
+    | KW_READ TK_IDENTIFIER
+    | KW_PRINT printList
+    | KW_RETURN expression
     | control
-	| KW_READ TK_IDENTIFIER ';'
-    | KW_PRINT printList ';'
-	| KW_RETURN expression ';'
     |
     ;
 

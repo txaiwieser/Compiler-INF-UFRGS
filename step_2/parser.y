@@ -33,13 +33,12 @@
 
 %union { HASH_NODE *symbol; }
 
-%token <symbol> TK_IDENTIFIER
-
 %token <symbol> LIT_INTEGER
 %token <symbol> LIT_REAL
 %token <symbol> LIT_CHAR
 %token <symbol> LIT_STRING
 
+%token <symbol> TK_IDENTIFIER
 %token TOKEN_ERROR
 
 %left OPERATOR_AND OPERATOR_OR
@@ -94,12 +93,18 @@ floatList: LIT_REAL floatList
     |
     ;
 
-parameterList: variableType TK_IDENTIFIER ',' parameterList | variableType TK_IDENTIFIER
-	|
+parameterList: param ',' parameterList | param
     ;
 
-functionDeclaration: variableType TK_IDENTIFIER '(' parameterList ')' command ';'
+param: variableType TK_IDENTIFIER
+    ;
+     
+functionDeclaration: variableType TK_IDENTIFIER '(' parameters ')' command ';'
 	;
+
+parameters: parameterList
+    |
+    ;
 
 commandList: commandList command ';'
      |
@@ -114,12 +119,10 @@ command: attribute
     |
     ;
 
-printList: printElement printList
-    | printElement
+printList: printElement printList | printElement
     ;
 
-printElement: LIT_STRING
-    | expression
+printElement: LIT_STRING | expression
     ;
 
 control: KW_WHEN '(' expression ')' KW_THEN command %prec LOWER_THAN_ELSE

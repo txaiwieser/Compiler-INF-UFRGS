@@ -63,9 +63,10 @@ declaration: functionDeclaration | variableDeclaration
     ;
 
 variableDeclaration: TK_IDENTIFIER ':' variableTypeAndValue ';'
+    ;
 
 variableType: KW_BYTE | KW_SHORT | KW_LONG | KW_FLOAT | KW_DOUBLE
-	;
+    ;
 
 variableTypeAndValue: KW_BYTE LIT_CHAR            // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "byte",    $2->text, $2->type); }
     | KW_BYTE LIT_INTEGER                         // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "byte",    $2->text, $2->type); }
@@ -100,15 +101,15 @@ param: variableType TK_IDENTIFIER
     ;
      
 functionDeclaration: variableType TK_IDENTIFIER '(' parameters ')' command ';'
-	;
+    ;
 
 parameters: parameterList
     |
     ;
 
 commandList: commandList command ';'
-     |
-     ;
+    |
+    ;
 
 command: attribute
     | '{' commandList '}'
@@ -145,14 +146,14 @@ expression:  '(' expression ')'
     | LIT_REAL
     | expression operator expression
     ;
-	
+    
 argument: expression extraArgument
     |
     ;
 
 extraArgument: ',' expression extraArgument
-	|
-	;
+    |
+    ;
 
 operator: OPERATOR_LE
     | OPERATOR_GE
@@ -167,7 +168,7 @@ operator: OPERATOR_LE
     | '<'
     | '>'
     | '!' 
-	;
+    ;
 
 
 

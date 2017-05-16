@@ -5,26 +5,26 @@
 #include <stdio.h>
 #include "hash.h"
 
-HASH_NODE *hash_table[HASH_SIZE];
+hash_node_t *hash_table[HASH_SIZE];
 
-void hashInit(void) {
+void hash_init(void) {
 	int i;
 	for(i = 0; i < HASH_SIZE; i++)
 		hash_table[i] = 0;
 }
 
-int hashAddress(char *text) {
+int hash_address(char *text) {
 	int address = 1, i;
 	for(i = 0; i< strlen(text); i++)
 		address = (address * text[i])%HASH_SIZE + 1;
 	return address - 1;
 }
 
-HASH_NODE *hashFind(char *text) {
+hash_node_t *hash_find(char *text) {
 	int address;
-	HASH_NODE *node;	
+	hash_node_t *node;	
 
-	address = hashAddress(text);
+	address = hash_address(text);
 	node = hash_table[address];
 
 	while(node != NULL) {
@@ -37,12 +37,12 @@ HASH_NODE *hashFind(char *text) {
 	return 0;
 }
 
-HASH_NODE *hashInsert(char *text, int type) {
+hash_node_t *hash_insert(char *text, int type) {
 	
-	HASH_NODE *new_node;
-	int address = hashAddress(text);
+	hash_node_t *new_node;
+	int address = hash_address(text);
 
-	new_node = (HASH_NODE *) calloc(1, sizeof(HASH_NODE));
+	new_node = (hash_node_t *) calloc(1, sizeof(hash_node_t));
 	new_node->text = calloc(strlen(text)+1, sizeof(char));
 
 	new_node->type = type;
@@ -54,10 +54,10 @@ HASH_NODE *hashInsert(char *text, int type) {
 	return new_node;
 }
 	
-void hashPrint(void) {
+void hash_print(void) {
 	int i;
-	HASH_NODE *node = 0;
+	hash_node_t *node = 0;
 	for(i = 0; i < HASH_SIZE; i++)
 		for(node = hash_table[i]; node; node =  node->next)
 			printf("Table[%d] = %s\n", i, node->text);
-}	
+}

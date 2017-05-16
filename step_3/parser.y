@@ -31,7 +31,7 @@
 %token OPERATOR_AND
 %token OPERATOR_OR
 
-%union { HASH_NODE *symbol; }
+%union { hash_node_t *symbol; }
 
 %token <symbol> LIT_INTEGER
 %token <symbol> LIT_REAL

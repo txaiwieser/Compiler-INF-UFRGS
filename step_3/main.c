@@ -8,7 +8,7 @@ extern void initMe();
 extern int  isRunning();
 
 
-int writeStringToFile(char* filePath, char* string) {
+int writeStringToFile(char *filePath, char *string) {
 	FILE* f;
 	if (f = fopen(filePath, "w")) {
 		fprintf(f, "%s", string);
@@ -19,7 +19,7 @@ int writeStringToFile(char* filePath, char* string) {
 	}
 }
 
-int main(int argc, char ** argv) {
+int main(int argc, char **argv) {
 	if (argc < 2) {
         printf("Error: invalid arguments\n");
         exit(1);
@@ -30,10 +30,16 @@ int main(int argc, char ** argv) {
 		printf ("Erro ao abrir arquivo!");
 		return 0;
 	}
+
 	initMe();
 	yyin = file;
 	
 	yyparse();
+
+	ASSTREE *root = ???
+	char *decompiledTree = decompileTree(root);
+
+	writeStringToFile(argv[2], decompiledTree);
 
 	fprintf(stderr, "Programa aceito!\n");
 

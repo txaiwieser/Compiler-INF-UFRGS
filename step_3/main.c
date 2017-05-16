@@ -20,6 +20,11 @@ int writeStringToFile(char* filePath, char* string) {
 }
 
 int main(int argc, char ** argv) {
+	if (argc < 2) {
+        printf("Error: invalid arguments\n");
+        exit(1);
+    }
+
 	FILE* file;
 	if (!(file = fopen(argv[1], "r"))) {
 		printf ("Erro ao abrir arquivo!");

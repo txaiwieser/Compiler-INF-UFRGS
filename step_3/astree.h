@@ -8,18 +8,18 @@
 
 #define MAX_SONS 4
 
-#define ASTREE_PROG_START			00
+#define ASTREE_PROG_START			0
 
 // variableTypeAndValue:
-#define ASTREE_VAR_DEC				01
-#define ASTREE_BYTE_CHAR			02
-#define ASTREE_BYTE_INT				03
-#define ASTREE_SHORT_INT			04
-#define ASTREE_LONG_INT				05
-#define ASTREE_FLOAT_INT 			06
-#define ASTREE_FLOAT_REAL			07
-#define ASTREE_DOUBLE_INT			08
-#define ASTREE_DOUBLE_REAL			09
+#define ASTREE_VAR_DEC				1
+#define ASTREE_BYTE_CHAR			2
+#define ASTREE_BYTE_INT				3
+#define ASTREE_SHORT_INT			4
+#define ASTREE_LONG_INT				5
+#define ASTREE_FLOAT_INT 			6
+#define ASTREE_FLOAT_REAL			7
+#define ASTREE_DOUBLE_INT			8
+#define ASTREE_DOUBLE_REAL			9
 
 // variableTypeAndValue list:
 #define ASTREE_BYTE_ARR_INT			10
@@ -46,7 +46,7 @@ Existe essa possibilidade análoga ao que foi feito com o float array.
 // functionDeclaration:
 #define ASTREE_FUNC_DEC				24
 #define ASTREE_PARAM_LST			25
-#define ASTREE_NO_PARAM_LST
+// #define ASTREE_NO_PARAM_LST		XX
 #define ASTREE_PARAM				26
 
 // literals:

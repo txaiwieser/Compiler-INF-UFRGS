@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include "astree.h"
 
-astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_0, astree_t *son_1, astree_t *son_2, astree_t *son_3) {
+astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_1, astree_t *son_2, astree_t *son_3, astree_t *son_4) {
     
     astree_t* newnode = 0;
     newnode = calloc(1, sizeof(astree_t));
     
     newnode->type = type;
     newnode->symbol = symbol;
-    newnode->son[0] = son0;
-    newnode->son[1] = son1;
-    newnode->son[2] = son2;
-    newnode->son[3] = son3;
+    newnode->son[0] = son1;
+    newnode->son[1] = son2;
+    newnode->son[2] = son3;
+    newnode->son[3] = son4;
 
     return newnode;
 }
@@ -43,8 +43,7 @@ void astree_print_tree(astree_t *node, int level) {
 
 }
 
-void astree_print_node(astree_t *node)
-{
+void astree_print_node(astree_t *node) {
     if(!node) return;
 
     fprintf(stderr, "ASTREE NODE(");

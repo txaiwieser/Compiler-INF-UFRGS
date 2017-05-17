@@ -1,6 +1,5 @@
 
-typedef struct hash_node
-{
+typedef struct hash_node {
 	int type;
 	char *text;
 	struct hash_node *next;

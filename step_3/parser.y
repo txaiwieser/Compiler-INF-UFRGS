@@ -59,26 +59,34 @@ declarationList: declaration declarationList
     |
     ;
 
-declaration: functionDeclaration | variableDeclaration
+declaration: functionDeclaration
+    | variableDeclaration
     ;
 
 variableDeclaration: TK_IDENTIFIER ':' variableTypeAndValue ';'
+    ;
 
-variableType: KW_BYTE | KW_SHORT | KW_LONG | KW_FLOAT | KW_DOUBLE
+variableType: KW_BYTE
+    | KW_SHORT
+    | KW_LONG
+    | KW_FLOAT
+    | KW_DOUBLE
 	;
 
-variableTypeAndValue: KW_BYTE LIT_CHAR            // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "byte",    $2->text, $2->type); }
-    | KW_BYTE LIT_INTEGER                         // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "byte",    $2->text, $2->type); }
-    | KW_SHORT LIT_INTEGER                        // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "short",   $2->text, $2->type); }
-    | KW_LONG LIT_INTEGER                         // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "long",    $2->text, $2->type); }
-    | KW_FLOAT LIT_REAL                           // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "float",   $2->text, $2->type); }
-    | KW_DOUBLE LIT_INTEGER                       // { fprintf(stderr, "%d: %s %s code: %d\n", getLineNumber(), "double",  $2->text, $2->type); }
+variableTypeAndValue: KW_BYTE LIT_CHAR   
+    | KW_BYTE LIT_INTEGER                
+    | KW_SHORT LIT_INTEGER               
+    | KW_LONG LIT_INTEGER                
+    | KW_FLOAT LIT_REAL
+    | KW_FLOAT LIT_INTEGER
+    | KW_DOUBLE LIT_INTEGER              
+    | KW_DOUBLE LIT_REAL
     | KW_BYTE '[' LIT_INTEGER ']' intList
     | KW_BYTE '[' LIT_INTEGER ']' charList
     | KW_SHORT '[' LIT_INTEGER ']' intList
     | KW_LONG '[' LIT_INTEGER ']' intList
-    | KW_FLOAT '[' LIT_INTEGER ']' floatList
-    | KW_DOUBLE '[' LIT_INTEGER ']' intList
+    | KW_FLOAT '[' LIT_INTEGER ']' intRealList
+    | KW_DOUBLE '[' LIT_INTEGER ']' intRealList
     ;
 
 intList: LIT_INTEGER intList
@@ -89,8 +97,9 @@ charList: LIT_CHAR charList
     |
     ;
 
-floatList: LIT_REAL floatList
-    |
+intRealList: LIT_REAL intRealList
+    | LIT_INTEGER intRealList
+    | 
     ;
 
 parameterList: param ',' parameterList | param
@@ -139,14 +148,14 @@ attribute: TK_IDENTIFIER '=' expression
 expression:  '(' expression ')'
     | TK_IDENTIFIER
     | TK_IDENTIFIER '[' expression ']'
-    | TK_IDENTIFIER '(' argument ')'
+    | TK_IDENTIFIER '(' arguments ')'
     | LIT_INTEGER
     | LIT_CHAR
     | LIT_REAL
     | expression operator expression
     ;
 	
-argument: expression extraArgument
+arguments: expression extraArgument
     |
     ;
 

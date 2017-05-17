@@ -109,15 +109,15 @@ param: variableType TK_IDENTIFIER
     ;
      
 functionDeclaration: variableType TK_IDENTIFIER '(' parameters ')' command ';'
-	;
+    ;
 
 parameters: parameterList
     |
     ;
 
 commandList: commandList command ';'
-     |
-     ;
+    |
+    ;
 
 command: attribute
     | '{' commandList '}'
@@ -160,8 +160,8 @@ arguments: expression extraArgument
     ;
 
 extraArgument: ',' expression extraArgument
-	|
-	;
+    |
+    ;
 
 operator: OPERATOR_LE
     | OPERATOR_GE
@@ -176,7 +176,7 @@ operator: OPERATOR_LE
     | '<'
     | '>'
     | '!' 
-	;
+    ;
 
 
 

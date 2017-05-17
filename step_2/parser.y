@@ -63,6 +63,7 @@ declaration: functionDeclaration | variableDeclaration
     ;
 
 variableDeclaration: TK_IDENTIFIER ':' variableTypeAndValue ';'
+    ;
 
 variableType: KW_BYTE | KW_SHORT | KW_LONG | KW_FLOAT | KW_DOUBLE
 	;
@@ -107,8 +108,8 @@ parameters: parameterList
     ;
 
 commandList: commandList command ';'
-     |
-     ;
+    |
+    ;
 
 command: attribute
     | '{' commandList '}'

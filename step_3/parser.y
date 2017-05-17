@@ -7,8 +7,6 @@
     void yyerror(char *s);
     int  yylex(void);
     int  getLineNumber(void);
-
-    astree_t astree;
 %}
 
 %token KW_BYTE
@@ -80,7 +78,7 @@
 
 %%
 
-program: declarationList { astree = *$1; fprintf(stderr, "reduziu [declarationList] para [program]\n"); }
+program: declarationList { tree = $1; fprintf(stderr, "reduziu [declarationList] para [program]\n"); }
     ;
 
 declarationList: declaration declarationList

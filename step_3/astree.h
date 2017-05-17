@@ -113,5 +113,6 @@ astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_1, astree_t
 void astree_print(astree_t *node, int level);
 char* decompileTree(astree_t* ast);
 
+astree_t* tree;
 
 #endif

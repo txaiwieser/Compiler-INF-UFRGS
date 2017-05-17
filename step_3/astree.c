@@ -8,10 +8,10 @@ astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_1, astree_t
     
     newnode->type = type;
     newnode->symbol = symbol;
-    newnode->son[0] = son1;
-    newnode->son[1] = son2;
-    newnode->son[2] = son3;
-    newnode->son[3] = son4;
+    newnode->son[0] = son_1;
+    newnode->son[1] = son_2;
+    newnode->son[2] = son_3;
+    newnode->son[3] = son_4;
 
     return newnode;
 }
@@ -26,9 +26,9 @@ void astree_print_tree(astree_t *node, int level) {
     fprintf(stderr, "ASTREE(");
 
     switch(node->type) {
-        case ASTREE_SYMBOL:
-            fprintf(stderr, "ASTREE_SYMBOL");
-            break;
+        // case ASTREE_SYMBOL:
+            // fprintf(stderr, "ASTREE_SYMBOL");
+            // break;
         case ASTREE_ADD:
             fprintf(stderr,"ASTREE_ADD");
             break;
@@ -49,9 +49,9 @@ void astree_print_node(astree_t *node) {
     fprintf(stderr, "ASTREE NODE(");
     
     switch(node->type) {
-        case ASTREE_SYMBOL:
-            fprintf(stderr, "ASTREE_SYMBOL");
-            break;
+        // case ASTREE_SYMBOL:
+            // fprintf(stderr, "ASTREE_SYMBOL");
+            // break;
         case ASTREE_ADD:
             fprintf(stderr,"ASTREE_ADD");
             break;

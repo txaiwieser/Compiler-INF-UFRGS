@@ -8,16 +8,16 @@ extern void initMe();
 extern int  isRunning();
 
 
-int writeStringToFile(char *filePath, char *string) {
-	FILE* f;
-	if (f = fopen(filePath, "w")) {
-		fprintf(f, "%s", string);
-		return 1;
-	} else {
-		fprintf(stderr, "ERROR: Couldn't open %s\n", filePath);
-		exit(1);
-	}
-}
+// int writeStringToFile(char *filePath, char *string) {
+// 	// FILE* f;
+// 	// if (f = fopen(filePath, "w")) {
+// 	// 	fprintf(f, "%s", string);
+// 	// 	return 1;
+// 	// } else {
+// 	// 	fprintf(stderr, "ERROR: Couldn't open %s\n", filePath);
+// 	// 	exit(1);
+// 	// }
+// }
 
 int main(int argc, char **argv) {
 	if (argc < 2) {
@@ -36,10 +36,10 @@ int main(int argc, char **argv) {
 	
 	yyparse();
 
-	ASSTREE *root = ???
-	char *decompiledTree = decompileTree(root);
+	// ASSTREE *root = ???
+	// char *decompiledTree = decompileTree(root);
 
-	writeStringToFile(argv[2], decompiledTree);
+	// writeStringToFile(argv[2], decompiledTree);
 
 	fprintf(stderr, "Programa aceito!\n");
 

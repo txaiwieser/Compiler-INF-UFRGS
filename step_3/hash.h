@@ -1,3 +1,5 @@
+#ifndef __HASH_H__
+#define __HASH_H__
 
 typedef struct hash_node {
 	int type;
@@ -11,3 +13,5 @@ int hash_address(char *text);
 hash_node_t *hash_find(char *text);
 hash_node_t *hash_insert(char *text, int type);
 void hash_print(void);
+
+#endif

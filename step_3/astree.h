@@ -19,19 +19,24 @@
 #define ASTREE_FLOAT_INT 			6
 #define ASTREE_FLOAT_REAL			7
 #define ASTREE_DOUBLE_INT			8
+#define ASTREE_DOUBLE_REAL			8
 
 // variableTypeAndValue list:
 #define ASTREE_BYTE_ARR_INT			9
 #define ASTREE_BYTE_ARR_CHAR		10
-#define ASTREE_BYTE_ARR				11
+/*
+Existe essa possibilidade análoga ao que foi feito com o float array.
+#define ASTREE_BYTE_ARR_CI			10
+*/
 #define ASTREE_SHORT_ARR_INT		12
-#define ASTREE_SHORT_ARR			13
 #define ASTREE_LONG_ARR_INT			14
+#define ASTREE_FLOAT_ARR_RI			16
+#define ASTREE_DOUBLE_ARR_RI		19
+
+#define ASTREE_BYTE_ARR				11
+#define ASTREE_SHORT_ARR			13
 #define ASTREE_LONG_ARR				15
-#define ASTREE_FLOAT_ARR_FLOAT		16
-#define ASTREE_FLOAT_ARR_INT		17
 #define ASTREE_FLOAT_ARR			18
-#define ASTREE_DOUBLE_ARR_INT		19
 #define ASTREE_DOUBLE_ARR			20
 
 #define ASTREE_INT_LST				21

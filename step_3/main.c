@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "lex.yy.h"
 #include "hash.h"
+#include "astree.h"
 
 extern int 	yyparse();
 extern int  getLineNumber();
@@ -20,7 +21,7 @@ int writeStringToFile(char *filePath, char *string) {
 }
 
 int main(int argc, char **argv) {
-	if (argc < 2) {
+	if (argc < 3) {
         printf("Error: invalid arguments\n");
         exit(1);
     }
@@ -36,10 +37,10 @@ int main(int argc, char **argv) {
 	
 	yyparse();
 
-	// ASSTREE *root = ???
-	// char *decompiledTree = decompileTree(root);
+	astree_t *root = tree;
+	char *decompiledTree = decompileTree(root);
 
-	// writeStringToFile(argv[2], decompiledTree);
+	writeStringToFile(argv[2], decompiledTree);
 
 	fprintf(stderr, "Programa aceito!\n");
 

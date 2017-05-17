@@ -137,7 +137,7 @@ intRealList: intReal intRealList    { $$ = astree_create(ASTREE_FLOAT_LST, NULL,
 intReal: LIT_INTEGER    { $$ = astree_create(ASTREE_LIT_INT, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_INTEGER=%s] para [intReal]\n", $1->text); }
     | LIT_REAL          { $$ = astree_create(ASTREE_LIT_REAL, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_REAL=%s] para [intReal]\n", $1->text); }
      
-functionDeclaration: variableType TK_IDENTIFIER '(' parameters ')' command ';' { $$ = astree_create(ASTREE_FUNC_DEC, $2, $1, $4, $6, 0); fprintf(stderr, "reduziu [variableType TK_IDENTIFIER=%s '(' parameters ')' command ';'] para [functionDeclaration]\n", $2->text); }
+functionDeclaration: variableType TK_IDENTIFIER '(' parameters ')' command ';' { $$ = astree_create(ASTREE_FUNC_DEC, $2, $1, $4, $6, 0); fprintf(stderr, "reduziu [variableType TK_IDENTIFIER=%s ( parameters ) command ;] para [functionDeclaration]\n", $2->text); }
     ;
 
 parameters: parameterList   { fprintf(stderr, "reduziu [parameterList] para [parameters]\n"); }
@@ -196,13 +196,13 @@ expression:  '(' expression ')'             { $$ = astree_create(ASTREE_EXP_PARE
     | expression OPERATOR_NE expression     { $$ = astree_create(ASTREE_NEQ, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_NE] para [expression]\n"); }
     | expression OPERATOR_AND expression    { $$ = astree_create(ASTREE_AND, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_AND] para [expression]\n"); }
     | expression OPERATOR_OR expression     { $$ = astree_create(ASTREE_OR, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_OR] para [expression]\n"); }
-    | expression '+' expression             { $$ = astree_create(ASTREE_ADD, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [+] para [expression]\n"); }
-    | expression '-' expression             { $$ = astree_create(ASTREE_SUB, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [-] para [expression]\n"); }
-    | expression '*' expression             { $$ = astree_create(ASTREE_MUL, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [*] para [expression]\n"); }
-    | expression '/' expression             { $$ = astree_create(ASTREE_DIV, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [/] para [expression]\n"); }
-    | expression '<' expression             { $$ = astree_create(ASTREE_LES, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [<] para [expression]\n"); }
-    | expression '>' expression             { $$ = astree_create(ASTREE_GTR, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [>] para [expression]\n"); }
-    | expression '!' expression             { $$ = astree_create(ASTREE_NOT, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [!] para [expression]\n"); } 
+    | expression '+' expression             { $$ = astree_create(ASTREE_ADD, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression + expression] para [expression]\n"); }
+    | expression '-' expression             { $$ = astree_create(ASTREE_SUB, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression - expression] para [expression]\n"); }
+    | expression '*' expression             { $$ = astree_create(ASTREE_MUL, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression * expression] para [expression]\n"); }
+    | expression '/' expression             { $$ = astree_create(ASTREE_DIV, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression / expression] para [expression]\n"); }
+    | expression '<' expression             { $$ = astree_create(ASTREE_LES, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression < expression] para [expression]\n"); }
+    | expression '>' expression             { $$ = astree_create(ASTREE_GTR, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression > expression] para [expression]\n"); }
+    | expression '!' expression             { $$ = astree_create(ASTREE_NOT, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression ! expression] para [expression]\n"); } 
     ;
 	
 arguments: expression extraArgument         { $$ = astree_create(ASTREE_FUNC_ARGS, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [expression extraArgument] para [arguments]\n"); } 

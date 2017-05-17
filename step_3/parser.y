@@ -48,11 +48,26 @@
 %type <astree> declaration
 %type <astree> functionDeclaration
 %type <astree> variableDeclaration
+%type <astree> variableType
 %type <astree> variableTypeAndValue
 %type <astree> intList
 %type <astree> charList
 %type <astree> intRealList
 %type <astree> intReal
+%type <astree> param 
+%type <astree> parameterList
+%type <astree> parameters
+%type <astree> command
+%type <astree> commandList
+%type <astree> control
+%type <astree> expression
+%type <astree> attribute
+%type <astree> printList
+%type <astree> printElement
+%type <astree> arguments
+%type <astree> extraArgument
+
+
 
 %left OPERATOR_AND OPERATOR_OR
 %left OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
@@ -79,11 +94,11 @@ declaration: functionDeclaration
 variableDeclaration: TK_IDENTIFIER ':' variableTypeAndValue ';' { $$ = astree_create(ASTREE_VAR_DEC, $1, $3, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s : variableTypeAndValue ;] para [variableDeclaration]\n", $1->text); }
     ;
 
-variableType: KW_BYTE
-    | KW_SHORT
-    | KW_LONG
-    | KW_FLOAT
-    | KW_DOUBLE
+variableType: KW_BYTE   { $$ = astree_create(ASTREE_KW_BYTE, NULL, 0, 0, 0, 0); }
+    | KW_SHORT          { $$ = astree_create(ASTREE_KW_SHORT, NULL, 0, 0, 0, 0); }
+    | KW_LONG           { $$ = astree_create(ASTREE_KW_LONG, NULL, 0, 0, 0, 0); }
+    | KW_FLOAT          { $$ = astree_create(ASTREE_KW_FLOAT, NULL, 0, 0, 0, 0); }
+    | KW_DOUBLE         { $$ = astree_create(ASTREE_KW_DOUBLE, NULL, 0, 0, 0, 0); }  
 	;
 
 variableTypeAndValue: KW_BYTE LIT_CHAR      { $$ = astree_create(ASTREE_BYTE_CHAR, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE LIT_CHAR=%s] para [variableTypeAndValue]", $2->text); }
@@ -121,84 +136,82 @@ intRealList: intReal intRealList    { $$ = astree_create(ASTREE_FLOAT_LST, NULL,
 
 intReal: LIT_INTEGER    { $$ = astree_create(ASTREE_LIT_INT, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_INTEGER=%s] para [intReal]\n", $1->text); }
     | LIT_REAL          { $$ = astree_create(ASTREE_LIT_REAL, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_REAL=%s] para [intReal]\n", $1->text); }
-
-parameterList: param ',' parameterList | param
-    ;
-
-param: variableType TK_IDENTIFIER
-    ;
      
-functionDeclaration: variableType TK_IDENTIFIER '(' parameters ')' command ';' { astree_t *node; $$ = node; }
+functionDeclaration: variableType TK_IDENTIFIER '(' parameters ')' command ';' { $$ = astree_create(ASTREE_FUNC_DEC, $2, $1, $4, $6, 0); fprintf(stderr, "reduziu [variableType TK_IDENTIFIER=%s '(' parameters ')' command ';'] para [functionDeclaration]\n", $2->text); }
     ;
 
-parameters: parameterList
-    |
+parameters: parameterList   { fprintf(stderr, "reduziu [parameterList] para [parameters]\n"); }
+    |                       { $$ = 0; }
     ;
 
-commandList: commandList command ';'
-    |
+parameterList: param ',' parameterList  { $$ = astree_create(ASTREE_PARAM_LST, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [param=%s , parameterList] para [parameterList]\n", $1->symbol->text); }
+    | param                             { fprintf(stderr, "reduziu [param=%s] para [parameterList]\n", $1->symbol->text); }
+    ;    
+
+param: variableType TK_IDENTIFIER   { $$ = astree_create(ASTREE_PARAM, $2, $1, 0, 0, 0); fprintf(stderr, "reduziu [variableType TK_IDENTIFIER=%s] para [param]\n", $2->text); }
     ;
 
-command: attribute
-    | '{' commandList '}'
-    | KW_READ TK_IDENTIFIER
-    | KW_PRINT printList
-    | KW_RETURN expression
+commandList: commandList command ';'    { $$ = astree_create(ASTREE_CMD_LST, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [commandList command ;] para [commandList]\n"); }
+    |                                   { $$ = 0; }
+    ;
+
+command: attribute          { fprintf(stderr, "reduziu [attribute] para [command]\n"); }
+    | '{' commandList '}'   { $$ = astree_create(ASTREE_CMD_BKTS, NULL, $2, 0, 0, 0); fprintf(stderr, "reduziu [{ commandList }] para [command]\n"); }
+    | KW_READ TK_IDENTIFIER { $$ = astree_create(ASTREE_KW_READ, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_READ TK_IDENTIFIER=%s] para [command]\n", $2->text); }
+    | KW_PRINT printList    { $$ = astree_create(ASTREE_KW_PRINT, NULL, $2, 0, 0, 0); fprintf(stderr, "reduziu [KW_READ printList] para [command]\n"); }
+    | KW_RETURN expression  { $$ = astree_create(ASTREE_KW_RETURN, NULL, $2, 0, 0, 0); fprintf(stderr, "reduziu [KW_RETURN expression] para [command]\n"); }
     | control
-    |
+    |                       { $$ = 0; }
     ;
 
-printList: printElement printList | printElement
+printList: printElement printList   { $$ = astree_create(ASTREE_PRINT_LST, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [printElement printList] para [printList]\n"); }
+    | printElement                  { fprintf(stderr, "reduziu [printElement] para [printList]\n"); }
     ;
 
-printElement: LIT_STRING | expression
+printElement: LIT_STRING            { $$ = astree_create(ASTREE_LIT_STRING, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_STRING=%s] para [printElement]\n", $1->text); }
+    | expression                    { fprintf(stderr, "reduziu [expression] para [printElement]\n"); }
     ;
 
-control: KW_WHEN '(' expression ')' KW_THEN command %prec LOWER_THAN_ELSE
-    | KW_WHEN '(' expression ')' KW_THEN command KW_ELSE command
-    | KW_WHILE '(' expression ')' command
-    | KW_FOR '(' TK_IDENTIFIER '=' expression KW_TO expression ')' command
+control: KW_WHEN '(' expression ')' KW_THEN command %prec LOWER_THAN_ELSE   { $$ = astree_create(ASTREE_KW_WHEN_THEN, NULL, $3, $6, 0, 0); fprintf(stderr, "reduziu [KW_WHEN ( expression ) KW_THEN command] para [control]\n"); }
+    | KW_WHEN '(' expression ')' KW_THEN command KW_ELSE command            { $$ = astree_create(ASTREE_KW_WHEN_THEN_ELSE, NULL, $3, $6, $8, 0); fprintf(stderr, "reduziu [KW_WHEN ( expression ) KW_THEN command KW_ELSE] para [control]\n"); }
+    | KW_WHILE '(' expression ')' command                                   { $$ = astree_create(ASTREE_KW_WHILE, NULL, $3, $5, 0, 0); fprintf(stderr, "reduziu [KW_WHILE ( expression ) command] para [control]\n"); }
+    | KW_FOR '(' TK_IDENTIFIER '=' expression KW_TO expression ')' command  { $$ = astree_create(ASTREE_KW_FOR, $3, $5, $7, $9, 0); fprintf(stderr, "reduziu [KW_FOR ( TK_IDENTIFIER=%s = expression KW_TO expression ) command] para [control]\n", $3->text); }
     ;
 
-attribute: TK_IDENTIFIER '=' expression
-    | TK_IDENTIFIER '#' expression '=' expression
+attribute: TK_IDENTIFIER '=' expression             { $$ = astree_create(ASTREE_ATTRIB, $1, $3, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s '=' expression] para [attribute]\n", $1->text); }
+    | TK_IDENTIFIER '#' expression '=' expression   { $$ = astree_create(ASTREE_ATTRIB_ARR, $1, $3, $5, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s '#' expression '=' expression] para [attribute]\n", $1->text); }
     ;
 
 
-expression:  '(' expression ')'
-    | TK_IDENTIFIER
-    | TK_IDENTIFIER '[' expression ']'
-    | TK_IDENTIFIER '(' arguments ')'
-    | LIT_INTEGER
-    | LIT_CHAR
-    | LIT_REAL
-    | expression operator expression
+expression:  '(' expression ')'             { $$ = astree_create(ASTREE_EXP_PARENTHESIS, NULL, $2, 0, 0, 0); fprintf(stderr, "reduziu [(expression)] para [expression]\n"); }      
+    | TK_IDENTIFIER                         { $$ = astree_create(ASTREE_TK_ID, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s] para [expression]\n", $1->text); }      
+    | TK_IDENTIFIER '[' expression ']'      { $$ = astree_create(ASTREE_ARRAY_CALL, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s [expression]] para [expression]\n", $1->text); }      
+    | TK_IDENTIFIER '(' arguments ')'       { $$ = astree_create(ASTREE_FUNC_CALL, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s] [arguments]] para [expression]\n", $1->text); }      
+    | LIT_INTEGER                           { $$ = astree_create(ASTREE_LIT_INT, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_INTEGER=%s] para [expression]\n", $1->text); }
+    | LIT_CHAR                              { $$ = astree_create(ASTREE_LIT_CHAR, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_CHAR=%s] para [expression]\n", $1->text); }
+    | LIT_REAL                              { $$ = astree_create(ASTREE_LIT_REAL, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_REAL=%s] para [expression]\n", $1->text); }
+    | expression OPERATOR_LE expression     { $$ = astree_create(ASTREE_LEQ, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_LE] para [expression]\n"); }
+    | expression OPERATOR_GE expression     { $$ = astree_create(ASTREE_GTE, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_GE] para [expression]\n"); }
+    | expression OPERATOR_EQ expression     { $$ = astree_create(ASTREE_EQU, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_EQ] para [expression]\n"); }
+    | expression OPERATOR_NE expression     { $$ = astree_create(ASTREE_NEQ, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_NE] para [expression]\n"); }
+    | expression OPERATOR_AND expression    { $$ = astree_create(ASTREE_AND, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_AND] para [expression]\n"); }
+    | expression OPERATOR_OR expression     { $$ = astree_create(ASTREE_OR, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [OPERATOR_OR] para [expression]\n"); }
+    | expression '+' expression             { $$ = astree_create(ASTREE_ADD, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [+] para [expression]\n"); }
+    | expression '-' expression             { $$ = astree_create(ASTREE_SUB, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [-] para [expression]\n"); }
+    | expression '*' expression             { $$ = astree_create(ASTREE_MUL, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [*] para [expression]\n"); }
+    | expression '/' expression             { $$ = astree_create(ASTREE_DIV, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [/] para [expression]\n"); }
+    | expression '<' expression             { $$ = astree_create(ASTREE_LES, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [<] para [expression]\n"); }
+    | expression '>' expression             { $$ = astree_create(ASTREE_GTR, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [>] para [expression]\n"); }
+    | expression '!' expression             { $$ = astree_create(ASTREE_NOT, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [!] para [expression]\n"); } 
     ;
 	
-arguments: expression extraArgument
-    |
+arguments: expression extraArgument         { $$ = astree_create(ASTREE_FUNC_ARGS, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [expression extraArgument] para [arguments]\n"); } 
+    |                                       { $$ = 0; }
     ;
 
-extraArgument: ',' expression extraArgument
-    |
+extraArgument: ',' expression extraArgument { $$ = astree_create(ASTREE_FUNC_ARGS, NULL, $2, $3, 0, 0); fprintf(stderr, "reduziu [, expression extraArgument] para [extraArgument]\n"); } 
+    |                                       { $$ = 0; }
     ;
-
-operator: OPERATOR_LE
-    | OPERATOR_GE
-    | OPERATOR_EQ
-    | OPERATOR_NE
-    | OPERATOR_AND
-    | OPERATOR_OR
-    | '*'
-    | '+'
-    | '-'
-    | '/'
-    | '<'
-    | '>'
-    | '!' 
-    ;
-
-
 
 %%
 

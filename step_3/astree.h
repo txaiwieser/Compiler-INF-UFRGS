@@ -46,6 +46,7 @@ Existe essa possibilidade análoga ao que foi feito com o float array.
 // functionDeclaration:
 #define ASTREE_FUNC_DEC				27
 #define ASTREE_PARAM_LST			28
+#define ASTREE_NO_PARAM_LST
 #define ASTREE_PARAM				29
 
 // literals:
@@ -63,8 +64,8 @@ Existe essa possibilidade análoga ao que foi feito com o float array.
 #define ASTREE_PRINT_LST			40
 #define ASTREE_KW_RETURN			39
 
-#define ASTREE_ATRIB 				46
-#define ASTREE_ATRIB_ARR			47
+#define ASTREE_ATTRIB 				46
+#define ASTREE_ATTRIB_ARR			47
 
 // keyword terminals:
 #define ASTREE_KW_BYTE				30
@@ -93,12 +94,13 @@ Existe essa possibilidade análoga ao que foi feito com o float array.
 #define ASTREE_NEQ					55
 #define ASTREE_AND					56
 #define ASTREE_OR 					57
-#define ASTREE_MUL					58
 #define ASTREE_ADD					59
 #define ASTREE_SUB					60
+#define ASTREE_MUL					58
 #define ASTREE_DIV					61
 #define ASTREE_LES					62
 #define ASTREE_GTR					63
+#define ASTREE_NOT					64
 
 
 typedef struct astree_s {

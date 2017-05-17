@@ -62,3 +62,12 @@ void astree_print_node(astree_t *node) {
     else
         fprintf(stderr, ",");
 }
+
+
+char* decompileTree(astree_t* ast) {
+    if (ast == NULL) {
+        return "";
+    } else {
+        return "Oi ";
+    }
+}

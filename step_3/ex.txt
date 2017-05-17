@@ -5,5 +5,5 @@
 // v6: float[3] 'a' 5 1.2; // wrong shit
 // v7: byte[5] 1 2 3 4 5;
 //um: short 1; dois: byte 2; tres: long 3; quatro: float 4.5;
-// short main() return 5+2; 
-short main();
+short main() return 5+2; 
+//short main();

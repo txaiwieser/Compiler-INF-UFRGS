@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include <string.h>
 #include "astree.h"
-#include "strings.h"
 
 astree_t* astree_create(int type, hash_node_t *symbol, astree_t *child_1, astree_t *child_2, astree_t *child_3, astree_t *child_4) {
 

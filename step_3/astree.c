@@ -5,7 +5,7 @@
 astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_1, astree_t *son_2, astree_t *son_3, astree_t *son_4) {
     
     astree_t* newnode = 0;
-    newnode = calloc(1, sizeof(astree_t));
+    newnode = (astree_t*) calloc(1, sizeof(astree_t));
     
     newnode->type = type;
     newnode->symbol = symbol;

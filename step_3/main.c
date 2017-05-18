@@ -37,6 +37,9 @@ int main(int argc, char **argv) {
 	
 	yyparse();
 
+
+	astree_print(tree, 0);
+
 	astree_t *root = tree;
 	char *decompiledTree = decompileTree(root);
 

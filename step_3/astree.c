@@ -111,9 +111,9 @@ void astree_print(astree_t* node, int level)
     }
 
     if(node->symbol)
-        fprintf(stderr, ",%s", node->symbol->text); // CHECK print (?)
+        fprintf(stderr, ",%s)\n", node->symbol->text);
     else
-        fprintf(stderr, ",");
+        fprintf(stderr, ",)\n");
     for(i=0; i < MAX_SONS; i++)
     {
         astree_print(node->son[i], level+1);

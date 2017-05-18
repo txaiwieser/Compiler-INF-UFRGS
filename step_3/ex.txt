@@ -7,6 +7,7 @@
 //um: short 1; dois: byte 2; tres: long 3; quatro: float 4.5;
 // short main() return 5+2; 
 //short main();
+v1: float[10] 1 2.2 3 4.4 5;
 a:byte 'c';
 short main() {
   	when (a==5) then {

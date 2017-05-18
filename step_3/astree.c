@@ -290,7 +290,13 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_FLOAT_LST: {
-            return "incomplete44";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+
+            char *buffer = (char *)calloc(strlen(son0_source) + 1 + strlen(son1_source), sizeof(char));
+            sprintf(buffer,"%s %s", son0_source, son1_source);
+
+            return buffer;
         }
 
         case ASTREE_FUNC_DEC: {
@@ -315,11 +321,21 @@ char* decompileTree(astree_t* ast) {
         }
 
         case ASTREE_LIT_INT: {
-            return "incomplete88";
+            char* son0_source = decompileTree(ast->son[0]);
+
+            char *buffer = (char *)calloc(strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer,"%s", ast->symbol->text);
+
+            return buffer;
         }
         
         case ASTREE_LIT_REAL: {
-            return "incomplete99";
+                        char* son0_source = decompileTree(ast->son[0]);
+
+            char *buffer = (char *)calloc(strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer,"%s", ast->symbol->text);
+
+            return buffer;
         }
         
         case ASTREE_LIT_CHAR: {

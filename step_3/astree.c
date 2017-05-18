@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "astree.h"
+#include "strings.h"
 
 astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_1, astree_t *son_2, astree_t *son_3, astree_t *son_4) {
     
@@ -25,8 +26,7 @@ void astree_print(astree_t* node, int level)
         fprintf(stderr, "  ");
 
     fprintf(stderr, "ASTREE(");
-    switch(node->type)
-    {
+    switch (node->type) {
         case ASTREE_PROG_START: fprintf(stderr,"ASTREE_PROG_START"); break;
 
         case ASTREE_VAR_DEC: fprintf(stderr,"ASTREE_VAR_DEC"); break;
@@ -143,8 +143,303 @@ void astree_print_node(astree_t *node) {
 
 char* decompileTree(astree_t* ast) {
     if (ast == NULL) {
-        return "";
+        return "incomplete";
     } else {
-        return "Oi ";
+        switch (ast->type) {
+
+          case ASTREE_PROG_START: {
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char* buffer = (char*) calloc(strlen(son0_source) + strlen(son1_source), sizeof(char));
+            sprintf(buffer, "%s%s", son0_source, son1_source);
+            return buffer;
+        }
+
+        case ASTREE_VAR_DEC: {
+            char* son0_source = decompileTree(ast->son[0]);
+            char* buffer = (char*) calloc(30 + 1 + strlen(son0_source) + 1, sizeof(char));
+            sprintf(buffer, "%s:%s;", ast->symbol->text, son0_source);
+            return buffer;
+        }
+
+        case ASTREE_BYTE_CHAR: {
+            char* buffer = (char*) calloc(4 + strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer,"BYTE%s", ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_BYTE_INT: {
+            char* buffer = (char*) calloc(4 + strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer, "BYTE%s", ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_SHORT_INT: {
+            char* buffer = (char*) calloc(5 + strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer, "SHORT%s", ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_LONG_INT: {
+            char* buffer = (char*) calloc(4 + strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer, "LONG%s", ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_FLOAT_INT: {
+            char* buffer = (char*) calloc(5 + strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer, "FLOAT%s", ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_FLOAT_REAL: {
+            char* buffer = (char*)calloc(5 + strlen(ast->symbol->text),sizeof(char));
+            sprintf(buffer,"FLOAT%s", ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_DOUBLE_INT: {
+            char* buffer = (char*)calloc(6 + strlen(ast->symbol->text),sizeof(char));
+            sprintf(buffer,"DOUBLE%s", ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_DOUBLE_REAL: {
+            char* buffer = (char*)calloc(6 + strlen(ast->symbol->text),sizeof(char));
+            sprintf(buffer,"DOUBLE%s", ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_BYTE_ARR_INT: {
+            char* son0_source = decompileTree(ast->son[0]);
+            char* buffer = (char*)calloc(5 + strlen(ast->symbol->text) + 1 + strlen(son0_source) ,sizeof(char));
+            sprintf(buffer,"BYTE[%s]%s", ast->symbol->text, son0_source);
+            return buffer;
+        }
+        
+        case ASTREE_BYTE_ARR_CHAR: {
+            return "incomplete";
+        }
+
+        case ASTREE_SHORT_ARR_INT: {
+            return "incomplete";
+        }
+        
+        case ASTREE_LONG_ARR_INT: {
+            return "incomplete";
+        }
+        
+        case ASTREE_FLOAT_ARR_RI: {
+            return "incomplete";
+        }
+        
+        case ASTREE_DOUBLE_ARR_RI: {
+            return "incomplete";
+        }
+
+        case ASTREE_BYTE_ARR: {
+            return "incomplete";
+        }
+        
+        case ASTREE_SHORT_ARR: {
+            return "incomplete";
+        }
+        
+        case ASTREE_LONG_ARR: {
+            return "incomplete";
+        }
+        
+        case ASTREE_FLOAT_ARR: {
+            return "incomplete";
+        }
+        
+        case ASTREE_DOUBLE_ARR: {
+            return "incomplete";
+        }
+        
+        case ASTREE_INT_LST: {
+            return "incomplete";
+        }
+        
+        case ASTREE_CHAR_LST: {
+            return "incomplete";
+        }
+        
+        case ASTREE_FLOAT_LST: {
+            return "incomplete";
+        }
+
+        case ASTREE_FUNC_DEC: {
+            return "incomplete";
+        }
+        
+        case ASTREE_PARAM_LST: {
+            return "incomplete";
+        }
+        
+        case ASTREE_PARAM: {
+            return "incomplete";
+        }
+
+        case ASTREE_LIT_INT: {
+            return "incomplete";
+        }
+        
+        case ASTREE_LIT_REAL: {
+            return "incomplete";
+        }
+        
+        case ASTREE_LIT_CHAR: {
+            return "incomplete";
+        }
+        
+        case ASTREE_LIT_STRING: {
+            return "incomplete";
+        }
+
+        case ASTREE_CMD_LST: {
+            return "incomplete";
+        }
+        
+        case ASTREE_CMD_BKTS: {
+            return "incomplete";
+        }
+
+        case ASTREE_KW_READ: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_PRINT: {
+            return "incomplete";
+        }
+        
+        case ASTREE_PRINT_LST: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_RETURN: {
+            return "incomplete";
+        }
+
+        case ASTREE_ATTRIB: {
+            return "incomplete";
+        }
+        
+        case ASTREE_ATTRIB_ARR: {
+            return "incomplete";
+        }
+
+        case ASTREE_KW_BYTE: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_SHORT: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_LONG: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_FLOAT: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_DOUBLE: {
+            return "incomplete";
+        }
+
+        case ASTREE_KW_WHEN_THEN: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_WHEN_THEN_ELSE: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_WHILE: {
+            return "incomplete";
+        }
+        
+        case ASTREE_KW_FOR: {
+            return "incomplete";
+        }
+
+        case ASTREE_EXP_PARENTHESIS: {
+            return "incomplete";
+        }
+        
+        case ASTREE_TK_ID: {
+            return "incomplete";
+        }
+        
+        case ASTREE_ARRAY_CALL: {
+            return "incomplete";
+        }
+        
+        case ASTREE_FUNC_CALL: {
+            return "incomplete";
+        }
+        
+        case ASTREE_FUNC_ARGS: {
+            return "incomplete";
+        }
+        
+        case ASTREE_FUNC_ARGS_EXT: {
+            return "incomplete";
+        }
+
+        case ASTREE_LEQ: {
+            return "incomplete";
+        }
+        
+        case ASTREE_GTE: {
+            return "incomplete";
+        }
+        
+        case ASTREE_EQU: {
+            return "incomplete";
+        }
+        
+        case ASTREE_NEQ: {
+            return "incomplete";
+        }
+        
+        case ASTREE_AND: {
+            return "incomplete";
+        }
+        
+        case ASTREE_OR: {
+            return "incomplete";
+        }
+        
+        case ASTREE_ADD: {
+            return "incomplete";
+        }
+        
+        case ASTREE_SUB: {
+            return "incomplete";
+        }
+        
+        case ASTREE_MUL: {
+            return "incomplete";
+        }
+        
+        case ASTREE_DIV: {
+            return "incomplete";
+        }
+        
+        case ASTREE_LES: {
+            return "incomplete";
+        }
+        
+        case ASTREE_GTR: {
+            return "incomplete";
+        }
+        
+        case ASTREE_NOT: {
+            return "incomplete";
+        }
+        }
     }
 }

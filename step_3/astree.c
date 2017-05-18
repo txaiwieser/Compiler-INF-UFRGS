@@ -506,19 +506,35 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_ADD: {
-            return "incomplete444444";
+            char* son0_source = astreeDecompile(ast->son[0]);
+            char* son1_source = astreeDecompile(ast->son[1]);
+            char* buffer = (char*)calloc( strlen(son0_source) + 3 + strlen(son1_source) + 1,sizeof(char));
+            sprintf(buffer,"%s + %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_SUB: {
-            return "incomplete555555";
+            char* son0_source = astreeDecompile(ast->son[0]);
+            char* son1_source = astreeDecompile(ast->son[1]);
+            char* buffer = (char*)calloc( strlen(son0_source) + 3 + strlen(son1_source) + 1,sizeof(char));
+            sprintf(buffer,"%s - %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_MUL: {
-            return "incomplete666666";
+            char* son0_source = astreeDecompile(ast->son[0]);
+            char* son1_source = astreeDecompile(ast->son[1]);
+            char* buffer = (char*)calloc( strlen(son0_source) + 3 + strlen(son1_source) + 1,sizeof(char));
+            sprintf(buffer,"%s * %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_DIV: {
-            return "incomplete777777";
+            char* son0_source = astreeDecompile(ast->son[0]);
+            char* son1_source = astreeDecompile(ast->son[1]);
+            char* buffer = (char*)calloc( strlen(son0_source) + 3 + strlen(son1_source) + 1,sizeof(char));
+            sprintf(buffer,"%s / %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_LES: {

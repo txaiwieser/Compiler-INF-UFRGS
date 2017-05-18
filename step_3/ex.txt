@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 //v: byte[10] 'a' 'b' 'c' 'd' 'e';
 //v2: float[5] 1 2 3 4 5 6 7 8 9;
 //v3: float[3] 1.2 5.6 4.2;
@@ -8,7 +7,7 @@
 //um: short 1; dois: byte 2; tres: long 3; quatro: float 4.5;
 // short main() return 5+2; 
 //short main();
-
+a:byte 'c';
 short main() {
   	when (a==5) then {
     	print "Parou no meio\n"; print "segundo";
@@ -17,21 +16,6 @@ short main() {
 	print "terceiro";
   // when (a==11) then
   //   ;
-  // when (a==11) then else
-  //   ;
+  when (a==11) then else
+    ;
 };
-=======
-v: byte[10] 'a' 'b' 'c' 'd' 'e';
-v2: float[5] 1 2 3 4 5 6 7 8 9;
-v3: float[3] 1.2 5.6 4.2;
-v5: float[3] 1.1 2 3.3 4;
-v: byte[106];
-v2: float[54];
-v3: float[367];
-v5: float[4566];
-//v6: float[3] 'a' 5 1.2; // wrong shit
-v7: byte[5] 1 2 3 4 5 6 7 8 9 10;
-um: short 1; dois: byte 2; tres: long 3; quatro: float 4.5;
-short main() return 5+2; 
-short main();
->>>>>>> Stashed changes

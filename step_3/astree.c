@@ -202,8 +202,8 @@ char* decompileTree(astree_t* ast) {
 
         case ASTREE_SHORT_ARR_INT: {
             char* child_0_text = decompileTree(ast->children[0]);
-            char* buffer = (char *) calloc(8 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
-            sprintf(buffer, "int [%s] %s", ast->symbol->text, child_0_text);
+            char* buffer = (char *) calloc(9 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
+            sprintf(buffer, "short [%s] %s", ast->symbol->text, child_0_text);
             return buffer;
         }
         

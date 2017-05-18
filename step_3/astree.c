@@ -389,7 +389,7 @@ char* decompileTree(astree_t* ast) {
         }
 
         case ASTREE_KW_BYTE: {
-            return "incomplete1111";
+            return "byte";
         }
         
         case ASTREE_KW_SHORT: {
@@ -397,15 +397,15 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_KW_LONG: {
-            return "incomplete3333";
+            return "long";
         }
         
         case ASTREE_KW_FLOAT: {
-            return "incomplete4444";
+            return "float";
         }
         
         case ASTREE_KW_DOUBLE: {
-            return "incomplete5555";
+            return "double";
         }
 
         case ASTREE_KW_WHEN_THEN: {

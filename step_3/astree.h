@@ -100,7 +100,6 @@ Existe essa possibilidade análoga ao que foi feito com o float array.
 #define ASTREE_DIV					63
 #define ASTREE_LES					64
 #define ASTREE_GTR					65
-#define ASTREE_NOT					66
 
 
 typedef struct astree_s {

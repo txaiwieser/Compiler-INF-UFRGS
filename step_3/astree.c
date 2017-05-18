@@ -634,10 +634,6 @@ char* decompileTree(astree_t* ast) {
             sprintf(buffer,"%s > %s", son0_source, son1_source);
             return buffer;
         }
-        
-        case ASTREE_NOT: {
-            return "incomplete1111111";
-        }
         }
         return "";
     } else {

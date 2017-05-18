@@ -107,8 +107,7 @@ void astree_print(astree_t* node, int level)
         case ASTREE_MUL: fprintf(stderr,"ASTREE_MUL"); break;
         case ASTREE_DIV: fprintf(stderr,"ASTREE_DIV"); break;
         case ASTREE_LES: fprintf(stderr,"ASTREE_LES"); break;
-        case ASTREE_GTR: fprintf(stderr,"ASTREE_GTR"); break;
-        case ASTREE_NOT: fprintf(stderr,"ASTREE_NOT"); break;   
+        case ASTREE_GTR: fprintf(stderr,"ASTREE_GTR"); break; 
     }
 
     if(node->symbol)

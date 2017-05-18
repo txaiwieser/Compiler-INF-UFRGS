@@ -200,7 +200,6 @@ expression:  '(' expression ')'             { $$ = astree_create(ASTREE_EXP_PARE
     | expression '/' expression             { $$ = astree_create(ASTREE_DIV, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression / expression] para [expression]\n"); }
     | expression '<' expression             { $$ = astree_create(ASTREE_LES, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression < expression] para [expression]\n"); }
     | expression '>' expression             { $$ = astree_create(ASTREE_GTR, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression > expression] para [expression]\n"); }
-    | expression '!' expression             { $$ = astree_create(ASTREE_NOT, NULL, $1, $3, 0, 0); fprintf(stderr, "reduziu [expression ! expression] para [expression]\n"); } 
     ;
 	
 arguments: expression extraArgument         { $$ = astree_create(ASTREE_FUNC_ARGS, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [expression extraArgument] para [arguments]\n"); } 

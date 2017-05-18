@@ -2,17 +2,17 @@
 #include "astree.h"
 #include "strings.h"
 
-astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_1, astree_t *son_2, astree_t *son_3, astree_t *son_4) {
+astree_t* astree_create(int type, hash_node_t *symbol, astree_t *child_1, astree_t *child_2, astree_t *child_3, astree_t *child_4) {
 
     astree_t* newnode = 0;
-    newnode = (astree_t*) calloc(1, sizeof(astree_t));
+    newnode = (astree_t *) calloc(1, sizeof(astree_t));
     
     newnode->type = type;
     newnode->symbol = symbol;
-    newnode->son[0] = son_1;
-    newnode->son[1] = son_2;
-    newnode->son[2] = son_3;
-    newnode->son[3] = son_4;
+    newnode->children[0] = child_1;
+    newnode->children[1] = child_2;
+    newnode->children[2] = child_3;
+    newnode->children[3] = child_4;
 
     return newnode;
 }
@@ -115,8 +115,8 @@ void astree_print(astree_t* node, int level)
     else
         fprintf(stderr, ",)\n");
 
-    for(i=0; i < MAX_SONS; i++)
-        astree_print(node->son[i], level+1);
+    for(i=0; i < MAX_NUMBER_OF_CHILDREN; i++)
+        astree_print(node->children[i], level+1);
 };
 
 char* decompileTree(astree_t* ast) {
@@ -124,17 +124,17 @@ char* decompileTree(astree_t* ast) {
         switch (ast->type) {
 
           case ASTREE_DECL_LIST: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *) calloc(1 + strlen(son_0_text) + strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s%s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *) calloc(1 + strlen(child_0_text) + strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s%s", child_0_text, child_1_text);
             return buffer;
         }
 
         case ASTREE_VAR_DEC: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* buffer = (char*)calloc(strlen(ast->symbol->text) + 3 + strlen(son_0_text) + 2 + 1, sizeof(char));
-            sprintf(buffer, "%s : %s;\n",ast->symbol->text,son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char*)calloc(strlen(ast->symbol->text) + 3 + strlen(child_0_text) + 2 + 1, sizeof(char));
+            sprintf(buffer, "%s : %s;\n",ast->symbol->text,child_0_text);
             return buffer;
         }
 
@@ -187,44 +187,44 @@ char* decompileTree(astree_t* ast) {
         }
 
         case ASTREE_BYTE_ARR_INT: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* buffer = (char*)calloc(6 + strlen(ast->symbol->text) + 2 + strlen(son_0_text) + 1, sizeof(char));
-            sprintf(buffer, "byte [%s] %s", ast->symbol->text, son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char*)calloc(6 + strlen(ast->symbol->text) + 2 + strlen(child_0_text) + 1, sizeof(char));
+            sprintf(buffer, "byte [%s] %s", ast->symbol->text, child_0_text);
             return buffer;
         }
         
         case ASTREE_BYTE_ARR_CHAR: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* buffer = (char*)calloc(6 + strlen(ast->symbol->text) + 2 + strlen(son_0_text) + 1, sizeof(char));
-            sprintf(buffer, "byte [%s] %s", ast->symbol->text, son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char*)calloc(6 + strlen(ast->symbol->text) + 2 + strlen(child_0_text) + 1, sizeof(char));
+            sprintf(buffer, "byte [%s] %s", ast->symbol->text, child_0_text);
             return buffer;
         }
 
         case ASTREE_SHORT_ARR_INT: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* buffer = (char*)calloc(5 + strlen(ast->symbol->text) + 2 + strlen(son_0_text) + 1, sizeof(char));
-            sprintf(buffer, "int [%s] %s", ast->symbol->text, son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char*)calloc(5 + strlen(ast->symbol->text) + 2 + strlen(child_0_text) + 1, sizeof(char));
+            sprintf(buffer, "int [%s] %s", ast->symbol->text, child_0_text);
             return buffer;
         }
         
         case ASTREE_LONG_ARR_INT: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* buffer = (char*)calloc(6 + strlen(ast->symbol->text) + 2 + strlen(son_0_text) + 1, sizeof(char));
-            sprintf(buffer, "long [%s] %s", ast->symbol->text, son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char*)calloc(6 + strlen(ast->symbol->text) + 2 + strlen(child_0_text) + 1, sizeof(char));
+            sprintf(buffer, "long [%s] %s", ast->symbol->text, child_0_text);
             return buffer;
         }
         
         case ASTREE_FLOAT_ARR_RI: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* buffer = (char*)calloc(7 + strlen(ast->symbol->text) + 2 + strlen(son_0_text) + 1, sizeof(char));
-            sprintf(buffer, "float [%s] %s", ast->symbol->text, son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char*)calloc(7 + strlen(ast->symbol->text) + 2 + strlen(child_0_text) + 1, sizeof(char));
+            sprintf(buffer, "float [%s] %s", ast->symbol->text, child_0_text);
             return buffer;
         }
         
         case ASTREE_DOUBLE_ARR_RI: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* buffer = (char*)calloc(8 + strlen(ast->symbol->text) + 2 + strlen(son_0_text) + 1, sizeof(char));
-            sprintf(buffer, "double [%s] %s", ast->symbol->text, son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char*)calloc(8 + strlen(ast->symbol->text) + 2 + strlen(child_0_text) + 1, sizeof(char));
+            sprintf(buffer, "double [%s] %s", ast->symbol->text, child_0_text);
             return buffer;
         }
 
@@ -259,63 +259,63 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_INT_LST: {
-            char* son_0_text = decompileTree(ast->son[0]);
+            char* child_0_text = decompileTree(ast->children[0]);
 
-            char *buffer = (char *)calloc(2 +strlen(ast->symbol->text) +1 +strlen(son_0_text), sizeof(char));
-            sprintf(buffer, "%s %s", ast->symbol->text, son_0_text);
+            char *buffer = (char *)calloc(2 +strlen(ast->symbol->text) +1 +strlen(child_0_text), sizeof(char));
+            sprintf(buffer, "%s %s", ast->symbol->text, child_0_text);
 
             return buffer;
         }
         
         case ASTREE_CHAR_LST: {
-            char* son_0_text = decompileTree(ast->son[0]);
+            char* child_0_text = decompileTree(ast->children[0]);
 
-            char *buffer = (char *)calloc(2 +strlen(ast->symbol->text) +1 +strlen(son_0_text), sizeof(char));
-            sprintf(buffer, "%s %s", ast->symbol->text, son_0_text);
+            char *buffer = (char *)calloc(2 +strlen(ast->symbol->text) +1 +strlen(child_0_text), sizeof(char));
+            sprintf(buffer, "%s %s", ast->symbol->text, child_0_text);
 
             return buffer;
         }
         
         case ASTREE_FLOAT_LST: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
 
-            char *buffer = (char *)calloc(strlen(son_0_text) + 1 + strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s %s", son_0_text, son_1_text);
+            char *buffer = (char *)calloc(strlen(child_0_text) + 1 + strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s %s", child_0_text, child_1_text);
 
             return buffer;
         }
 
         case ASTREE_FUNC_DEC: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* son_2_text = decompileTree(ast->son[2]);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* child_2_text = decompileTree(ast->children[2]);
 
             // short main(parameters) commando;
 
-            char *buffer = (char *)calloc(strlen(son_0_text) + 1 + strlen(ast->symbol->text) + 1 + strlen(son_1_text) + 1 + strlen(son_2_text) + 2, sizeof(char));
-            sprintf(buffer, "%s %s(%s)%s;\n", son_0_text, ast->symbol->text, son_1_text, son_2_text);
+            char *buffer = (char *)calloc(strlen(child_0_text) + 1 + strlen(ast->symbol->text) + 1 + strlen(child_1_text) + 1 + strlen(child_2_text) + 2, sizeof(char));
+            sprintf(buffer, "%s %s(%s)%s;\n", child_0_text, ast->symbol->text, child_1_text, child_2_text);
 
             return buffer;
         }
         
         case ASTREE_PARAM_LST: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* buffer = (char*)calloc(strlen(son_0_text) + 1 + strlen(son_1_text) + 1, sizeof(char));
-            sprintf(buffer, "%s,%s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char*)calloc(strlen(child_0_text) + 1 + strlen(child_1_text) + 1, sizeof(char));
+            sprintf(buffer, "%s,%s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_PARAM: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* buffer = (char*)calloc(strlen(son_0_text) + 1 + strlen(ast->symbol->text) + 1, sizeof(char));
-            sprintf(buffer, "%s %s", son_0_text, ast->symbol->text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char*)calloc(strlen(child_0_text) + 1 + strlen(ast->symbol->text) + 1, sizeof(char));
+            sprintf(buffer, "%s %s", child_0_text, ast->symbol->text);
             return buffer;
         }
 
         case ASTREE_LIT_INT: {
-            char* son_0_text = decompileTree(ast->son[0]);
+            char* child_0_text = decompileTree(ast->children[0]);
             char *buffer = (char *)calloc(strlen(ast->symbol->text), sizeof(char));
             sprintf(buffer, "%s", ast->symbol->text);
 
@@ -323,7 +323,7 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_LIT_REAL: {
-            char* son_0_text = decompileTree(ast->son[0]);
+            char* child_0_text = decompileTree(ast->children[0]);
             char *buffer = (char *)calloc(strlen(ast->symbol->text), sizeof(char));
             sprintf(buffer, "%s", ast->symbol->text);
 
@@ -348,20 +348,20 @@ char* decompileTree(astree_t* ast) {
 
         case ASTREE_CMD_LST: {
 
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
 
-            char *buffer = (char *)calloc(strlen(son_0_text) + 1 + strlen(son_1_text) + 2, sizeof(char));
-            sprintf(buffer, "%s%s;\n", son_0_text, son_1_text);
+            char *buffer = (char *)calloc(strlen(child_0_text) + 1 + strlen(child_1_text) + 2, sizeof(char));
+            sprintf(buffer, "%s%s;\n", child_0_text, child_1_text);
 
             return buffer;
         }
         
         case ASTREE_CMD_BKTS: {
-            char* son_0_text = decompileTree(ast->son[0]);
+            char* child_0_text = decompileTree(ast->children[0]);
 
-            char *buffer = (char *)calloc(3 + strlen(son_0_text) +2, sizeof(char));
-            sprintf(buffer, "{\n%s}", son_0_text);
+            char *buffer = (char *)calloc(3 + strlen(child_0_text) +2, sizeof(char));
+            sprintf(buffer, "{\n%s}", child_0_text);
 
             return buffer;
         }
@@ -375,46 +375,46 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_KW_PRINT: {
-            char* son_0_text = decompileTree(ast->son[0]);
+            char* child_0_text = decompileTree(ast->children[0]);
             // print "texto" identifier
 
-            char *buffer = (char *)calloc(6 + strlen(son_0_text) + 1, sizeof(char));
-            sprintf(buffer, "print %s", son_0_text);
+            char *buffer = (char *)calloc(6 + strlen(child_0_text) + 1, sizeof(char));
+            sprintf(buffer, "print %s", child_0_text);
 
             return buffer;
         }
         
         case ASTREE_PRINT_LST: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
 
-            char *buffer = (char *)calloc(strlen(son_0_text) + 1 + strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s %s", son_0_text, son_1_text);
+            char *buffer = (char *)calloc(strlen(child_0_text) + 1 + strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s %s", child_0_text, child_1_text);
 
             return buffer;
         }
         
         case ASTREE_KW_RETURN: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char *buffer = (char *)calloc(7 +strlen(son_0_text), sizeof(char));
-            sprintf(buffer, "return %s", son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char *buffer = (char *)calloc(7 +strlen(child_0_text), sizeof(char));
+            sprintf(buffer, "return %s", child_0_text);
 
             return buffer;   
         }
 
         case ASTREE_ATTRIB: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char *buffer = (char *)calloc(strlen(ast->symbol->text) +3 +strlen(son_0_text), sizeof(char));
-            sprintf(buffer, "%s = %s", ast->symbol->text, son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char *buffer = (char *)calloc(strlen(ast->symbol->text) +3 +strlen(child_0_text), sizeof(char));
+            sprintf(buffer, "%s = %s", ast->symbol->text, child_0_text);
 
             return buffer;        
         }
         
         case ASTREE_ATTRIB_ARR: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(strlen(ast->symbol->text) +3 +strlen(son_0_text) +3 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s # %s = %s", ast->symbol->text, son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(strlen(ast->symbol->text) +3 +strlen(child_0_text) +3 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s # %s = %s", ast->symbol->text, child_0_text, child_1_text);
 
             return buffer;
         }
@@ -440,43 +440,43 @@ char* decompileTree(astree_t* ast) {
         }
 
         case ASTREE_KW_WHEN_THEN: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(5 +strlen(son_0_text) +7 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "when(%s) then %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(5 +strlen(child_0_text) +7 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "when(%s) then %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_KW_WHEN_THEN_ELSE: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* son_2_text = decompileTree(ast->son[2]);
-            char *buffer = (char *)calloc(5 +strlen(son_0_text) +7 +strlen(son_1_text) +6 +strlen(son_2_text), sizeof(char));
-            sprintf(buffer, "when(%s) then %s else %s", son_0_text, son_1_text, son_2_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* child_2_text = decompileTree(ast->children[2]);
+            char *buffer = (char *)calloc(5 +strlen(child_0_text) +7 +strlen(child_1_text) +6 +strlen(child_2_text), sizeof(char));
+            sprintf(buffer, "when(%s) then %s else %s", child_0_text, child_1_text, child_2_text);
             return buffer;
         }
         
         case ASTREE_KW_WHILE: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* buffer = (char*)calloc( 6 + strlen(son_0_text) + 2 + strlen(son_1_text) + 1, sizeof(char));
-            sprintf(buffer, "while(%s)\n%s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char*)calloc( 6 + strlen(child_0_text) + 2 + strlen(child_1_text) + 1, sizeof(char));
+            sprintf(buffer, "while(%s)\n%s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_KW_FOR: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* son_2_text = decompileTree(ast->son[2]);
-            char* buffer = (char*)calloc( 4+ strlen(ast->symbol->text) + 3 + strlen(son_0_text) + 4 + strlen(son_1_text) + 2 + strlen(son_2_text) + 1, sizeof(char));
-            sprintf(buffer, "for(%s = %s to %s)\n%s", ast->symbol->text, son_0_text, son_1_text, son_2_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* child_2_text = decompileTree(ast->children[2]);
+            char* buffer = (char*)calloc( 4+ strlen(ast->symbol->text) + 3 + strlen(child_0_text) + 4 + strlen(child_1_text) + 2 + strlen(child_2_text) + 1, sizeof(char));
+            sprintf(buffer, "for(%s = %s to %s)\n%s", ast->symbol->text, child_0_text, child_1_text, child_2_text);
             return buffer;
         }
 
         case ASTREE_EXP_PARENTHESIS: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char *buffer = (char *)calloc(+1 +strlen(son_0_text) +1, sizeof(char));
-            sprintf(buffer, "(%s)", son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char *buffer = (char *)calloc(+1 +strlen(child_0_text) +1, sizeof(char));
+            sprintf(buffer, "(%s)", child_0_text);
             return buffer;
         }
         
@@ -487,129 +487,129 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_ARRAY_CALL: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char *buffer = (char *)calloc(strlen(ast->symbol->text) +1 +strlen(son_0_text) +1, sizeof(char));
-            sprintf(buffer, "%s[%s]", ast->symbol->text, son_0_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char *buffer = (char *)calloc(strlen(ast->symbol->text) +1 +strlen(child_0_text) +1, sizeof(char));
+            sprintf(buffer, "%s[%s]", ast->symbol->text, child_0_text);
             return buffer;
         }
         
         case ASTREE_FUNC_CALL: {
-            char* son_0_text = decompileTree(ast->son[0]);
+            char* child_0_text = decompileTree(ast->children[0]);
 
-            char *buffer = (char *)calloc(strlen(ast->symbol->text) +1 +strlen(son_0_text) +1, sizeof(char));
-            sprintf(buffer, "%s(%s)", ast->symbol->text, son_0_text);
+            char *buffer = (char *)calloc(strlen(ast->symbol->text) +1 +strlen(child_0_text) +1, sizeof(char));
+            sprintf(buffer, "%s(%s)", ast->symbol->text, child_0_text);
             return buffer;
         }
         
         case ASTREE_FUNC_ARGS: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(strlen(son_0_text) +1 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(strlen(child_0_text) +1 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_FUNC_ARGS_EXT: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(2 +strlen(son_0_text) +1 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, ", %s%s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(2 +strlen(child_0_text) +1 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, ", %s%s", child_0_text, child_1_text);
             return buffer;
         }
 
         case ASTREE_LEQ: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(strlen(son_0_text) +4 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s <= %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(strlen(child_0_text) +4 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s <= %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_GTE: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(strlen(son_0_text) +4 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s >= %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(strlen(child_0_text) +4 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s >= %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_EQU: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(strlen(son_0_text) +4 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s == %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(strlen(child_0_text) +4 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s == %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_NEQ: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(strlen(son_0_text) +4 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s != %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(strlen(child_0_text) +4 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s != %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_AND: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(strlen(son_0_text) +4 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s && %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(strlen(child_0_text) +4 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s && %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_OR: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(strlen(son_0_text) +4 +strlen(son_1_text), sizeof(char));
-            sprintf(buffer, "%s || %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char *buffer = (char *)calloc(strlen(child_0_text) +4 +strlen(child_1_text), sizeof(char));
+            sprintf(buffer, "%s || %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_ADD: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* buffer = (char*)calloc( strlen(son_0_text) + 3 + strlen(son_1_text) + 1, sizeof(char));
-            sprintf(buffer, "%s + %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char*)calloc( strlen(child_0_text) + 3 + strlen(child_1_text) + 1, sizeof(char));
+            sprintf(buffer, "%s + %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_SUB: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* buffer = (char*)calloc( strlen(son_0_text) + 3 + strlen(son_1_text) + 1, sizeof(char));
-            sprintf(buffer, "%s - %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char*)calloc( strlen(child_0_text) + 3 + strlen(child_1_text) + 1, sizeof(char));
+            sprintf(buffer, "%s - %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_MUL: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* buffer = (char*)calloc( strlen(son_0_text) + 3 + strlen(son_1_text) + 1, sizeof(char));
-            sprintf(buffer, "%s * %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char*)calloc( strlen(child_0_text) + 3 + strlen(child_1_text) + 1, sizeof(char));
+            sprintf(buffer, "%s * %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_DIV: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* buffer = (char*)calloc( strlen(son_0_text) + 3 + strlen(son_1_text) + 1, sizeof(char));
-            sprintf(buffer, "%s / %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char*)calloc( strlen(child_0_text) + 3 + strlen(child_1_text) + 1, sizeof(char));
+            sprintf(buffer, "%s / %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_LES: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* buffer = (char*)calloc( strlen(son_0_text) + 3 + strlen(son_1_text) + 1, sizeof(char));
-            sprintf(buffer, "%s < %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char*)calloc( strlen(child_0_text) + 3 + strlen(child_1_text) + 1, sizeof(char));
+            sprintf(buffer, "%s < %s", child_0_text, child_1_text);
             return buffer;
         }
         
         case ASTREE_GTR: {
-            char* son_0_text = decompileTree(ast->son[0]);
-            char* son_1_text = decompileTree(ast->son[1]);
-            char* buffer = (char*)calloc( strlen(son_0_text) + 3 + strlen(son_1_text) + 1, sizeof(char));
-            sprintf(buffer, "%s > %s", son_0_text, son_1_text);
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char*)calloc( strlen(child_0_text) + 3 + strlen(child_1_text) + 1, sizeof(char));
+            sprintf(buffer, "%s > %s", child_0_text, child_1_text);
             return buffer;
         }
         }

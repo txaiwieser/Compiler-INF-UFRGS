@@ -6,7 +6,7 @@
 
 #include "hash.h"
 
-#define MAX_SONS 4
+#define MAX_NUMBER_OF_CHILDREN 4
 
 #define ASTREE_DECL_LIST			0
 
@@ -105,10 +105,10 @@ Existe essa possibilidade análoga ao que foi feito com o float array.
 typedef struct astree_s {
     int type;
     hash_node_t *symbol;
-    struct astree_s *son[MAX_SONS];
+    struct astree_s *children[MAX_NUMBER_OF_CHILDREN];
 } astree_t;
 
-astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_1, astree_t *son_2, astree_t *son_3, astree_t *son_4);
+astree_t* astree_create(int type, hash_node_t *symbol, astree_t *child_1, astree_t *child_2, astree_t *child_3, astree_t *child_4);
 void astree_print(astree_t *node, int level);
 char* decompileTree(astree_t* ast);
 

@@ -18,6 +18,10 @@ short main() {
 	read vaisf;
   // when (a==11) then
   //   ;
-  when (a==11) then else
+  when (a==11) then else vec # 5 = 2.2
     ;
+      a = v[15-12+3];
+      return x + func(tr3s) + v[3] + 1.1 + 4;
+      return ((53 * (102 + 2)+5 / 94 * (8 + (82-3*77))/26)+23)*(14);
+      return 2*(4);
 };

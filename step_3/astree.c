@@ -388,14 +388,15 @@ char* decompileTree(astree_t* ast) {
             char *buffer = (char *)calloc(5 +strlen(ast->symbol->text), sizeof(char));
             sprintf(buffer,"read %s", ast->symbol->text);
 
-            return buffer;        }
+            return buffer;        
+        }
         
         case ASTREE_KW_PRINT: {
             char* son0_source = decompileTree(ast->son[0]);
             // print "texto" identifier
 
             char *buffer = (char *)calloc(6 + strlen(son0_source) + 1, sizeof(char));
-            sprintf(buffer,"print %s", son0_source);
+            sprintf(buffer, "print %s", son0_source);
 
             return buffer;
         }
@@ -411,15 +412,28 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_KW_RETURN: {
-            return "return";
+            char* son0_source = decompileTree(ast->son[0]);
+            char *buffer = (char *)calloc(7 +strlen(son0_source), sizeof(char));
+            sprintf(buffer, "return %s", son0_source);
+
+            return buffer;   
         }
 
         case ASTREE_ATTRIB: {
-            return "incomplete888";
+            char* son0_source = decompileTree(ast->son[0]);
+            char *buffer = (char *)calloc(strlen(ast->symbol->text) +3 +strlen(son0_source), sizeof(char));
+            sprintf(buffer,"%s = %s", ast->symbol->text, son0_source);
+
+            return buffer;        
         }
         
         case ASTREE_ATTRIB_ARR: {
-            return "incomplete999";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char *buffer = (char *)calloc(strlen(ast->symbol->text) +3 +strlen(son0_source) +3 +strlen(son1_source), sizeof(char));
+            sprintf(buffer,"%s # %s = %s", ast->symbol->text, son0_source, son1_source);
+
+            return buffer;
         }
 
         case ASTREE_KW_BYTE: {
@@ -468,7 +482,10 @@ char* decompileTree(astree_t* ast) {
         }
 
         case ASTREE_EXP_PARENTHESIS: {
-            return "incomplete11111";
+            char* son0_source = decompileTree(ast->son[0]);
+            char *buffer = (char *)calloc(+1 +strlen(son0_source) +1, sizeof(char));
+            sprintf(buffer, "(%s)", son0_source);
+            return buffer;
         }
         
         case ASTREE_TK_ID: {
@@ -478,7 +495,10 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_ARRAY_CALL: {
-            return "incomplete33333";
+            char* son0_source = decompileTree(ast->son[0]);
+            char *buffer = (char *)calloc(strlen(ast->symbol->text) +1 +strlen(son0_source) +1, sizeof(char));
+            sprintf(buffer, "%s[%s]", ast->symbol->text, son0_source);
+            return buffer;
         }
         
         case ASTREE_FUNC_CALL: {

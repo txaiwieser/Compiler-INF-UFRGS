@@ -81,11 +81,11 @@
 program: declarationList { tree = $1; fprintf(stderr, "reduziu [declarationList] para [program]\n"); }
     ;
 
-declarationList: declaration declarationList
-    | declaration                               { fprintf(stderr, "reduziu [declaration] para [declarationList]\n"); }
+declarationList: declaration declarationList    { $$ = astree_create(ASTREE_DECL_LIST, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [declaration declarationList] para [declarationList]\n"); }
+    |                                           { $$ = 0; }
     ;
 
-declaration: functionDeclaration
+declaration: functionDeclaration    { fprintf(stderr, "reduziu [functionDeclaration] para [declaration]\n"); }
     | variableDeclaration           { fprintf(stderr, "reduziu [variableDeclaration] para [declaration]\n"); }
     ;
 
@@ -99,32 +99,32 @@ variableType: KW_BYTE   { $$ = astree_create(ASTREE_KW_BYTE, NULL, 0, 0, 0, 0); 
     | KW_DOUBLE         { $$ = astree_create(ASTREE_KW_DOUBLE, NULL, 0, 0, 0, 0); }  
 	;
 
-variableTypeAndValue: KW_BYTE LIT_CHAR      { $$ = astree_create(ASTREE_BYTE_CHAR, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE LIT_CHAR=%s] para [variableTypeAndValue]", $2->text); }
-    | KW_BYTE LIT_INTEGER                   { $$ = astree_create(ASTREE_BYTE_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE LIT_INTEGER=%s] para [variableTypeAndValue]", $2->text); }
-    | KW_SHORT LIT_INTEGER                  { $$ = astree_create(ASTREE_SHORT_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_SHORT LIT_INTEGER=%s] para [variableTypeAndValue]", $2->text); }
-    | KW_LONG LIT_INTEGER                   { $$ = astree_create(ASTREE_LONG_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_LONG LIT_INTEGER=%s] para [variableTypeAndValue]", $2->text); }
-    | KW_FLOAT LIT_REAL                     { $$ = astree_create(ASTREE_FLOAT_REAL, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_FLOAT LIT_REAL=%s] para [variableTypeAndValue]", $2->text); }
-    | KW_FLOAT LIT_INTEGER                  { $$ = astree_create(ASTREE_FLOAT_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_FLOAT LIT_INTEGER=%s] para [variableTypeAndValue]", $2->text); }
-    | KW_DOUBLE LIT_INTEGER                 { $$ = astree_create(ASTREE_DOUBLE_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_DOUBLE LIT_INTEGER=%s] para [variableTypeAndValue]", $2->text); }
-    | KW_DOUBLE LIT_REAL                    { $$ = astree_create(ASTREE_DOUBLE_REAL, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_DOUBLE LIT_REAL=%s] para [variableTypeAndValue]", $2->text); }
-    | KW_BYTE '[' LIT_INTEGER ']' intList       { $$ = astree_create(ASTREE_BYTE_ARR_INT, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE '[' LIT_INTEGER ']' intList] para [variableTypeAndValue]\n"); }
-    | KW_BYTE '[' LIT_INTEGER ']' charList      { $$ = astree_create(ASTREE_BYTE_ARR_CHAR, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE '[' LIT_INTEGER ']' charList] para [variableTypeAndValue]\n"); }
-    | KW_SHORT '[' LIT_INTEGER ']' intList      { $$ = astree_create(ASTREE_SHORT_ARR_INT, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_SHORT '[' LIT_INTEGER ']' intList] para [variableTypeAndValue]\n"); }
-    | KW_LONG '[' LIT_INTEGER ']' intList       { $$ = astree_create(ASTREE_LONG_ARR_INT, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_LONG '[' LIT_INTEGER ']' intList] para [variableTypeAndValue]\n"); }
-    | KW_FLOAT '[' LIT_INTEGER ']' intRealList  { $$ = astree_create(ASTREE_FLOAT_ARR_RI, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_FLOAT '[' LIT_INTEGER ']' intRealList] para [variableTypeAndValue]\n"); }
-    | KW_DOUBLE '[' LIT_INTEGER ']' intRealList { $$ = astree_create(ASTREE_DOUBLE_ARR_RI, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_DOUBLE '[' LIT_INTEGER ']' intRealList] para [variableTypeAndValue]\n"); }
-    | KW_BYTE '[' LIT_INTEGER ']'               { $$ = astree_create(ASTREE_BYTE_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE '[' LIT_INTEGER ']'] para [variableTypeAndValue]\n"); }
-    | KW_SHORT '[' LIT_INTEGER ']'              { $$ = astree_create(ASTREE_SHORT_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_SHORT '[' LIT_INTEGER ']'] para [variableTypeAndValue]\n"); }
-    | KW_LONG '[' LIT_INTEGER ']'               { $$ = astree_create(ASTREE_LONG_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_LONG '[' LIT_INTEGER ']'] para [variableTypeAndValue]\n"); }
-    | KW_FLOAT '[' LIT_INTEGER ']'              { $$ = astree_create(ASTREE_FLOAT_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_FLOAT '[' LIT_INTEGER ']'] para [variableTypeAndValue]\n"); }
-    | KW_DOUBLE '[' LIT_INTEGER ']'             { $$ = astree_create(ASTREE_DOUBLE_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_DOUBLE '[' LIT_INTEGER ']'] para [variableTypeAndValue]\n"); }
+variableTypeAndValue: KW_BYTE LIT_CHAR      { $$ = astree_create(ASTREE_BYTE_CHAR, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE LIT_CHAR=%s] para [variableTypeAndValue]\n", $2->text); }
+    | KW_BYTE LIT_INTEGER                   { $$ = astree_create(ASTREE_BYTE_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE LIT_INTEGER=%s] para [variableTypeAndValue]\n", $2->text); }
+    | KW_SHORT LIT_INTEGER                  { $$ = astree_create(ASTREE_SHORT_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_SHORT LIT_INTEGER=%s] para [variableTypeAndValue]\n", $2->text); }
+    | KW_LONG LIT_INTEGER                   { $$ = astree_create(ASTREE_LONG_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_LONG LIT_INTEGER=%s] para [variableTypeAndValue]\n", $2->text); }
+    | KW_FLOAT LIT_REAL                     { $$ = astree_create(ASTREE_FLOAT_REAL, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_FLOAT LIT_REAL=%s] para [variableTypeAndValue]\n", $2->text); }
+    | KW_FLOAT LIT_INTEGER                  { $$ = astree_create(ASTREE_FLOAT_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_FLOAT LIT_INTEGER=%s] para [variableTypeAndValue]\n", $2->text); }
+    | KW_DOUBLE LIT_INTEGER                 { $$ = astree_create(ASTREE_DOUBLE_INT, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_DOUBLE LIT_INTEGER=%s] para [variableTypeAndValue]\n", $2->text); }
+    | KW_DOUBLE LIT_REAL                    { $$ = astree_create(ASTREE_DOUBLE_REAL, $2, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_DOUBLE LIT_REAL=%s] para [variableTypeAndValue]\n", $2->text); }
+    | KW_BYTE '[' LIT_INTEGER ']' intList       { $$ = astree_create(ASTREE_BYTE_ARR_INT, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE [ LIT_INTEGER ] intList] para [variableTypeAndValue]\n"); }
+    | KW_BYTE '[' LIT_INTEGER ']' charList      { $$ = astree_create(ASTREE_BYTE_ARR_CHAR, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE [ LIT_INTEGER ] charList] para [variableTypeAndValue]\n"); }
+    | KW_SHORT '[' LIT_INTEGER ']' intList      { $$ = astree_create(ASTREE_SHORT_ARR_INT, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_SHORT [ LIT_INTEGER ] intList] para [variableTypeAndValue]\n"); }
+    | KW_LONG '[' LIT_INTEGER ']' intList       { $$ = astree_create(ASTREE_LONG_ARR_INT, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_LONG [ LIT_INTEGER ] intList] para [variableTypeAndValue]\n"); }
+    | KW_FLOAT '[' LIT_INTEGER ']' intRealList  { $$ = astree_create(ASTREE_FLOAT_ARR_RI, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_FLOAT [ LIT_INTEGER ] intRealList] para [variableTypeAndValue]\n"); }
+    | KW_DOUBLE '[' LIT_INTEGER ']' intRealList { $$ = astree_create(ASTREE_DOUBLE_ARR_RI, $3, $5, 0, 0, 0); fprintf(stderr, "reduziu [KW_DOUBLE [ LIT_INTEGER ] intRealList] para [variableTypeAndValue]\n"); }
+    | KW_BYTE '[' LIT_INTEGER ']'               { $$ = astree_create(ASTREE_BYTE_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_BYTE [ LIT_INTEGER ]] para [variableTypeAndValue]\n"); }
+    | KW_SHORT '[' LIT_INTEGER ']'              { $$ = astree_create(ASTREE_SHORT_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_SHORT [ LIT_INTEGER ]] para [variableTypeAndValue]\n"); }
+    | KW_LONG '[' LIT_INTEGER ']'               { $$ = astree_create(ASTREE_LONG_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_LONG [ LIT_INTEGER ]] para [variableTypeAndValue]\n"); }
+    | KW_FLOAT '[' LIT_INTEGER ']'              { $$ = astree_create(ASTREE_FLOAT_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_FLOAT [ LIT_INTEGER ]] para [variableTypeAndValue]\n"); }
+    | KW_DOUBLE '[' LIT_INTEGER ']'             { $$ = astree_create(ASTREE_DOUBLE_ARR, $3, 0, 0, 0, 0); fprintf(stderr, "reduziu [KW_DOUBLE [ LIT_INTEGER ]] para [variableTypeAndValue]\n"); }
     ;
 
-intList: LIT_INTEGER intList    { $$ = astree_create(ASTREE_INT_LST, $1, $2, 0, 0, 0); fprintf(stderr, "reduziu [LIT_INTEGER=%s intList ] para intList\n", $1->text); }
+intList: LIT_INTEGER intList    { $$ = astree_create(ASTREE_INT_LST, $1, $2, 0, 0, 0); fprintf(stderr, "reduziu [LIT_INTEGER=%s intList] para [intList]\n", $1->text); }
     | LIT_INTEGER               { $$ = astree_create(ASTREE_LIT_INT, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_INTEGER=%s] para [intList]\n", $1->text); }
     ;
 
-charList: LIT_CHAR charList     { $$ = astree_create(ASTREE_CHAR_LST, $1, $2, 0, 0, 0); fprintf(stderr, "reduziu [LIT_CHAR=%s charList ] para charList\n", $1->text); }
+charList: LIT_CHAR charList     { $$ = astree_create(ASTREE_CHAR_LST, $1, $2, 0, 0, 0); fprintf(stderr, "reduziu [LIT_CHAR=%s charList] para [charList]\n", $1->text); }
     | LIT_CHAR                  { $$ = astree_create(ASTREE_LIT_CHAR, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_CHAR=%s] para [charList]\n", $1->text); }
     ;
 

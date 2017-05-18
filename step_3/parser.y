@@ -184,7 +184,7 @@ attribute: TK_IDENTIFIER '=' expression             { $$ = astree_create(ASTREE_
 expression:  '(' expression ')'             { $$ = astree_create(ASTREE_EXP_PARENTHESIS, NULL, $2, 0, 0, 0); fprintf(stderr, "reduziu [(expression)] para [expression]\n"); }      
     | TK_IDENTIFIER                         { $$ = astree_create(ASTREE_TK_ID, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s] para [expression]\n", $1->text); }      
     | TK_IDENTIFIER '[' expression ']'      { $$ = astree_create(ASTREE_ARRAY_CALL, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s [expression]] para [expression]\n", $1->text); }      
-    | TK_IDENTIFIER '(' arguments ')'       { $$ = astree_create(ASTREE_FUNC_CALL, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s] [arguments]] para [expression]\n", $1->text); }      
+    | TK_IDENTIFIER '(' arguments ')'       { $$ = astree_create(ASTREE_FUNC_CALL, $1, $3, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s] [arguments]] para [expression]\n", $1->text); }      
     | LIT_INTEGER                           { $$ = astree_create(ASTREE_LIT_INT, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_INTEGER=%s] para [expression]\n", $1->text); }
     | LIT_CHAR                              { $$ = astree_create(ASTREE_LIT_CHAR, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_CHAR=%s] para [expression]\n", $1->text); }
     | LIT_REAL                              { $$ = astree_create(ASTREE_LIT_REAL, $1, 0, 0, 0, 0); fprintf(stderr, "reduziu [LIT_REAL=%s] para [expression]\n", $1->text); }
@@ -207,7 +207,7 @@ arguments: expression extraArgument         { $$ = astree_create(ASTREE_FUNC_ARG
     |                                       { $$ = 0; }
     ;
 
-extraArgument: ',' expression extraArgument { $$ = astree_create(ASTREE_FUNC_ARGS, NULL, $2, $3, 0, 0); fprintf(stderr, "reduziu [, expression extraArgument] para [extraArgument]\n"); } 
+extraArgument: ',' expression extraArgument { $$ = astree_create(ASTREE_FUNC_ARGS_EXT, NULL, $2, $3, 0, 0); fprintf(stderr, "reduziu [, expression extraArgument] para [extraArgument]\n"); } 
     |                                       { $$ = 0; }
     ;
 

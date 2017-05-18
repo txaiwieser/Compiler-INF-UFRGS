@@ -377,7 +377,7 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_KW_RETURN: {
-            return "incomplete777";
+            return "return";
         }
 
         case ASTREE_ATTRIB: {
@@ -538,11 +538,19 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_LES: {
-            return "incomplete888888";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char* buffer = (char*)calloc( strlen(son0_source) + 3 + strlen(son1_source) + 1,sizeof(char));
+            sprintf(buffer,"%s < %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_GTR: {
-            return "incomplete999999";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char* buffer = (char*)calloc( strlen(son0_source) + 3 + strlen(son1_source) + 1,sizeof(char));
+            sprintf(buffer,"%s > %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_NOT: {

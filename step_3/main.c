@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 	FILE* file;
 	if (!(file = fopen(argv[1], "r"))) {
 		printf ("Erro ao abrir arquivo!");
-		return 0;
+		return 1;
 	}
 
 	initMe();
@@ -49,5 +49,5 @@ int main(int argc, char **argv) {
 
 	// hashPrint();
 
-	return 1;
+	return 0;
 }

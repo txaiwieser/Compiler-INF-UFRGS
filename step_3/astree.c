@@ -3,8 +3,7 @@
 
 astree_t* astree_create(int type, hash_node_t *symbol, astree_t *son_1, astree_t *son_2, astree_t *son_3, astree_t *son_4) {
     
-    astree_t* newnode = 0;
-    newnode = calloc(1, sizeof(astree_t));
+    astree_t* newnode = calloc(1, sizeof(astree_t));
     
     newnode->type = type;
     newnode->symbol = symbol;
@@ -21,6 +20,7 @@ void astree_print(astree_t* node, int level)
     int i;
 
     if(!node) return;
+
     for(i=0; i < level; i++)
         fprintf(stderr, "  ");
 
@@ -114,10 +114,9 @@ void astree_print(astree_t* node, int level)
         fprintf(stderr, ",%s)\n", node->symbol->text);
     else
         fprintf(stderr, ",)\n");
+
     for(i=0; i < MAX_SONS; i++)
-    {
         astree_print(node->son[i], level+1);
-    }
 };
 
 void astree_print_node(astree_t *node) {

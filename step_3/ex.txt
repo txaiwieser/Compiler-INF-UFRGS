@@ -7,7 +7,7 @@
 //um: short 1; dois: byte 2; tres: long 3; quatro: float 4.5;
 // short main() return 5+2; 
 //short main();
-
+a:byte 'c';
 short main() {
   	when (a==5) then {
     	print "Parou no meio\n"; print "segundo";
@@ -16,6 +16,6 @@ short main() {
 	print "terceiro";
   // when (a==11) then
   //   ;
-  // when (a==11) then else
-  //   ;
+  when (a==11) then else
+    ;
 };

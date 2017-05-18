@@ -322,18 +322,24 @@ char* decompileTree(astree_t* ast) {
         }
         
         case ASTREE_LIT_CHAR: {
-            return "incomplete111";
+            
+            char *buffer = (char *)calloc(strlen(ast->symbol->text) + 2, sizeof(char));
+            sprintf(buffer,"'%s'", ast->symbol->text);
+            
+            return buffer;
         }
         
         case ASTREE_LIT_STRING: {
-            return "incomplete111";
+            
+            char *buffer = (char *)calloc(strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer, "%s", ast->symbol->text);
+            
+            return buffer;
         }
 
         case ASTREE_CMD_LST: {
 
-            char* son0_source = "";
-            if(ast->son[0] != 0)
-                son0_source = decompileTree(ast->son[0]);
+            char* son0_source = decompileTree(ast->son[0]);
             char* son1_source = decompileTree(ast->son[1]);
 
             char *buffer = (char *)calloc(strlen(son0_source) + 1 + strlen(son1_source) + 2, sizeof(char));
@@ -404,13 +410,18 @@ char* decompileTree(astree_t* ast) {
         case ASTREE_KW_WHEN_THEN: {
             char* son0_source = decompileTree(ast->son[0]);
             char* son1_source = decompileTree(ast->son[1]);
-            char *buffer = (char *)calloc(5 + strlen(son0_source) + 7 + strlen(son1_source), sizeof(char));
+            char *buffer = (char *)calloc(5 +strlen(son0_source) +7 +strlen(son1_source), sizeof(char));
             sprintf(buffer, "when(%s) then %s", son0_source, son1_source);
             return buffer;
         }
         
         case ASTREE_KW_WHEN_THEN_ELSE: {
-            return "incomplete7777";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char* son2_source = decompileTree(ast->son[2]);
+            char *buffer = (char *)calloc(5 +strlen(son0_source) +7 +strlen(son1_source) +6 +strlen(son2_source), sizeof(char));
+            sprintf(buffer, "when(%s) then %s else %s", son0_source, son1_source, son2_source);
+            return buffer;
         }
         
         case ASTREE_KW_WHILE: {
@@ -446,27 +457,51 @@ char* decompileTree(astree_t* ast) {
         }
 
         case ASTREE_LEQ: {
-            return "incomplete77777";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char *buffer = (char *)calloc(strlen(son0_source) +4 +strlen(son1_source), sizeof(char));
+            sprintf(buffer, "%s <= %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_GTE: {
-            return "incomplete88888";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char *buffer = (char *)calloc(strlen(son0_source) +4 +strlen(son1_source), sizeof(char));
+            sprintf(buffer, "%s >= %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_EQU: {
-            return "incomplete99999";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char *buffer = (char *)calloc(strlen(son0_source) +4 +strlen(son1_source), sizeof(char));
+            sprintf(buffer, "%s == %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_NEQ: {
-            return "incomplete111111";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char *buffer = (char *)calloc(strlen(son0_source) +4 +strlen(son1_source), sizeof(char));
+            sprintf(buffer, "%s != %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_AND: {
-            return "incomplete222222";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char *buffer = (char *)calloc(strlen(son0_source) +4 +strlen(son1_source), sizeof(char));
+            sprintf(buffer, "%s && %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_OR: {
-            return "incomplete333333";
+            char* son0_source = decompileTree(ast->son[0]);
+            char* son1_source = decompileTree(ast->son[1]);
+            char *buffer = (char *)calloc(strlen(son0_source) +4 +strlen(son1_source), sizeof(char));
+            sprintf(buffer, "%s || %s", son0_source, son1_source);
+            return buffer;
         }
         
         case ASTREE_ADD: {

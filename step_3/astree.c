@@ -314,8 +314,8 @@ char* decompileTree(astree_t* ast) {
 
             // short main(parameters) commando;
 
-            char *buffer = (char *)calloc(strlen(son0_source) + 1 + strlen(ast->symbol->text) + 1 + strlen(son1_source) + 1 + strlen(son2_source) + 1, sizeof(char));
-            sprintf(buffer,"%s %s(%s)%s;", son0_source, ast->symbol->text, son1_source, son2_source);
+            char *buffer = (char *)calloc(strlen(son0_source) + 1 + strlen(ast->symbol->text) + 1 + strlen(son1_source) + 1 + strlen(son2_source) + 2, sizeof(char));
+            sprintf(buffer,"%s %s(%s)%s;\n", son0_source, ast->symbol->text, son1_source, son2_source);
 
             return buffer;
         }

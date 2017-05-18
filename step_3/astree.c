@@ -27,7 +27,7 @@ void astree_print(astree_t* node, int level)
 
     fprintf(stderr, "ASTREE(");
     switch (node->type) {
-        case ASTREE_PROG_START: fprintf(stderr,"ASTREE_PROG_START"); break;
+        case ASTREE_DECL_LIST: fprintf(stderr,"ASTREE_DECL_LIST"); break;
 
         case ASTREE_VAR_DEC: fprintf(stderr,"ASTREE_VAR_DEC"); break;
         case ASTREE_BYTE_CHAR: fprintf(stderr,"ASTREE_BYTE_CHAR"); break;
@@ -146,7 +146,7 @@ char* decompileTree(astree_t* ast) {
     } else {
         switch (ast->type) {
 
-          case ASTREE_PROG_START: {
+          case ASTREE_DECL_LIST: {
             char* son0_source = decompileTree(ast->son[0]);
             char* son1_source = decompileTree(ast->son[1]);
             char *buffer = (char *) calloc(strlen(son0_source) + strlen(son1_source), sizeof(char));

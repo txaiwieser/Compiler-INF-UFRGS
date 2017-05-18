@@ -81,7 +81,7 @@
 program: declarationList { tree = $1; fprintf(stderr, "reduziu [declarationList] para [program]\n"); }
     ;
 
-declarationList: declaration declarationList    { $$ = astree_create(ASTREE_PROG_START, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [declaration declarationList] para [declarationList]\n"); }
+declarationList: declaration declarationList    { $$ = astree_create(ASTREE_DECL_LIST, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [declaration declarationList] para [declarationList]\n"); }
     |                                           { $$ = 0; }
     ;
 

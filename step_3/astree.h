@@ -8,7 +8,7 @@
 
 #define MAX_SONS 4
 
-#define ASTREE_PROG_START			0
+#define ASTREE_DECL_LIST			0
 
 // variableTypeAndValue:
 #define ASTREE_VAR_DEC				1

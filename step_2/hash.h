@@ -1,14 +1,17 @@
+#ifndef __HASH_H__
+#define __HASH_H__
 
-typedef struct hash_node_struck
-{
+typedef struct hash_node {
 	int type;
 	char *text;
-	struct hash_node_struck *next;
+	struct hash_node *next;
 	
-} HASH_NODE;
+} hash_node_t;
 
-void hashInit(void);
-int hashAddress(char *text);
-HASH_NODE *hashFind(char *text);
-HASH_NODE *hashInsert(char *text, int type);
-void hashPrint(void);
+void hash_init(void);
+int hash_address(char *text);
+hash_node_t *hash_find(char *text);
+hash_node_t *hash_insert(char *text, int type);
+void hash_print(void);
+
+#endif

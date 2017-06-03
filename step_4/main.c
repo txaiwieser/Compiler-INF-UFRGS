@@ -20,6 +20,12 @@ int writeStringToFile(char *filePath, char *string) {
 	}
 }
 
+#define SUCCESS 0
+#define FILE_NOT_INFORMED 1
+#define FILE_NOT_FOUND 2
+#define SINTAX_ERROR 3
+#define SEMANTIC_ERROR 4
+
 int main(int argc, char **argv) {
 	if (argc < 3) {
         printf("Error: invalid arguments\n");

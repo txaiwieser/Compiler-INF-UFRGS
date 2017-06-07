@@ -3,7 +3,8 @@
     #include <stdio.h>
     #include <string.h>
     #include "astree.h"
-
+    #include "semantic.h"
+    
     void yyerror(char *s);
     int  yylex(void);
     int  getLineNumber(void);

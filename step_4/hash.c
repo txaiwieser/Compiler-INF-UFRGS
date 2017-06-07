@@ -37,7 +37,7 @@ hash_node_t *hash_find(char *text) {
 	return 0;
 }
 
-hash_node_t *hash_insert(char *text, int type) {
+hash_node_t *hash_insert(char *text, int type, int dataType, int nature) {
 	
 	hash_node_t *new_node;
 	int address = hash_address(text);
@@ -46,6 +46,12 @@ hash_node_t *hash_insert(char *text, int type) {
 	new_node->text = calloc(strlen(text)+1, sizeof(char));
 
 	new_node->type = type;
+	new_node->dataType = dataType;
+	new_node->nature = nature;
+	new_node->numParameters = -1;
+	new_node->isDeclared = 0;
+	new_node->exprType = 0;
+
 	strcpy(new_node->text, text);
 
 	new_node->next = hash_table[address];

@@ -1,16 +1,16 @@
 # Makefile
 
-# etapa1: lex.yy.o hash.o main.o
-#	gcc lex.yy.o hash.o main.o -o etapa1
-
-etapa2: y.tab.o lex.yy.o hash.o astree.o main.o
-	gcc -o etapa4 y.tab.o lex.yy.o hash.o astree.o main.o
+all: y.tab.o lex.yy.o hash.o astree.o semantic.o main.o
+	gcc -o etapa4 y.tab.o lex.yy.o hash.o astree.o semantic.o main.o
 
 main.o: main.c
 	gcc -c main.c
 
 astree.o: astree.c
 	gcc -c astree.c
+
+semantic.o: semantic.c
+	gcc -c semantic.c
 
 hash.o: hash.c
 	gcc -c hash.c

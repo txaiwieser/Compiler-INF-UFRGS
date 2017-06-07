@@ -29,31 +29,28 @@ int writeStringToFile(char *filePath, char *string) {
 int main(int argc, char **argv) {
 	if (argc < 3) {
         printf("Error: invalid arguments\n");
-        exit(1);
+        return FILE_NOT_INFORMED;
     }
 
 	FILE* file;
 	if (!(file = fopen(argv[1], "r"))) {
 		printf ("Erro ao abrir arquivo!");
-		return 1;
+		return FILE_NOT_FOUND;
 	}
 
 	initMe();
-	yyin = file;
-	
+	yyin = file;	
 	yyparse();
 
-
 	astree_print(tree, 0);
-
 	astree_t *root = tree;
-	char *decompiledTree = decompileTree(root);
 
-	writeStringToFile(argv[2], decompiledTree);
+	// char *decompiledTree = decompileTree(root);
+	// writeStringToFile(argv[2], decompiledTree);
+
+	semanticSetDeclarations(root);
+	semanticCheck(root);
 
 	fprintf(stderr, "Programa aceito!\n");
-
-	// hashPrint();
-
-	return 0;
+	return SUCCESS;
 }

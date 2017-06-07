@@ -12,32 +12,15 @@
 
 // variableTypeAndValue:
 #define ASTREE_VAR_DEC				1
-#define ASTREE_BYTE_CHAR			2
-#define ASTREE_BYTE_INT				3
-#define ASTREE_SHORT_INT			4
-#define ASTREE_LONG_INT				5
-#define ASTREE_FLOAT_INT 			6
-#define ASTREE_FLOAT_REAL			7
-#define ASTREE_DOUBLE_INT			8
-#define ASTREE_DOUBLE_REAL			9
+#define ASTREE_CHAR					2
+#define ASTREE_INT					3
+#define ASTREE_REAL					4
 
 // variableTypeAndValue list:
-#define ASTREE_BYTE_ARR_INT			10
-#define ASTREE_BYTE_ARR_CHAR		11
-/*
-Existe essa possibilidade análoga ao que foi feito com o float array.
-#define ASTREE_BYTE_ARR_CI			XX
-*/
-#define ASTREE_SHORT_ARR_INT		12
-#define ASTREE_LONG_ARR_INT			13
-#define ASTREE_FLOAT_ARR_RI			14
-#define ASTREE_DOUBLE_ARR_RI		15
-
-#define ASTREE_BYTE_ARR				16
-#define ASTREE_SHORT_ARR			17
-#define ASTREE_LONG_ARR				18
-#define ASTREE_FLOAT_ARR			19
-#define ASTREE_DOUBLE_ARR			20
+#define ASTREE_ARR_INT				5
+#define ASTREE_ARR_CHAR				6
+#define ASTREE_ARR_FLOAT			7
+#define ASTREE_ARR					8
 
 #define ASTREE_INT_LST				21
 #define ASTREE_CHAR_LST				22
@@ -46,7 +29,6 @@ Existe essa possibilidade análoga ao que foi feito com o float array.
 // functionDeclaration:
 #define ASTREE_FUNC_DEC				24
 #define ASTREE_PARAM_LST			25
-// #define ASTREE_NO_PARAM_LST		XX
 #define ASTREE_PARAM				26
 
 // literals:

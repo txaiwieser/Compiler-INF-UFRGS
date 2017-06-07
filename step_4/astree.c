@@ -31,28 +31,14 @@ void astree_print(astree_t* node, int level)
         case ASTREE_DECL_LIST: fprintf(stderr, "ASTREE_DECL_LIST"); break;
 
         case ASTREE_VAR_DEC: fprintf(stderr, "ASTREE_VAR_DEC"); break;
-        case ASTREE_BYTE_CHAR: fprintf(stderr, "ASTREE_BYTE_CHAR"); break;
-        case ASTREE_BYTE_INT: fprintf(stderr, "ASTREE_BYTE_INT"); break;
-        case ASTREE_SHORT_INT: fprintf(stderr, "ASTREE_SHORT_INT"); break;
-        case ASTREE_LONG_INT: fprintf(stderr, "ASTREE_LONG_INT"); break;
-        case ASTREE_FLOAT_INT: fprintf(stderr, "ASTREE_FLOAT_INT"); break;
-        case ASTREE_FLOAT_REAL: fprintf(stderr, "ASTREE_FLOAT_REAL"); break;
-        case ASTREE_DOUBLE_INT: fprintf(stderr, "ASTREE_DOUBLE_INT"); break;
-        case ASTREE_DOUBLE_REAL: fprintf(stderr, "ASTREE_DOUBLE_REAL"); break;
+        case ASTREE_CHAR: fprintf(stderr, "ASTREE_CHAR"); break;
+        case ASTREE_INT: fprintf(stderr, "ASTREE_INT"); break;
+        case ASTREE_REAL: fprintf(stderr, "ASTREE_REAL"); break;
         
-        case ASTREE_BYTE_ARR_INT: fprintf(stderr, "ASTREE_BYTE_ARR_INT"); break;
-        case ASTREE_BYTE_ARR_CHAR: fprintf(stderr, "ASTREE_BYTE_ARR_CHAR"); break;
-
-        case ASTREE_SHORT_ARR_INT: fprintf(stderr, "ASTREE_SHORT_ARR_INT"); break;
-        case ASTREE_LONG_ARR_INT: fprintf(stderr, "ASTREE_LONG_ARR_INT"); break;
-        case ASTREE_FLOAT_ARR_RI: fprintf(stderr, "ASTREE_FLOAT_ARR_RI"); break;
-        case ASTREE_DOUBLE_ARR_RI: fprintf(stderr, "ASTREE_DOUBLE_ARR_RI"); break;
-
-        case ASTREE_BYTE_ARR: fprintf(stderr, "ASTREE_BYTE_ARR"); break;
-        case ASTREE_SHORT_ARR: fprintf(stderr, "ASTREE_SHORT_ARR"); break;
-        case ASTREE_LONG_ARR: fprintf(stderr, "ASTREE_LONG_ARR"); break;
-        case ASTREE_FLOAT_ARR: fprintf(stderr, "ASTREE_FLOAT_ARR"); break;
-        case ASTREE_DOUBLE_ARR: fprintf(stderr, "ASTREE_DOUBLE_ARR"); break;
+        case ASTREE_ARR_INT: fprintf(stderr, "ASTREE_ARR_INT"); break;
+        case ASTREE_ARR_CHAR: fprintf(stderr, "ASTREE_ARR_CHAR"); break;
+        case ASTREE_ARR_FLOAT: fprintf(stderr, "ASTREE_ARR_FLOAT"); break;
+        case ASTREE_ARR: fprintf(stderr, "ASTREE_ARR"); break;
 
         case ASTREE_INT_LST: fprintf(stderr, "ASTREE_INT_LST"); break;
         case ASTREE_CHAR_LST: fprintf(stderr, "ASTREE_CHAR_LST"); break;
@@ -138,145 +124,76 @@ char* decompileTree(astree_t* ast) {
             return buffer;
         }
 
-        case ASTREE_BYTE_CHAR: {
-            char* buffer = (char *) calloc(7 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "byte %s", ast->symbol->text);
-            return buffer;
-        }
-
-        case ASTREE_BYTE_INT: {
-            char* buffer = (char *) calloc(6 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "byte %s", ast->symbol->text);
-            return buffer;
-        }
-
-        case ASTREE_SHORT_INT: {
-            char* buffer = (char *) calloc(7 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "short %s", ast->symbol->text);
-            return buffer;
-        }
-
-        case ASTREE_LONG_INT: {
-            char* buffer = (char *) calloc(6 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "long %s", ast->symbol->text);
-            return buffer;
-        }
-
-        case ASTREE_FLOAT_INT: {
-            char* buffer = (char *) calloc(7 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "float %s", ast->symbol->text);
-            return buffer;
-        }
-
-        case ASTREE_FLOAT_REAL: {
-            char* buffer = (char *) calloc(7 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "float %s", ast->symbol->text);
-            return buffer;
-        }
-
-        case ASTREE_DOUBLE_INT: {
-            char* buffer = (char *) calloc(8 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "double %s", ast->symbol->text);
-            return buffer;
-        }
-
-        case ASTREE_DOUBLE_REAL: {
-            char *buffer = (char *) calloc(8 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "double %s", ast->symbol->text);
-            return buffer;
-        }
-
-        case ASTREE_BYTE_ARR_INT: {
+        case ASTREE_CHAR: {
             char* child_0_text = decompileTree(ast->children[0]);
-            char* buffer = (char *) calloc(9 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
-            sprintf(buffer, "byte [%s] %s", ast->symbol->text, child_0_text);
-            return buffer;
-        }
-        
-        case ASTREE_BYTE_ARR_CHAR: {
-            char* child_0_text = decompileTree(ast->children[0]);
-            char* buffer = (char *) calloc(9 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
-            sprintf(buffer, "byte [%s] %s", ast->symbol->text, child_0_text);
+            char* buffer = (char *) calloc(strlen(child_0_text) +2 +strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer, "%s %s", child_0_text, ast->symbol->text);
             return buffer;
         }
 
-        case ASTREE_SHORT_ARR_INT: {
+        case ASTREE_INT: {
             char* child_0_text = decompileTree(ast->children[0]);
-            char* buffer = (char *) calloc(9 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
-            sprintf(buffer, "short [%s] %s", ast->symbol->text, child_0_text);
-            return buffer;
-        }
-        
-        case ASTREE_LONG_ARR_INT: {
-            char* child_0_text = decompileTree(ast->children[0]);
-            char* buffer = (char *) calloc(9 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
-            sprintf(buffer, "long [%s] %s", ast->symbol->text, child_0_text);
-            return buffer;
-        }
-        
-        case ASTREE_FLOAT_ARR_RI: {
-            char* child_0_text = decompileTree(ast->children[0]);
-            char* buffer = (char *) calloc(10 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
-            sprintf(buffer, "float [%s] %s", ast->symbol->text, child_0_text);
-            return buffer;
-        }
-        
-        case ASTREE_DOUBLE_ARR_RI: {
-            char* child_0_text = decompileTree(ast->children[0]);
-            char* buffer = (char *) calloc(11 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
-            sprintf(buffer, "double [%s] %s", ast->symbol->text, child_0_text);
+            char* buffer = (char *) calloc(strlen(child_0_text) +2 +strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer, "%s %s", child_0_text, ast->symbol->text);
             return buffer;
         }
 
-        case ASTREE_BYTE_ARR: {
-            char *buffer = (char *) calloc(7 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "byte [%s]", ast->symbol->text);
+        case ASTREE_REAL: {
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char *) calloc(strlen(child_0_text) +2 +strlen(ast->symbol->text), sizeof(char));
+            sprintf(buffer, "%s %s", child_0_text, ast->symbol->text);
+            return buffer;
+        }
+
+        case ASTREE_ARR_INT: {
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char *) calloc(+strlen(child_0_text) +1 +strlen(ast->symbol->text) +2 +strlen(child_1_text) +1, sizeof(char));
+            sprintf(buffer, "%s[%s] %s", child_0_text, ast->symbol->text, child_1_text);
             return buffer;
         }
         
-        case ASTREE_SHORT_ARR: {
-            char *buffer = (char *) calloc(8 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "short [%s]", ast->symbol->text);
+        case ASTREE_ARR_CHAR: {
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char *) calloc(+strlen(child_0_text) +1 +strlen(ast->symbol->text) +2 +strlen(child_1_text) +1, sizeof(char));
+            sprintf(buffer, "%s[%s] %s", child_0_text, ast->symbol->text, child_1_text);
+            return buffer;
+        }
+
+        case ASTREE_ARR_FLOAT: {
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* child_1_text = decompileTree(ast->children[1]);
+            char* buffer = (char *) calloc(+strlen(child_0_text) +1 +strlen(ast->symbol->text) +2 +strlen(child_1_text) +1, sizeof(char));
+            sprintf(buffer, "%s[%s] %s", child_0_text, ast->symbol->text, child_1_text);
             return buffer;
         }
         
-        case ASTREE_LONG_ARR: {
-            char *buffer = (char *) calloc(8 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "long [%s]", ast->symbol->text);
-            return buffer;
-        }
-        
-        case ASTREE_FLOAT_ARR: {
-            char *buffer = (char *) calloc(8 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "float [%s]", ast->symbol->text);
-            return buffer;
-        }
-        
-        case ASTREE_DOUBLE_ARR: {
-            char *buffer = (char *) calloc(9 + strlen(ast->symbol->text), sizeof(char));
-            sprintf(buffer, "double [%s]", ast->symbol->text);
+        case ASTREE_ARR: {
+            char* child_0_text = decompileTree(ast->children[0]);
+            char* buffer = (char *) calloc(+strlen(ast->symbol->text) +1 +strlen(child_0_text) +2, sizeof(char));
+            sprintf(buffer, "%s[%s]", child_0_text, ast->symbol->text);
             return buffer;
         }
         
         case ASTREE_INT_LST: {
             char* child_0_text = decompileTree(ast->children[0]);
-            char *buffer = (char *) calloc(3 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
+            char *buffer = (char *) calloc(+2 +strlen(ast->symbol->text) +strlen(child_0_text), sizeof(char));
             sprintf(buffer, "%s %s", ast->symbol->text, child_0_text);
             return buffer;
         }
         
         case ASTREE_CHAR_LST: {
             char* child_0_text = decompileTree(ast->children[0]);
-            char *buffer = (char *) calloc(3 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
+            char *buffer = (char *) calloc(+2 +strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
             sprintf(buffer, "%s %s", ast->symbol->text, child_0_text);
             return buffer;
         }
         
         case ASTREE_FLOAT_LST: {
             char* child_0_text = decompileTree(ast->children[0]);
-            char* child_1_text = decompileTree(ast->children[1]);
-            char *buffer = (char *) calloc(1 + strlen(child_0_text) + strlen(child_1_text), sizeof(char));
-            sprintf(buffer, "%s %s", child_0_text, child_1_text);
+            char *buffer = (char *) calloc(+2 +strlen(ast->symbol->text) +strlen(child_0_text), sizeof(char));
+            sprintf(buffer, "%s %s", ast->symbol->text, child_0_text);
             return buffer;
         }
 
@@ -284,8 +201,8 @@ char* decompileTree(astree_t* ast) {
             char* child_0_text = decompileTree(ast->children[0]);
             char* child_1_text = decompileTree(ast->children[1]);
             char* child_2_text = decompileTree(ast->children[2]); // short main(parameters) commando;
-            char *buffer = (char *) calloc(5 + strlen(child_0_text) + strlen(ast->symbol->text) + strlen(child_1_text) + strlen(child_2_text), sizeof(char));
-            sprintf(buffer, "%s %s(%s)%s;\n", child_0_text, ast->symbol->text, child_1_text, child_2_text);
+            char *buffer = (char *) calloc(7 + strlen(child_0_text) + strlen(ast->symbol->text) + strlen(child_1_text) + strlen(child_2_text), sizeof(char));
+            sprintf(buffer, "%s %s(%s) %s;\n", child_0_text, ast->symbol->text, child_1_text, child_2_text);
             return buffer;
         }
         

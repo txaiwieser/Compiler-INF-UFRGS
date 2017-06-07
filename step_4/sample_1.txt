@@ -10,6 +10,7 @@ c: byte 'x';
 d: byte 65;
 vchar: byte[3] 'a' 'b' 'c';
 vfloat: float[4] 10.0 0.3 999.99 15.001;
+vshort: short[3] 5 3 15;
 
 
 long main()

@@ -37,11 +37,11 @@ print			{ return KW_PRINT; }
 "&&"			{ return OPERATOR_AND; }
 "||"			{ return OPERATOR_OR; }
 
-[A-Za-z_][A-Za-z_0-9]*						{ yylval.symbol = hash_insert(yytext, SYMBOL_IDENTIFIER); return TK_IDENTIFIER; }
-[0-9]+										{ yylval.symbol = hash_insert(yytext, SYMBOL_LIT_INTEGER); return LIT_INTEGER; }
-[0-9]+"."[0-9]+								{ yylval.symbol = hash_insert(yytext, SYMBOL_LIT_REAL); return LIT_REAL; }
-'.'  			               				{ yylval.symbol = hash_insert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR; }
-\"(\\.|[^"])*\"                  			{ yylval.symbol = hash_insert(yytext, SYMBOL_LIT_STRING); return LIT_STRING; }
+[A-Za-z_][A-Za-z_0-9]*						{ yylval.symbol = hash_insert(yytext, SYMBOL_IDENTIFIER, 0, 0); return TK_IDENTIFIER; }
+[0-9]+										{ yylval.symbol = hash_insert(yytext, SYMBOL_LIT_INTEGER, 0, 0); return LIT_INTEGER; }
+[0-9]+"."[0-9]+								{ yylval.symbol = hash_insert(yytext, SYMBOL_LIT_REAL, 0, 0); return LIT_REAL; }
+'.'  			               				{ yylval.symbol = hash_insert(yytext, SYMBOL_LIT_CHAR, 0, 0); return LIT_CHAR; }
+\"(\\.|[^"])*\"                  			{ yylval.symbol = hash_insert(yytext, SYMBOL_LIT_STRING, 0, 0); return LIT_STRING; }
 
 [\-,\;\:\(\)\[\]\{\}\+\*\/\<\>\=\!\&\$\#]	{ return yytext[0]; }
 

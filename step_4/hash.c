@@ -48,9 +48,9 @@ hash_node_t *hash_insert(char *text, int type, int dataType, int nature) {
 	new_node->type = type;
 	new_node->dataType = dataType;
 	new_node->nature = nature;
-	new_node->numParameters = -1;
-	new_node->isDeclared = 0;
-	new_node->exprType = 0;
+	new_node->parametersNumber = -1;
+	new_node->isVariableOrFuncionDeclared = 0;
+	new_node->expressionType = 0;
 
 	strcpy(new_node->text, text);
 

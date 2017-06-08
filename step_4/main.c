@@ -2,6 +2,7 @@
 #include "lex.yy.h"
 #include "hash.h"
 #include "astree.h"
+#include "semantic.h"
 
 extern int 	yyparse();
 extern int  getLineNumber();

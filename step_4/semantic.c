@@ -1,6 +1,20 @@
 #include "semantic.h"
 #include "symcodes.h"
 
+
+int getParametersNumber(astree_t* node) {
+  if (node->type==ASTREE_PARAM) {
+    return 1;
+  } else if (node->children[1]->type==ASTREE_PARAM) {
+    return 2;
+  } else if (node->children[1]->type==ASTREE_PARAM_LST) {
+    return 1 + getParametersNumber(node->children[1]);
+  } else {
+    fprintf(stderr, "ERROR 9543\n" );
+    return -1;
+  }
+}
+
 void semanticVariableDeclaration(astree_t* node) {
   if (node->symbol) {
     if (node->symbol->type == SYMBOL_IDENTIFIER && node->children[0]) {
@@ -67,6 +81,51 @@ void semanticVariableDeclaration(astree_t* node) {
   }
 }
 
+
+void semanticFunctionDeclaration(astree_t* node) {
+  if (node->symbol) {
+    if (node->symbol->isVariableOrFuncionDeclared) {
+      fprintf(stderr, "ERRO SEMANTICO\nfuncao ja declarada: %s\n", node->symbol->text);
+      exit(4);
+    }
+
+    node->symbol->isVariableOrFuncionDeclared = 1;
+
+    if (node->symbol->type == SYMBOL_IDENTIFIER && node->children[0]){
+      node->symbol->nature = NATURE_FUNCTION;
+    }
+
+    switch(node->children[0]->type){
+      case ASTREE_KW_BYTE:
+        node->symbol->dataType = DATATYPE_BYTE;
+        break;
+      case ASTREE_KW_SHORT:
+        node->symbol->dataType = DATATYPE_SHORT;
+        break;
+      case ASTREE_KW_LONG:
+        node->symbol->dataType = DATATYPE_LONG;
+        break;
+      case ASTREE_KW_FLOAT:
+        node->symbol->dataType = DATATYPE_FLOAT;
+        break;
+      case ASTREE_KW_DOUBLE:
+        node->symbol->dataType = DATATYPE_DOUBLE;
+        break;
+      default:
+        fprintf(stderr, "ERROR 2437\n");
+        break;
+    }
+
+    if (node->children[1] == 0) {
+      node->symbol->parametersNumber = 0;
+    } else{
+      node->symbol->parametersNumber = getParametersNumber(node->children[1]);
+    }
+  } else{
+    fprintf(stderr, "ERROR 2345\n");
+  }
+}
+
 void semanticSetDeclarations(astree_t* node) {
   int i = 0;
   
@@ -81,7 +140,7 @@ void semanticSetDeclarations(astree_t* node) {
       semanticVariableDeclaration(node);
       break;
     case ASTREE_FUNC_DEC:
-      // semanticFunctionDeclaration(node);
+      semanticFunctionDeclaration(node);
       break;
     case ASTREE_PARAM:
       // semanticParameter(node);

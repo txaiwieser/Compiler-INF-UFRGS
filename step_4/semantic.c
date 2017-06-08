@@ -126,6 +126,42 @@ void semanticFunctionDeclaration(astree_t* node) {
   }
 }
 
+void semanticParameters(astree_t* node) {
+  if (node->symbol) {
+    if (node->symbol->isVariableOrFuncionDeclared) {
+      fprintf(stderr, "ERRO SEMANTICO\nvariavel de parametro ja declarada: %s\n", node->symbol->text);
+      exit(4);
+    }
+
+    node->symbol->isVariableOrFuncionDeclared = 1;
+
+    if (node->symbol->type == SYMBOL_IDENTIFIER && node->children[0]) {
+      node->symbol->nature = NATURE_VARIABLE;
+    }
+
+    switch (node->children[0]->type) {
+      case ASTREE_KW_BYTE:
+        node->symbol->dataType = DATATYPE_BYTE;
+        break;
+      case ASTREE_KW_SHORT:
+        node->symbol->dataType = DATATYPE_SHORT;
+        break;
+      case ASTREE_KW_LONG:
+        node->symbol->dataType = DATATYPE_LONG;
+        break;
+      case ASTREE_KW_FLOAT:
+        node->symbol->dataType = DATATYPE_FLOAT;
+        break;
+      case ASTREE_KW_DOUBLE:
+        node->symbol->dataType = DATATYPE_DOUBLE;
+        break;
+      default:
+        fprintf(stderr, "ERROR 24566\n");
+        break;
+    }
+  }
+}
+
 void semanticSetDeclarations(astree_t* node) {
   int i = 0;
   
@@ -143,7 +179,7 @@ void semanticSetDeclarations(astree_t* node) {
       semanticFunctionDeclaration(node);
       break;
     case ASTREE_PARAM:
-      // semanticParameter(node);
+      semanticParameters(node);
       break;
     default:
       fprintf(stderr, "ERROR 345\n");

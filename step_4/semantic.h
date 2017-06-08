@@ -6,4 +6,7 @@
 #include "hash.h"
 #include "astree.h"
 
+void semanticSetDeclarations(astree_t* node);
+void semanticCheck(astree_t* node);
+
 #endif

@@ -30,8 +30,8 @@ typedef struct hash_node {
 
 void hash_init(void);
 int hash_address(char *text);
-hash_node_t *hash_find(char *text);
-hash_node_t *hash_insert(char *text, int type, int dataType, int nature);
+hash_node_t* hash_find(hash_node_t *node);
+hash_node_t* hash_insert(char *text, int type, int dataType, int nature);
 void hash_print(void);
 
 #endif

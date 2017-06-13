@@ -20,21 +20,26 @@ int hash_address(char *text) {
 	return address - 1;
 }
 
-hash_node_t *hash_find(char *text) {
-	int address;
-	hash_node_t *node;	
+int hash_equal(hash_node_t *n1, hash_node_t *n2) {
 
-	address = hash_address(text);
-	node = hash_table[address];
+	if(n1->type == n2->type && !strcmp(n1->text, n2->text))
+		return 1;
+	else
+		return 0;
+}
 
-	while(node != NULL) {
-		if(strcmp(node->text, text))
-			node = node->next;
+hash_node_t* hash_find(hash_node_t *node) {
+
+	hash_node_t *aux = hash_table[hash_address(node->text)];
+
+	while(aux != NULL) {
+		if(!hash_equal(node, aux))
+			aux = aux->next;
 		else
-			return node;		
+			return aux;		
 	}	
 	
-	return 0;
+	return NULL;
 }
 
 hash_node_t *hash_insert(char *text, int type, int dataType, int nature) {
@@ -54,10 +59,15 @@ hash_node_t *hash_insert(char *text, int type, int dataType, int nature) {
 
 	strcpy(new_node->text, text);
 
-	new_node->next = hash_table[address];
-	hash_table[address] = new_node;
+	hash_node_t *aux = hash_find(new_node);
 
-	return new_node;
+	if(aux == NULL) {
+		new_node->next = hash_table[address];
+		hash_table[address] = new_node;
+		return new_node;
+	}
+	
+	return aux;
 }
 	
 void hash_print(void) {

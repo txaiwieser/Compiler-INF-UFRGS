@@ -501,12 +501,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_LEQ:
     {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-          fprintf(stderr, "Semantic error: comparing strings.");
+          fprintf(stderr, "Semantic error: comparing strings. (LEQ)");
           exit(4);
         }
         if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
         {
-          fprintf(stderr, "Semantic error: comparing boolean sizes.\n");
+          fprintf(stderr, "Semantic error: comparing boolean sizes (LEQ).\n");
           exit(4);
         }
         break;
@@ -515,12 +515,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_GTE:
     {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-          fprintf(stderr, "Semantic error: comparing strings.\n");
+          fprintf(stderr, "Semantic error: comparing strings (GTE).\n");
           exit(4);
         }
         if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
         {
-          fprintf(stderr, "Semantic error: comparing boolean sizes.\n");
+          fprintf(stderr, "Semantic error: comparing boolean sizes (GTE).\n");
           exit(4);
         }
         break;
@@ -529,12 +529,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_EQU:
     {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-          fprintf(stderr, "Semantic error: comparing strings.\n");
+          fprintf(stderr, "Semantic error: comparing strings (EQU).\n");
           exit(4);
         }
         if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
         {
-          fprintf(stderr, "Semantic error: comparing boolean sizes.\n");
+          fprintf(stderr, "Semantic error: comparing boolean sizes (EQU).\n");
           exit(4);
         }
         break;
@@ -543,12 +543,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_NEQ:
     {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-          fprintf(stderr, "Semantic error: comparing strings.\n");
+          fprintf(stderr, "Semantic error: comparing strings (NEQ).\n");
           exit(4);
         }
         if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
         {
-          fprintf(stderr, "Semantic error: comparing boolean sizes.\n");
+          fprintf(stderr, "Semantic error: comparing boolean sizes (NEQ).\n");
           exit(4);
         }
         break;
@@ -557,12 +557,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_AND:
     {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-        fprintf(stderr, "Semantic error: using strings instead booleans.\n");
+        fprintf(stderr, "Semantic error: using strings instead booleans (AND).\n");
         exit(4);
       }
       if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN || getExprType(node->children[1]) != EXPRESSION_BOOLEAN)
       {
-        fprintf(stderr, "Semantic error: using booleans instead numbers.\n");
+        fprintf(stderr, "Semantic error: using booleans instead numbers (AND).\n");
         exit(4);
       }
       break;
@@ -571,12 +571,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_OR:
     {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-        fprintf(stderr, "Semantic error: using strings instead booleans.\n");
+        fprintf(stderr, "Semantic error: using strings instead booleans (OR).\n");
         exit(4);
       }
       if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN || getExprType(node->children[1]) != EXPRESSION_BOOLEAN)
       {
-        fprintf(stderr, "Semantic error: using booleans instead numbers.\n");
+        fprintf(stderr, "Semantic error: using booleans instead numbers (OR).\n");
         exit(4);
       }
       break;
@@ -590,7 +590,7 @@ void semanticCheck(astree_t* node) {
       }
       if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
       {
-        fprintf(stderr, "Semantic error:  multiplying booleans\n");
+        fprintf(stderr, "Semantic error: multiplying booleans\n");
         exit(4);
       }
       break;
@@ -599,12 +599,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_ADD:
     {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-        fprintf(stderr, "Semantic error: somando strings\n");
+        fprintf(stderr, "Semantic error: adding strings.\n");
         exit(4);
       }
       if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
       {
-        fprintf(stderr, "Semantic error:  somando booleanos\n");
+        fprintf(stderr, "Semantic error: adding booleans.\n");
         exit(4);
       }
       break;
@@ -613,12 +613,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_SUB:
     {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-        fprintf(stderr, "Semantic error:  subtraindo strings\n");
+        fprintf(stderr, "Semantic error: subtracting strings.\n");
         exit(4);
       }
       if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
       {
-        fprintf(stderr, "Semantic error:  subtraindo booleanos\n");
+        fprintf(stderr, "Semantic error: subtracting booleans.\n");
         exit(4);
       }
       break;
@@ -627,12 +627,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_DIV:
     {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-        fprintf(stderr, "Semantic error:  dividindo strings\n");
+        fprintf(stderr, "Semantic error: dividing strings.\n");
         exit(4);
       }
       if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
       {
-        fprintf(stderr, "Semantic error:  dividindo booleanos\n");
+        fprintf(stderr, "Semantic error: dividing booleans\n");
         exit(4);
       }
       break;
@@ -641,12 +641,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_LES:
     {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-          fprintf(stderr, "Semantic error: comparing strings.\n");
+          fprintf(stderr, "Semantic error: comparing strings (LES).\n");
           exit(4);
         }
         if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
         {
-          fprintf(stderr, "Semantic error: comparing boolean sizes\n");
+          fprintf(stderr, "Semantic error: comparing boolean sizes (LES).\n");
           exit(4);
         }
         break;
@@ -655,12 +655,12 @@ void semanticCheck(astree_t* node) {
     case ASTREE_GTR:
     {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
-          fprintf(stderr, "Semantic error: comparing strings.\n");
+          fprintf(stderr, "Semantic error: comparing strings (GTR).\n");
           exit(4);
         }
         if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
         {
-          fprintf(stderr, "Semantic error: comparing boolean sizes\n");
+          fprintf(stderr, "Semantic error: comparing boolean sizes (GTR).\n");
           exit(4);
         }
         break;

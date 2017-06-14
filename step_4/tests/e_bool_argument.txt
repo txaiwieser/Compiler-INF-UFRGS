@@ -1,0 +1,10 @@
+//@TODO: segmentation fault;
+
+a: short 0;
+v: short[2] 1 2;
+short func(short p1);
+
+byte test() {
+  a = func(a<v[0]); // should throw a semantic error
+  return 0;
+};

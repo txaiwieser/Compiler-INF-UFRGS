@@ -1,0 +1,10 @@
+//@TODO: It's throwing an error when it shouldn't.
+
+a: short 0;
+v: short[2] 1 2;
+
+byte test() {
+  // a = v[2/3.1]; // must throw a semantic error
+  a = v[2/3]; // should work
+  return 0;
+};	

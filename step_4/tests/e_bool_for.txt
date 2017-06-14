@@ -1,4 +1,4 @@
-//@TODO TEST PASSANDO, ARRUMAR!!!
+//@TODO This case should throw a semantic error, it doesn't.
 
 i: byte 0;
 

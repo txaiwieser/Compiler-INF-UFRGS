@@ -1,0 +1,6 @@
+//@TODO: I'm not sure about this case.
+
+byte test() {
+  when (1) then print "aloha";
+  return 0;
+};

@@ -106,7 +106,7 @@ int getNumArgs(astree_t* node) {
     } else if(node->type == ASTREE_FUNC_ARGS_EXT) {
       return 1 + getNumArgs(node->children[1]);
     } else {
-      fprintf(stderr, "Semantic error: number of arguments can't be resolved.");
+      fprintf(stderr, "Semantic error: number of arguments can't be resolved.\n");
       return 0;
   }
 }
@@ -492,7 +492,7 @@ void semanticCheck(astree_t* node) {
       int numArgs = getNumArgs(node->children[0]);
       if(numArgs != parametersNumber)
       {
-        fprintf(stderr, "Semantic error: wrong number of arguments: %s() should receive %d arguments.", node->symbol->text, parametersNumber);
+        fprintf(stderr, "Semantic error: wrong number of arguments: %s() should receive %d arguments.\natureza", node->symbol->text, parametersNumber);
         exit(4);
       }
       break;

@@ -128,7 +128,7 @@ void semanticVariableDeclaration(astree_t* node) {
   if(node->symbol) {
     if(node->symbol->type == SYMBOL_IDENTIFIER && node->children[0]) {
       if(node->symbol->isVariableOrFuncionDeclared) {
-        fprintf(stderr, "Semantic error: identifier used to the valriable already declared: %s\n", node->symbol->text);
+        fprintf(stderr, "Semantic error: identifier %s used to the valriable already declared.\n", node->symbol->text);
         exit(4);
       } 
 
@@ -207,7 +207,7 @@ void findReturn(astree_t* node) {
 void semanticFunctionDeclaration(astree_t* node) {
   if(node->symbol) {
     if(node->symbol->isVariableOrFuncionDeclared) {
-      fprintf(stderr, "Semantic error: identifier used to the function already declared: %s\n", node->symbol->text);
+      fprintf(stderr, "Semantic error: identifier %s used to the function already declared.\n", node->symbol->text);
       exit(4);
     }
 
@@ -254,7 +254,7 @@ void semanticFunctionDeclaration(astree_t* node) {
 void semanticParameters(astree_t* node) {
   if(node->symbol) {
     if(node->symbol->isVariableOrFuncionDeclared) {
-      fprintf(stderr, "Semantic error: identifier %s used as prameter already.\n", node->symbol->text);
+      fprintf(stderr, "Semantic error: identifier %s used to the prameter already declared.\n", node->symbol->text);
       exit(4);
     }
 
@@ -590,7 +590,7 @@ void semanticCheck(astree_t* node) {
       }
       if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
       {
-        fprintf(stderr, "Semantic error: multiplying booleans\n");
+        fprintf(stderr, "Semantic error: multiplying booleans.\n");
         exit(4);
       }
       break;
@@ -632,7 +632,7 @@ void semanticCheck(astree_t* node) {
       }
       if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
       {
-        fprintf(stderr, "Semantic error: dividing booleans\n");
+        fprintf(stderr, "Semantic error: dividing booleans.\n");
         exit(4);
       }
       break;

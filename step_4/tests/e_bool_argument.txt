@@ -1,4 +1,4 @@
-//@TODO: segmentation fault;
+//@TODO: segmentation fault.
 
 a: short 0;
 v: short[2] 1 2;

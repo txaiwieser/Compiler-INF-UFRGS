@@ -10,7 +10,7 @@ extern void initMe();
 extern int  isRunning();
 
 
-int writeStringToFile(char *filePath, char *string) {
+int string_to_file(char *filePath, char *string) {
 	FILE* f;
 	if ((f = fopen(filePath, "w")) != NULL) {
 		fprintf(f, "%s", string);
@@ -29,13 +29,13 @@ int writeStringToFile(char *filePath, char *string) {
 
 int main(int argc, char **argv) {
 	if (argc < 3) {
-        printf("Error: invalid arguments\n");
+        printf("Error: invalid arguments.\nUsage: <input file> <output file>\n");
         return FILE_NOT_INFORMED;
     }
 
 	FILE* file;
 	if (!(file = fopen(argv[1], "r"))) {
-		printf ("Erro ao abrir arquivo!");
+		printf ("Error: file %s can't be opened.\n", argv[1]);
 		return FILE_NOT_FOUND;
 	}
 
@@ -46,11 +46,11 @@ int main(int argc, char **argv) {
 	astree_print(tree, 0);
 	astree_t *root = tree;
 
-	// char *decompiledTree = decompileTree(root);
-	// writeStringToFile(argv[2], decompiledTree);
+	char *decompiledTree = decompileTree(root);
+	string_to_file(argv[2], decompiledTree);
 
-	semanticSetDeclarations(root);
-	semanticCheck(root);
+	semantic_set_declarations(root);
+	semantic_check(root);
 
 	fprintf(stderr, "Programa aceito!\n");
 	return SUCCESS;

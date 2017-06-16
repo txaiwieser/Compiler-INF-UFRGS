@@ -124,7 +124,7 @@ int getParametersNumber(astree_t* node) {
   }
 }
 
-void semanticVariableDeclaration(astree_t* node) {
+void semantic_variable_declaration(astree_t* node) {
   if(node->symbol) {
     if(node->symbol->type == SYMBOL_IDENTIFIER && node->children[0]) {
       if(node->symbol->isVariableOrFuncionDeclared) {
@@ -181,12 +181,12 @@ void semanticVariableDeclaration(astree_t* node) {
           node->symbol->dataType = DATATYPE_DOUBLE;
           break;
         default:
-          fprintf(stderr, "Semantic error: semanticSetDeclarations() can't resolve node dataType.\n");
+          fprintf(stderr, "Semantic error: semantic_set_declarations() can't resolve node dataType.\n");
           break;
       }
     }
   } else {
-    fprintf(stderr, "Semantic error at semanticVariableDeclaration(): ASTREE node hasn't a symbol.\n");
+    fprintf(stderr, "Semantic error at semantic_variable_declaration(): ASTREE node hasn't a symbol.\n");
   }
 }
 
@@ -204,7 +204,7 @@ void findReturn(astree_t* node) {
     }
 }
 
-void semanticFunctionDeclaration(astree_t* node) {
+void semantic_function_declaration(astree_t* node) {
   if(node->symbol) {
     if(node->symbol->isVariableOrFuncionDeclared) {
       fprintf(stderr, "Semantic error: identifier %s used to the function already declared.\n", node->symbol->text);
@@ -234,7 +234,7 @@ void semanticFunctionDeclaration(astree_t* node) {
         node->symbol->dataType = DATATYPE_DOUBLE;
         break;
       default:
-        fprintf(stderr, "Semantic error: semanticFunctionDeclaration() can't resolve node dataType.\n");
+        fprintf(stderr, "Semantic error: semantic_function_declaration() can't resolve node dataType.\n");
         break;
     }
 
@@ -247,11 +247,11 @@ void semanticFunctionDeclaration(astree_t* node) {
     // printf("Debug info: function delcaration setted: %s, number of parameters: %d\n", node->symbol->text, node->symbol->parametersNumber);
 
   } else{
-    fprintf(stderr, "Semantic error at semanticFunctionDeclaration(): ASTREE node hasn't a symbol.\n");
+    fprintf(stderr, "Semantic error at semantic_function_declaration(): ASTREE node hasn't a symbol.\n");
   }
 }
 
-void semanticParameters(astree_t* node) {
+void semantic_parameters(astree_t* node) {
   if(node->symbol) {
     if(node->symbol->isVariableOrFuncionDeclared) {
       fprintf(stderr, "Semantic error: identifier %s used to the prameter already declared.\n", node->symbol->text);
@@ -281,45 +281,45 @@ void semanticParameters(astree_t* node) {
         node->symbol->dataType = DATATYPE_DOUBLE;
         break;
       default:
-        fprintf(stderr, "Semantic error: semanticParameters() can't resolve node dataType.\n");
+        fprintf(stderr, "Semantic error: semantic_parameters() can't resolve node dataType.\n");
         break;
     }
   } else {
-    fprintf(stderr, "Semantic error at semanticParameters(): ASTREE node hasn't a symbol.\n");
+    fprintf(stderr, "Semantic error at semantic_parameters(): ASTREE node hasn't a symbol.\n");
   }
 }
 
-void semanticSetDeclarations(astree_t* node) {
+void semantic_set_declarations(astree_t* node) {
   int i = 0;
   
   if(node == NULL) { return; }
 
   for (i=0; i<MAX_NUMBER_OF_CHILDREN; i++) {
-    semanticSetDeclarations(node->children[i]);
+    semantic_set_declarations(node->children[i]);
   }
 
   switch(node->type) {
     case ASTREE_VAR_DEC:
-      semanticVariableDeclaration(node);
+      semantic_variable_declaration(node);
       break;
     case ASTREE_FUNC_DEC:
-      semanticFunctionDeclaration(node);
+      semantic_function_declaration(node);
       break;
     case ASTREE_PARAM:
-      semanticParameters(node);
+      semantic_parameters(node);
       break;
     default:
-      // fprintf(stderr, "Debug info: semanticSetDeclarations trying to parse a non-declartion node.\n");
+      // fprintf(stderr, "Debug info: semantic_set_declarations() trying to parse a non-declartion node.\n");
       break;
   }
 }
 
-void semanticCheck(astree_t* node) {
+void semantic_check(astree_t* node) {
   int i=0;
   if(!node) return;
 
   for(i=0; i<MAX_NUMBER_OF_CHILDREN; i++) {
-    semanticCheck(node->children[i]);
+    semantic_check(node->children[i]);
   }
 
   switch(node->type) {

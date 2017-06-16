@@ -323,140 +323,202 @@ void semantic_check(astree_t* node) {
   }
 
   switch(node->type) {
-    case ASTREE_VAR_DEC:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
-        fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
+    case ASTREE_VAR_DEC: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
         exit(4);
       }
       break;
     }
 
-    case ASTREE_FUNC_DEC:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
-        fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
+    case ASTREE_FUNC_DEC: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
         exit(4);
       }
-      //verifica natureza
-      if(node->symbol->nature != NATURE_FUNCTION)
-      {
+      // Checks for nature:
+      if(node->symbol->nature != NATURE_FUNCTION) {
         fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_FUNCTION);
         exit(4);
       }
 
-      //verifica se o tipo do return esta correto
+      // Checks for return type:
       findReturn(node->children[2]);
 
       break;
     }
 
-    case ASTREE_PARAM:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
-        fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
+    case ASTREE_PARAM: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
         exit(4);
       }
         break;
     }
 
-    case ASTREE_KW_READ:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
-        fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
+    case ASTREE_KW_READ: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
         exit(4);
       }
         break;
     }
 
-    case ASTREE_KW_FOR:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
-        fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
-        exit(4);
+    case ASTREE_KW_PRINT: {
+      // Checks for expressions types:
+      if(node->children[0]->type != ASTREE_LIT_STRING && node->children[0]->type != ASTREE_PRINT_LST){
+        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[0])== EXPRESSION_STRING) {
+            fprintf(stderr, "Semantic error: print command with invalid types.\n");
+            exit(4);
+         }
       }
-        break;
+      break;
     }
 
-    case ASTREE_ATTRIB:
-    {
-        //verif vars nao declaradas
-        if(!node->symbol->isVariableOrFuncionDeclared)
-        {
-          fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
+    case ASTREE_KW_FOR: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
+        exit(4);
+      }
+      // Checks for expressions types:
+      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[0])== EXPRESSION_STRING) {
+        fprintf(stderr, "Semantic error: for command with invalid types.\n");
+        exit(4);
+      }
+      if(getExprType(node->children[1]) == EXPRESSION_BOOLEAN || getExprType(node->children[1])== EXPRESSION_STRING) {
+        fprintf(stderr, "Semantic error: for command with invalid types.\n");
+        exit(4);
+      }
+      break;
+    }
+
+    case ASTREE_KW_RETURN: {
+      // Checks for expressions types:
+      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[0])== EXPRESSION_STRING) {
+        fprintf(stderr, "Semantic error: invalid return type.\n");
+        exit(4);
+      }
+      break;
+    }
+
+    case ASTREE_PRINT_LST: {
+      // Checks for expressions types:
+      if(node->children[0]->type != ASTREE_LIT_STRING) {
+        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[0])== EXPRESSION_STRING) {
+          fprintf(stderr, "Semantic error: print command with invalid types.\n");
           exit(4);
         }
-        //verifica natureza
-        if(node->symbol->nature != NATURE_VARIABLE)
-        {
-          fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_VARIABLE);
-          exit(4);
-        }
-        break;
+      }
+      break;
     }
 
-    case ASTREE_ATTRIB_ARR:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
-        fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
+    case ASTREE_KW_WHEN_THEN: {
+      // Checks for expressions types:
+      if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN) {
+        fprintf(stderr, "Semantic error: when command with invalid types.\n");
         exit(4);
+        
       }
-      //verifica natureza
-      if(node->symbol->nature != NATURE_ARRAY)
-      {
-        fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_ARRAY);
-        exit(4);
-      }
-     //verifica indice do vetor
-      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[0])== EXPRESSION_REAL)
-	     {
-	        fprintf(stderr, "Semantic error: vector %s with invalid index.\n", node->symbol->text);
-          exit(4);
-	     }
-        break;
+      break;
     }
 
-    case ASTREE_TK_ID:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
-        fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
+    case ASTREE_KW_WHEN_THEN_ELSE: {
+      // Checks for expressions types:
+      if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN) {
+        fprintf(stderr, "Semantic error: when command with invalid types.\n");
+        exit(4);
+      }
+      break;
+    }
+    
+    case ASTREE_KW_WHILE: {
+      // Checks for expressions types:
+      if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN) {
+        fprintf(stderr, "Semantic error: while command with invalid types.\n");
+        exit(4);
+      }
+      break;
+    }
+
+    case ASTREE_ATTRIB: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
+        exit(4);
+      }
+      // Checks for nature:
+      if(node->symbol->nature != NATURE_VARIABLE && node->symbol->nature != 0) {
+        fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_VARIABLE);
+        exit(4);
+      }
+      // Checks for expressions types:
+      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[0])== EXPRESSION_STRING) {
+        fprintf(stderr, "Semantic error: attribuition with invalid types.\n");
+        exit(4);
+      }
+      break;
+    }
+
+     case ASTREE_ATTRIB_ARR:
+     {
+       // Checks for undeclared variables:
+       if(!node->symbol->isVariableOrFuncionDeclared)
+       {
+         fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
+         exit(4);
+         
+       }
+       // Checks for nature:
+       if(node->symbol->nature != NATURE_ARRAY && node->symbol->nature != 0)
+       {
+         fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n",
+                 node->symbol->text, node->symbol->nature, NATURE_ARRAY);
+         exit(4);
+         
+       }
+      //verifica indice do vetor
+       if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[0])== EXPRESSION_REAL)
+       {
+          fprintf(stderr, "Semantic error: vector %s with invalid index.\n", node->symbol->text);
+exit(4);
+         }
+       // Checks for expressions types:
+       if(getExprType(node->children[1]) == EXPRESSION_BOOLEAN || getExprType(node->children[1])== EXPRESSION_STRING)
+       {
+         fprintf(stderr, "Semantic error: attribuition with invalid types.\n");
+         exit(4);
+         
+       }
+          break;
+      }
+    case ASTREE_TK_ID: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
         exit(4);
       }
 
-      //verifica natureza
-      if(node->symbol->nature != NATURE_VARIABLE)
-      {
+      // Checks for nature:
+      if(node->symbol->nature != NATURE_VARIABLE) {
         fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_VARIABLE);
         exit(4);
       }
       break;
     }
 
-    case ASTREE_ARRAY_CALL:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
-        fprintf(stderr, "Semantic error: varible %s wasn't declared.\n", node->symbol->text);
+    case ASTREE_ARRAY_CALL: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
         exit(4);
       }
-      //verifica natureza
-      if(node->symbol->nature != NATURE_ARRAY)
-      {
+      // Checks for nature:
+      if(node->symbol->nature != NATURE_ARRAY) {
         fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_ARRAY);
         exit(4);
       }
@@ -469,17 +531,14 @@ void semantic_check(astree_t* node) {
       break;
     }
 
-    case ASTREE_FUNC_CALL:
-    {
-      //verif vars nao declaradas
-      if(!node->symbol->isVariableOrFuncionDeclared)
-      {
+    case ASTREE_FUNC_CALL: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
         fprintf(stderr, "Semantic error: variable %s wasn't declared.\n", node->symbol->text);
         exit(4);
       }
-      //verifica natureza
-      if(node->symbol->nature != NATURE_FUNCTION)
-      {
+      // Checks for nature:
+      if(node->symbol->nature != NATURE_FUNCTION) {
         fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_FUNCTION);
         exit(4);
       }
@@ -490,176 +549,151 @@ void semantic_check(astree_t* node) {
       //verifica num de argumentos
       int parametersNumber = node->symbol->parametersNumber;
       int numArgs = getNumArgs(node->children[0]);
-      if(numArgs != parametersNumber)
-      {
+      if(numArgs != parametersNumber) {
         fprintf(stderr, "Semantic error: wrong number of arguments: %s() should receive %d arguments.\natureza", node->symbol->text, parametersNumber);
         exit(4);
       }
       break;
     }
 
-    case ASTREE_LEQ:
-    {
+    case ASTREE_LEQ: {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
           fprintf(stderr, "Semantic error: comparing strings. (LEQ)");
           exit(4);
         }
-        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-        {
+        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
           fprintf(stderr, "Semantic error: comparing boolean sizes (LEQ).\n");
           exit(4);
         }
         break;
     }
 
-    case ASTREE_GTE:
-    {
+    case ASTREE_GTE: {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
           fprintf(stderr, "Semantic error: comparing strings (GTE).\n");
           exit(4);
         }
-        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-        {
+        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
           fprintf(stderr, "Semantic error: comparing boolean sizes (GTE).\n");
           exit(4);
         }
         break;
     }
 
-    case ASTREE_EQU:
-    {
+    case ASTREE_EQU: {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
           fprintf(stderr, "Semantic error: comparing strings (EQU).\n");
           exit(4);
         }
-        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-        {
+        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
           fprintf(stderr, "Semantic error: comparing boolean sizes (EQU).\n");
           exit(4);
         }
         break;
     }
 
-    case ASTREE_NEQ:
-    {
+    case ASTREE_NEQ: {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
           fprintf(stderr, "Semantic error: comparing strings (NEQ).\n");
           exit(4);
         }
-        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-        {
+        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
           fprintf(stderr, "Semantic error: comparing boolean sizes (NEQ).\n");
           exit(4);
         }
         break;
     }
 
-    case ASTREE_AND:
-    {
+    case ASTREE_AND: {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
         fprintf(stderr, "Semantic error: using strings instead booleans (AND).\n");
         exit(4);
       }
-      if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN || getExprType(node->children[1]) != EXPRESSION_BOOLEAN)
-      {
+      if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN || getExprType(node->children[1]) != EXPRESSION_BOOLEAN) {
         fprintf(stderr, "Semantic error: using booleans instead numbers (AND).\n");
         exit(4);
       }
       break;
     }
 
-    case ASTREE_OR:
-    {
+    case ASTREE_OR: {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
         fprintf(stderr, "Semantic error: using strings instead booleans (OR).\n");
         exit(4);
       }
-      if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN || getExprType(node->children[1]) != EXPRESSION_BOOLEAN)
-      {
+      if(getExprType(node->children[0]) != EXPRESSION_BOOLEAN || getExprType(node->children[1]) != EXPRESSION_BOOLEAN) {
         fprintf(stderr, "Semantic error: using booleans instead numbers (OR).\n");
         exit(4);
       }
       break;
     }
 
-    case ASTREE_MUL:
-    {
+    case ASTREE_MUL: {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
         fprintf(stderr, "Semantic error: multiplying strings.\n");
         exit(4);
       }
-      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-      {
+      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
         fprintf(stderr, "Semantic error: multiplying booleans.\n");
         exit(4);
       }
       break;
     }
 
-    case ASTREE_ADD:
-    {
+    case ASTREE_ADD: {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
         fprintf(stderr, "Semantic error: adding strings.\n");
         exit(4);
       }
-      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-      {
+      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
         fprintf(stderr, "Semantic error: adding booleans.\n");
         exit(4);
       }
       break;
     }
 
-    case ASTREE_SUB:
-    {
+    case ASTREE_SUB: {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
         fprintf(stderr, "Semantic error: subtracting strings.\n");
         exit(4);
       }
-      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-      {
+      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
         fprintf(stderr, "Semantic error: subtracting booleans.\n");
         exit(4);
       }
       break;
     }
 
-    case ASTREE_DIV:
-    {
+    case ASTREE_DIV: {
       if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
         fprintf(stderr, "Semantic error: dividing strings.\n");
         exit(4);
       }
-      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-      {
+      if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
         fprintf(stderr, "Semantic error: dividing booleans.\n");
         exit(4);
       }
       break;
     }
 
-    case ASTREE_LES:
-    {
+    case ASTREE_LES: {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
           fprintf(stderr, "Semantic error: comparing strings (LES).\n");
           exit(4);
         }
-        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-        {
+        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
           fprintf(stderr, "Semantic error: comparing boolean sizes (LES).\n");
           exit(4);
         }
         break;
     }
 
-    case ASTREE_GTR:
-    {
+    case ASTREE_GTR: {
         if(getExprType(node->children[0]) == EXPRESSION_STRING || getExprType(node->children[1]) == EXPRESSION_STRING){
           fprintf(stderr, "Semantic error: comparing strings (GTR).\n");
           exit(4);
         }
-        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN)
-        {
+        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[1]) == EXPRESSION_BOOLEAN) {
           fprintf(stderr, "Semantic error: comparing boolean sizes (GTR).\n");
           exit(4);
         }

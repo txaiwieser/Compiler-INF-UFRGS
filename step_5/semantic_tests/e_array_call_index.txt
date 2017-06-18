@@ -1,0 +1,9 @@
+a: short 0;
+v: short[2] 1 2;
+
+byte test() {
+  a = v[2/3.1]; // must throw a semantic error
+  a = v[2 < 3]; // must throw a semantic error
+  //a = v[2/3]; // should work
+  return 0;
+};

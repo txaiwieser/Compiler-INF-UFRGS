@@ -46,12 +46,12 @@ int main(int argc, char **argv) {
 	astree_print(tree, 0);
 	astree_t *root = tree;
 
-	char *decompiledTree = decompileTree(root);
+	char *decompiledTree = decompile_tree(root);
 	string_to_file(argv[2], decompiledTree);
 
 	semantic_set_declarations(root);
 	semantic_check(root);
 
-	fprintf(stderr, "Programa aceito!\n");
+	fprintf(stderr, "Program accepted!\n");
 	return SUCCESS;
 }

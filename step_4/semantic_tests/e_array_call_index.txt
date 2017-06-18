@@ -6,4 +6,4 @@ byte test() {
   a = v[2 < 3]; // must throw a semantic error
   //a = v[2/3]; // should work
   return 0;
-};	
+};

@@ -92,7 +92,7 @@ typedef struct astree_s {
 
 astree_t* astree_create(int type, hash_node_t *symbol, astree_t *child_1, astree_t *child_2, astree_t *child_3, astree_t *child_4);
 void astree_print(astree_t *node, int level);
-char* decompileTree(astree_t* ast);
+char* decompile_tree(astree_t* ast);
 
 astree_t* tree;
 

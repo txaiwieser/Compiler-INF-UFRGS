@@ -1,0 +1,8 @@
+a: short 0;
+v: short[2] 1 2;
+
+byte test() {
+  v#1*2.3 = a;
+  v#1<2 = a;
+  return 0;
+};	

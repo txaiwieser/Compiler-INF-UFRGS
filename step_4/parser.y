@@ -65,8 +65,6 @@
 %type <astree> arguments
 %type <astree> extraArgument
 
-
-
 %left OPERATOR_AND OPERATOR_OR
 %left OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
 %left '<' '>' '!'

@@ -1,0 +1,6 @@
+b: byte 0;
+
+byte test() {
+  b = b[1];
+  return b;
+};

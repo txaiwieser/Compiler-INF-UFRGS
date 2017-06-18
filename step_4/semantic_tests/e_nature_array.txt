@@ -1,0 +1,7 @@
+b: byte 0;
+v: byte[3] 1 2 3;
+
+byte test() {
+  b = v + 4;
+  return b;
+};

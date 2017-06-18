@@ -3,18 +3,6 @@
 
 int semantic_get_expression_t(astree_t* node) {
   switch(node->type) {
-    case ASTREE_EXP_PARENTHESIS:
-      return semantic_get_expression_t(node->children[0]);
-      break;
-    case ASTREE_TK_ID:
-      return node->symbol->expressionType;
-      break;
-    case ASTREE_ARRAY_CALL:
-      return node->symbol->expressionType;
-      break;
-    case ASTREE_FUNC_CALL:
-      return node->symbol->expressionType;
-      break;
     case ASTREE_LIT_INT:
       return EXPRESSION_INTEGER;
       break;
@@ -27,56 +15,36 @@ int semantic_get_expression_t(astree_t* node) {
     case ASTREE_LIT_STRING:
       return EXPRESSION_STRING;
       break;
+    case ASTREE_TK_ID:
+    case ASTREE_ARRAY_CALL:
+    case ASTREE_FUNC_CALL:
+      return node->symbol->expressionType;
+      break;
     case ASTREE_LEQ:
-      return EXPRESSION_BOOLEAN;
-      break;
     case ASTREE_GTE:
-      return EXPRESSION_BOOLEAN;
-      break;
     case ASTREE_EQU:
-      return EXPRESSION_BOOLEAN;
-      break;
     case ASTREE_NEQ:
-      return EXPRESSION_BOOLEAN;
-      break;
     case ASTREE_AND:
-      return EXPRESSION_BOOLEAN;
-      break;
+    case ASTREE_LES:
+    case ASTREE_GTR:
     case ASTREE_OR:
       return EXPRESSION_BOOLEAN;
       break;
-    case ASTREE_MUL:
-      if(semantic_get_expression_t(node->children[0]) == EXPRESSION_REAL || semantic_get_expression_t(node->children[1]) == EXPRESSION_REAL) {
-        return EXPRESSION_REAL;
-      } else {
-        return EXPRESSION_INTEGER;
-      }
-      break;
     case ASTREE_ADD:
-      if(semantic_get_expression_t(node->children[0]) == EXPRESSION_REAL || semantic_get_expression_t(node->children[1]) == EXPRESSION_REAL) {
-        return EXPRESSION_REAL;
-      } else {
-        return EXPRESSION_INTEGER;
-      }
-      break;
     case ASTREE_SUB:
+    case ASTREE_MUL:
+    case ASTREE_DIV:
       if(semantic_get_expression_t(node->children[0]) == EXPRESSION_REAL || semantic_get_expression_t(node->children[1]) == EXPRESSION_REAL) {
         return EXPRESSION_REAL;
       } else {
         return EXPRESSION_INTEGER;
       }
       break;
-    case ASTREE_DIV:
-      return EXPRESSION_REAL;
-      break;
-    case ASTREE_LES:
-      return EXPRESSION_BOOLEAN;
-      break;
-    case ASTREE_GTR:
-      return EXPRESSION_BOOLEAN;
+    case ASTREE_EXP_PARENTHESIS:
+      return semantic_get_expression_t(node->children[0]);
       break;
   }
-  printf("Semantic error at semantic_get_expression_t(): node without type.\n");
+  fprintf(stderr, "Semantic error at semantic_get_expression_t(): node without type.\n");
   return -1;
 }
 
@@ -88,7 +56,7 @@ void semantic_check_arguments_t(astree_t* node) {
   } else if(semantic_get_expression_t(node->children[0]) == EXPRESSION_STRING) {
     fprintf(stderr, "Semantic error: argument can't be string type.\n");
     exit(4);
-  }else if(node->type == ASTREE_FUNC_ARGS) {
+  } else if(node->type == ASTREE_FUNC_ARGS) {
     semantic_check_arguments_t(node->children[1]);
     return;
   } else if(node->type == ASTREE_FUNC_ARGS_EXT) {
@@ -243,7 +211,7 @@ void semantic_function_declaration(astree_t* node) {
     } else{
       node->symbol->parametersNumber = semantic_get_num_parameters(node->children[1]);
     }
-    // printf("Debug info: function delcaration setted: %s, number of parameters: %d\n", node->symbol->text, node->symbol->parametersNumber);
+    // printf(stderr, "Debug info: function delcaration setted: %s, number of parameters: %d\n", node->symbol->text, node->symbol->parametersNumber);
   } else{
     fprintf(stderr, "Semantic error at semantic_function_declaration(): ASTREE node hasn't a symbol.\n");
   }
@@ -344,7 +312,6 @@ void semantic_check(astree_t* node) {
 
       // Checks for return type:
       semantic_check_return_t(node->children[2]);
-
       break;
     }
 
@@ -462,45 +429,35 @@ void semantic_check(astree_t* node) {
       break;
     }
 
-     case ASTREE_ATTRIB_ARR:
-     {
-       // Checks for undeclared variables:
-       if(!node->symbol->isVariableOrFuncionDeclared)
-       {
-         fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
-         exit(4);
-         
-       }
-       // Checks for nature:
-       if(node->symbol->nature != NATURE_ARRAY && node->symbol->nature != 0)
-       {
-         fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n",
-                 node->symbol->text, node->symbol->nature, NATURE_ARRAY);
-         exit(4);
-         
-       }
-      // Checks for vector index:
-       if(semantic_get_expression_t(node->children[0]) == EXPRESSION_BOOLEAN || semantic_get_expression_t(node->children[0])== EXPRESSION_REAL)
-       {
-          fprintf(stderr, "Semantic error: vector %s with invalid index.\n", node->symbol->text);
-            exit(4);
-         }
-       // Checks for expressions types:
-       if(semantic_get_expression_t(node->children[1]) == EXPRESSION_BOOLEAN || semantic_get_expression_t(node->children[1])== EXPRESSION_STRING)
-       {
-         fprintf(stderr, "Semantic error: attribuition with invalid types.\n");
-         exit(4);
-         
-       }
-          break;
+    case ASTREE_ATTRIB_ARR: {
+      // Checks for undeclared variables:
+      if(!node->symbol->isVariableOrFuncionDeclared) {
+        fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
+        exit(4);
       }
+      // Checks for nature:
+      if(node->symbol->nature != NATURE_ARRAY && node->symbol->nature != 0) {
+        fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_ARRAY);
+        exit(4);
+      }
+      // Checks for vector index:
+      if(semantic_get_expression_t(node->children[0]) == EXPRESSION_BOOLEAN || semantic_get_expression_t(node->children[0])== EXPRESSION_REAL) {
+        fprintf(stderr, "Semantic error: vector %s with invalid index.\n", node->symbol->text);
+        exit(4);
+      }
+      // Checks for expressions types:
+      if(semantic_get_expression_t(node->children[1]) == EXPRESSION_BOOLEAN || semantic_get_expression_t(node->children[1])== EXPRESSION_STRING) {
+        fprintf(stderr, "Semantic error: attribuition with invalid types.\n");
+        exit(4);
+      }
+      break;
+    }
     case ASTREE_TK_ID: {
       // Checks for undeclared variables:
       if(!node->symbol->isVariableOrFuncionDeclared) {
         fprintf(stderr, "Semantic error: variable %s isn't declared.\n", node->symbol->text);
         exit(4);
       }
-
       // Checks for nature:
       if(node->symbol->nature != NATURE_VARIABLE) {
         fprintf(stderr, "Semantic error: %s got a wrong nature (%d), it should be %d.\n", node->symbol->text, node->symbol->nature, NATURE_VARIABLE);
@@ -521,9 +478,8 @@ void semantic_check(astree_t* node) {
         exit(4);
       }
       // Checks for vector index:
-      if(semantic_get_expression_t(node->children[0]) == EXPRESSION_BOOLEAN || semantic_get_expression_t(node->children[0])== EXPRESSION_REAL)
-	     {
-	        fprintf(stderr, "Semantic error: vector %s with invalid index.\n", node->symbol->text);
+      if(semantic_get_expression_t(node->children[0]) == EXPRESSION_BOOLEAN || semantic_get_expression_t(node->children[0])== EXPRESSION_REAL) {
+          fprintf(stderr, "Semantic error: vector %s with invalid index.\n", node->symbol->text);
           exit(4);
 	     }
       break;
@@ -697,11 +653,11 @@ void semantic_check(astree_t* node) {
         }
         break;
     }
-    
+
     default:
       // fprintf(stderr, "Debug info: ASTREE node of type %d wasn't checked.\n", node->type);
       break;
   }
-  // printf("Debug info: ASTREE node of type %d was semanticaly verified with success!\n", node->type);
+  // fprintf(stderr, "Debug info: ASTREE node of type %d was semanticaly verified with success!\n", node->type);
   return;
 }

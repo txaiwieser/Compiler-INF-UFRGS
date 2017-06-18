@@ -1,6 +1,6 @@
 //@TODO: I'm not sure about this case.
 
 byte test() {
-  when (1) then print "aloha";
+  when (1) then print "aloha"; // It throws error when isn't a expression after when keyword.
   return 0;
 };

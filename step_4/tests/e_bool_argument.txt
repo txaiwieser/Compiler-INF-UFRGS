@@ -1,10 +1,7 @@
-//@TODO: segmentation fault.
-
 a: short 0;
-v: short[2] 1 2;
-short func(short p1);
+short func(short p1, long p2, double p3);
 
 byte test() {
-  a = func(a<v[0]); // should throw a semantic error
+  a = func(1, 2, 1<2);
   return 0;
 };

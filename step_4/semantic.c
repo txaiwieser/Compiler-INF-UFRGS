@@ -1,25 +1,6 @@
 #include "semantic.h"
 #include "symcodes.h"
 
-void checkArgsTypes(astree_t* node) {
-  if(!node) return;
-  if(node->children[0]->symbol->expressionType == EXPRESSION_BOOLEAN) {
-    fprintf(stderr, "Semantic error: %s argument can't be boolean type.\n", node->children[0]->symbol->text);
-    exit(4);
-  } else if(node->children[0]->symbol->expressionType == EXPRESSION_STRING) {
-    fprintf(stderr, "Semantic error: %s argument can't be string type.\n", node->children[0]->symbol->text);
-    exit(4);
-  }else if(node->type == ASTREE_FUNC_ARGS) {
-    checkArgsTypes(node->children[1]);
-    return;
-  } else if(node->type == ASTREE_FUNC_ARGS_EXT) {
-    checkArgsTypes(node->children[1]);
-    return;
-  }
-  fprintf(stderr, "Semantic error at checkArgsTypes().\n");
-  return;
-}
-
 int getExprType(astree_t* node) {
   switch(node->type) {
     case ASTREE_EXP_PARENTHESIS:
@@ -97,6 +78,25 @@ int getExprType(astree_t* node) {
   }
   printf("Semantic error at getExprType(): node without type.\n");
   return -1;
+}
+
+void checkArgsTypes(astree_t* node) {
+  if(!node) return;
+  if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN) {
+    fprintf(stderr, "Semantic error: argument can't be boolean type.\n");
+    exit(4);  
+  } else if(getExprType(node->children[0]) == EXPRESSION_STRING) {
+    fprintf(stderr, "Semantic error: argument can't be string type.\n");
+    exit(4);
+  }else if(node->type == ASTREE_FUNC_ARGS) {
+    checkArgsTypes(node->children[1]);
+    return;
+  } else if(node->type == ASTREE_FUNC_ARGS_EXT) {
+    checkArgsTypes(node->children[1]);
+    return;
+  }
+  fprintf(stderr, "Semantic error at checkArgsTypes().\n");
+  return;
 }
 
 int getNumArgs(astree_t* node) {
@@ -485,7 +485,7 @@ void semantic_check(astree_t* node) {
        if(getExprType(node->children[0]) == EXPRESSION_BOOLEAN || getExprType(node->children[0])== EXPRESSION_REAL)
        {
           fprintf(stderr, "Semantic error: vector %s with invalid index.\n", node->symbol->text);
-exit(4);
+            exit(4);
          }
        // Checks for expressions types:
        if(getExprType(node->children[1]) == EXPRESSION_BOOLEAN || getExprType(node->children[1])== EXPRESSION_STRING)

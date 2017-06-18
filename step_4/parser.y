@@ -198,6 +198,6 @@ extraArgument: ',' expression extraArgument { $$ = astree_create(ASTREE_FUNC_ARG
 %%
 
 void yyerror(char *s) {
-    fprintf(stderr, "\nErro na linha %d!\n\n", getLineNumber());
+    fprintf(stderr, "\nSyntax error at line number: %d.\n\n", getLineNumber());
     exit(3);
 }

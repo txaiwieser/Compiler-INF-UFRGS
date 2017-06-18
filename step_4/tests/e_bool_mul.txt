@@ -1,6 +1,0 @@
-b: byte 0;
-
-byte test() {
-  b = 1 * (2<3);
-  return b;
-};

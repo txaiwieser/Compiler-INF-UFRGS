@@ -1,7 +1,0 @@
-a: short 0;
-short func(short p1, long p2, double p3);
-
-byte test() {
-  a = func(1, 2, 1<2);
-  return 0;
-};

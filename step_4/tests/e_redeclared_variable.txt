@@ -1,7 +1,0 @@
-b: byte 0;
-
-byte test() {
-  return b;
-};
-
-b: byte 1;

@@ -1,6 +1,0 @@
-i: byte 0;
-
-byte test() {
-  for (i = (1<=2) to 3) print "e_for_boolean";
-  return 0;
-};

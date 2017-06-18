@@ -1,7 +1,0 @@
-b: byte 0;
-byte func();
-
-byte test() {
-  b = func + 1;
-  return b;
-};

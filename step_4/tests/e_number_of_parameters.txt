@@ -1,7 +1,0 @@
-short func(short a, short b);
-l: long 0;
-
-byte test() {
-  	return func(l);
- // return func(l, 1, 2);
-};

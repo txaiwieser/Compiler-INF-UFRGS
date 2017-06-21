@@ -5,8 +5,8 @@
 
 // ATTENTION: must math with tac_type_e at tac.h.
 char *tac_type_str[] = { //@TODO: this is only the template.
-	"TAC_LABEL",
-	"TAC_BEGINFUN"
+	"TAC_SYMBOL",
+	"TAC_MOVE"
 };
 
 tac_t *tac_node_create(tac_type_t type, hash_node_t *res, hash_node_t *op1, hash_node_t *op2) {
@@ -74,5 +74,5 @@ void tac_test() {
 	printf("\n");
 	tac_code_print_forward(tac[0]);
 
-	printf("%d - %s\n", TAC_BEGINFUN, tac_type_str[TAC_BEGINFUN]);
+	printf("%d - %s\n", TAC_MOVE, tac_type_str[TAC_MOVE]);
 }

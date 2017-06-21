@@ -3,6 +3,7 @@
 #include "hash.h"
 #include "astree.h"
 #include "semantic.h"
+#include "tac.h"
 
 extern int 	yyparse();
 extern int  getLineNumber();
@@ -53,5 +54,11 @@ int main(int argc, char **argv) {
 	semantic_check(root);
 
 	fprintf(stderr, "Program accepted!\n");
+
+	tac_t *code;
+	code = tac_generate(root);
+	printf("gerou o code de tacs\n");
+	tac_print_backward(code);
+
 	return SUCCESS;
 }

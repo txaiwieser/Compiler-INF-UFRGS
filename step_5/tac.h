@@ -2,6 +2,7 @@
 #define __TAC_H__
 
 #include "hash.h"
+#include "astree.h"
 
 typedef enum tac_type_e { //@TODO: incomplete.
 	TAC_SYMBOL = 0,
@@ -30,6 +31,10 @@ typedef struct tac_s {
 	struct tac_s *prev;
 
 } tac_t;
+
+tac_t *tac_generate(astree_t *root);
+void tac_print_forward(tac_t *head_node);
+void tac_print_backward(tac_t *tail_node);
 
 void tac_test();
 

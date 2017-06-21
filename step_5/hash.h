@@ -34,4 +34,7 @@ hash_node_t* hash_find(hash_node_t *node);
 hash_node_t* hash_insert(char *text, int type, int dataType, int nature);
 void hash_print(void);
 
+hash_node_t* hash_label();
+hash_node_t* hash_temporary();
+
 #endif

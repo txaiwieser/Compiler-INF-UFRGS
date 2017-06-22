@@ -21,6 +21,7 @@ typedef struct hash_node {
 #define NATURE_VARIABLE 1
 #define NATURE_ARRAY 2
 #define NATURE_FUNCTION 3
+#define NATURE_BOOLEAN 4
 
 #define EXPRESSION_INTEGER 1
 #define EXPRESSION_REAL 2
@@ -30,11 +31,12 @@ typedef struct hash_node {
 
 void hash_init(void);
 int hash_address(char *text);
-hash_node_t* hash_find(hash_node_t *node);
-hash_node_t* hash_insert(char *text, int type, int dataType, int nature);
+hash_node_t *hash_find(hash_node_t *node);
+hash_node_t *hash_insert(char *text, int type, int dataType, int nature);
 void hash_print(void);
 
-hash_node_t* hash_label();
-hash_node_t* hash_temporary();
+hash_node_t *hash_label();
+hash_node_t *hash_temporary();
+hash_node_t *hash_boolean();
 
 #endif

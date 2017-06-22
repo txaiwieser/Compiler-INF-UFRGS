@@ -69,10 +69,10 @@ hash_node_t *hash_insert(char *text, int type, int dataType, int nature) {
 		hash_table[address] = new_node;
 		return new_node;
 	}
-	
+
 	return aux;
 }
-	
+
 void hash_print(void) {
 	int i;
 	hash_node_t *node = 0;
@@ -81,7 +81,7 @@ void hash_print(void) {
 			printf("Table[%d] = %s\n", i, node->text);
 }
 
-hash_node_t *hash_aux_node(char* text) {
+hash_node_t *hash_aux_node(char *text) {
 
 	hash_node_t *new_node;
 	new_node = (hash_node_t *) calloc(1, sizeof(hash_node_t));
@@ -95,6 +95,16 @@ hash_node_t *hash_aux_node(char* text) {
 	new_node->parametersNumber = -1;
 	new_node->isVariableOrFuncionDeclared = -1;
 	new_node->expressionType = -1;
+
+	return new_node;
+}
+
+hash_node_t *hash_boolean(char *text) {
+
+	hash_node_t *new_node = hash_aux_node(text);
+	new_node->type = SYMBOL_LIT_INTEGER;
+	new_node->nature = NATURE_BOOLEAN;
+	new_node->expressionType = EXPRESSION_BOOLEAN;
 
 	return new_node;
 }

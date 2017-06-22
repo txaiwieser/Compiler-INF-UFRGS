@@ -55,9 +55,9 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr, "Program accepted!\n");
 
-	tac_t *code;
-	code = tac_generate(root);
-	tac_print_backward(code);
+	tac_print_backward(tac_reverse(tac_generate(root)));
+
+	tac_test();
 
 	return SUCCESS;
 }

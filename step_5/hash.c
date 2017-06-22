@@ -85,8 +85,10 @@ hash_node_t *hash_aux_node(char* text) {
 
 	hash_node_t *new_node;
 	new_node = (hash_node_t *) calloc(1, sizeof(hash_node_t));
-
+	
+	new_node->text = calloc(strlen(text)+1, sizeof(char));
 	strcpy(new_node->text, text);
+
 	new_node->type = SYMBOL_IDENTIFIER;
 	new_node->dataType = -1;
 	new_node->nature = -1;

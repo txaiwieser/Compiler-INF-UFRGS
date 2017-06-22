@@ -57,7 +57,6 @@ int main(int argc, char **argv) {
 
 	tac_t *code;
 	code = tac_generate(root);
-	printf("gerou o code de tacs\n");
 	tac_print_backward(code);
 
 	return SUCCESS;

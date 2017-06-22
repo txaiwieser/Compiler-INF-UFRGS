@@ -7,7 +7,9 @@ char *tac_type_str[] = { //@TODO: this is only the template.
 	"TAC_SYMBOL",
 	"TAC_MOVE",
 	"TAC_ADD",
+	"TAC_SUB",
 	"TAC_MUL",
+	"TAC_DIV",
 	"TAC_LABEL",
 	"TAC_BEGINFUN",
 	"TAC_ENDFUN",
@@ -22,8 +24,6 @@ char *tac_type_str[] = { //@TODO: this is only the template.
 
 tac_t *tac_create(tac_type_t type, hash_node_t *res, hash_node_t *op1, hash_node_t *op2) {
 
-	fprintf(stderr, "entrou no tac_create\n");
-
 	tac_t* new_tac_node = (tac_t *)calloc(1, sizeof(tac_t));
 
 	new_tac_node->type = type;
@@ -32,8 +32,6 @@ tac_t *tac_create(tac_type_t type, hash_node_t *res, hash_node_t *op1, hash_node
 	new_tac_node->op2 = op2;
 	new_tac_node->next = NULL;
 	new_tac_node->prev = NULL;
-
-	printf("saiu do tac_create\n");
 
 	return new_tac_node;
 }
@@ -50,16 +48,13 @@ tac_t *tac_tail(tac_t *node) {
 	return i;
 }
 
-tac_t *tac_join(tac_t *c1, tac_t *c2) {
-	fprintf(stderr, "entrou no join\n");
+tac_t *tac_join(tac_t *c0, tac_t *c1) {
 	tac_t *i;
-	//if(!c1 && !c2) return NULL; else
-	if(!c1) return c2; else if(!c2) return c1;
-	for(i = c2; i->prev; i = i->prev);
-	i->prev = c1;
-	c1->next = i;
-	fprintf(stderr, "saiu do join\n");
-	return c2;
+	if(!c0 && !c1) return NULL; else if(!c0) return c1; else if(!c1) return c0;
+	for(i = c1; i->prev; i = i->prev);
+	i->prev = c0;
+	c0->next = i;
+	return c1;
 }
 
 tac_t *tac_reverse(tac_t *node) {
@@ -70,12 +65,12 @@ tac_t *tac_reverse(tac_t *node) {
 
 void tac_print_forward(tac_t *head_node) {
 	for(tac_t *i = head_node; i; i = i->next)
-		printf("TAC(%s)\n", tac_type_str[i->type]);
+		printf("TAC(%s, %s, %s, %s)\n", tac_type_str[i->type], i->res ? i->res->text : "", i->op1 ? i->op1->text : "", i->op2 ? i->op2->text : "");
 }
 
 void tac_print_backward(tac_t *tail_node) {
 	for(tac_t *i = tail_node; i; i = i->prev)
-		printf("TAC(%s)\n", tac_type_str[i->type]);
+		printf("TAC(%s, %s, %s, %s)\n", tac_type_str[i->type], i->res ? i->res->text : "", i->op1 ? i->op1->text : "", i->op2 ? i->op2->text : "");
 }
 
 tac_t *tac_when(astree_t* node, tac_t* c0, tac_t* c1) { // studying
@@ -83,6 +78,20 @@ tac_t *tac_when(astree_t* node, tac_t* c0, tac_t* c1) { // studying
 	tac_t* if_z = tac_create(TAC_IFZ, label_symbol,c0->res, 0);
 	tac_t* label = tac_create(TAC_LABEL, label_symbol,0, 0);
 	return tac_join(c0, tac_join(if_z, tac_join(c1, label)));
+}
+
+tac_t *tac_aritimetic(astree_t *node, tac_t *c0, tac_t *c1) {
+
+	hash_node_t *temp = hash_temporary();
+	tac_t *tac;
+
+	switch (node->type) {
+		case ASTREE_ADD: tac = tac_create(TAC_ADD, temp, c0->res, c1->res); break;
+		case ASTREE_SUB: tac = tac_create(TAC_SUB, temp, c0->res, c1->res); break;
+		case ASTREE_MUL: tac = tac_create(TAC_MUL, temp, c0->res, c1->res); break;
+		case ASTREE_DIV: tac = tac_create(TAC_DIV, temp, c0->res, c1->res); break;
+	}
+	return tac_join(tac_join(c0, c1), tac);
 }
 
 tac_t *tac_generate(astree_t *root) { // studying
@@ -97,9 +106,17 @@ tac_t *tac_generate(astree_t *root) { // studying
 		cod[i] = tac_generate(root->children[i]);
 
 	switch (root->type) {
+		case ASTREE_LIT_INT:
+		case ASTREE_LIT_REAL:
+		case ASTREE_LIT_CHAR:
+		case ASTREE_LIT_STRING:
 		case ASTREE_TK_ID:				res = tac_create(TAC_SYMBOL, root->symbol, 0, 0); break;
 		case ASTREE_KW_WHEN_THEN:		res = tac_when(root, cod[0], cod[1]); break;
-		case ASTREE_KW_RETURN:			res = tac_join(cod[0], tac_create(TAC_RET, NULL, NULL, NULL)); break;
+		case ASTREE_KW_RETURN:			res = tac_join(cod[0], tac_create(TAC_RET, cod[0]->res, NULL, NULL)); break;
+		case ASTREE_ADD:
+		case ASTREE_SUB:
+		case ASTREE_MUL:
+		case ASTREE_DIV:				res = tac_aritimetic(root, cod[0], cod[1]); break;
 		default: 						res = tac_join(tac_join(tac_join(cod[0], cod[1]), cod[2]), cod[3]);
 	}
 

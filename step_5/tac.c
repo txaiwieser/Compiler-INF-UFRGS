@@ -168,20 +168,6 @@ tac_t *tac_function(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 	return tac_join(tac_begin, tac_join(c1, tac_join(c2, tac_end)));
 }
 
-// tac_t *tac_orand(astree_t *node, tac_t *c1, tac_t *c1) {
-
-// 	hash_node_t *
-
-// 	tac_t *cmd;
-// 	switch(node->type) {
-// 		case ASTREE_OR : cmd = tac_create(TAC_OR , NULL, c0->res, c1->res); break;
-// 		case ASTREE_AND: cmd = tac_create(TAC_AND, NULL, c0->res, c1->res); break;
-// 	}
-
-// 	return tac_join(c0, tac_join(if_z, tac_join(c1, label)));
-
-// }
-
 tac_t *tac_var_dec(astree_t *node, tac_t *c0, tac_t *c1) {
 	return NULL;
 }
@@ -204,7 +190,7 @@ tac_t *tac_return(astree_t *node, tac_t *c0) {
 tac_t *tac_for(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 
 	/*
-		for base to end 
+		for base to end (only ascendent)
 
 		mov tmp, base
 		:begin
@@ -227,6 +213,29 @@ tac_t *tac_for(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 	tac_t *end = tac_create(TAC_LABEL, end_l, NULL, NULL);
 
 	return tac_join(c0, tac_join(c1, tac_join(mov, tac_join(beg, tac_join(c2, tac_join(inc, tac_join(beq, tac_join(jmp, end))))))));
+}
+
+tac_t *tac_while(astree_t *node, tac_t *c0, tac_t *c1) {
+
+	/*
+		while (a>b)
+
+		:begin
+		ifz end, bool
+		<code>
+		jmp begin
+		:end
+	*/
+
+	hash_node_t* beg_l = hash_label();
+	hash_node_t* end_l = hash_label();
+
+	tac_t *beg = tac_create(TAC_LABEL, beg_l, NULL, NULL);
+	tac_t *ifz = tac_create(TAC_IFZ, end_l, c0->res, NULL);
+	tac_t *jmp = tac_create(TAC_JUMP, beg_l, NULL, NULL);
+	tac_t *end = tac_create(TAC_LABEL, end_l, NULL, NULL);
+
+	return tac_join(c0, tac_join(beg, tac_join(ifz, tac_join(c1 ,tac_join(jmp, end)))));
 }
 
 tac_t *tac_generate(astree_t *root) {
@@ -266,6 +275,7 @@ tac_t *tac_generate(astree_t *root) {
 		case ASTREE_KW_PRINT:			r = tac_print(root, c[0]); break;
 		case ASTREE_KW_READ:			r = tac_read(root); break;
 		case ASTREE_KW_FOR:				r = tac_for(root, c[0], c[1], c[2]); break;
+		case ASTREE_KW_WHILE:			r = tac_while(root, c[0], c[1]); break;
 		default: 						r = tac_join(tac_join(tac_join(c[0], c[1]), c[2]), c[3]);
 	}
 

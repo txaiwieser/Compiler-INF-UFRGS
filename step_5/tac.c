@@ -34,12 +34,12 @@ tac_t *tac_create(tac_type_t type, hash_node_t *res, hash_node_t *op1, hash_node
 
 	tac_t* new_tac_node = (tac_t *)calloc(1, sizeof(tac_t));
 
-	new_tac_node->type = type;
-	new_tac_node->res = res;
-	new_tac_node->op1 = op1;
-	new_tac_node->op2 = op2;
-	new_tac_node->next = NULL;
-	new_tac_node->prev = NULL;
+	new_tac_node->type	= type;
+	new_tac_node->res	= res;
+	new_tac_node->op1	= op1;
+	new_tac_node->op2	= op2;
+	new_tac_node->next	= NULL;
+	new_tac_node->prev	= NULL;
 
 	return new_tac_node;
 }
@@ -81,11 +81,32 @@ void tac_print_backward(tac_t *tail_node) {
 		printf("TAC(%s, %s, %s, %s)\n", tac_type_str[i->type], i->res ? i->res->text : "", i->op1 ? i->op1->text : "", i->op2 ? i->op2->text : "");
 }
 
-tac_t *tac_when(astree_t* node, tac_t* c0, tac_t* c1) { // studying
+tac_t *tac_when(astree_t* node, tac_t* c0, tac_t* c1) {
 	hash_node_t* label_symbol = hash_label();
 	tac_t* if_z = tac_create(TAC_IFZ, label_symbol, c0->res, NULL);
-	tac_t* label = tac_create(TAC_LABEL, label_symbol,NULL, NULL);
+	tac_t* label = tac_create(TAC_LABEL, label_symbol, NULL, NULL);
 	return tac_join(c0, tac_join(if_z, tac_join(c1, label)));
+}
+
+tac_t *tac_when_else(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
+
+	/*
+		ifz else
+		<code>
+		jmp end
+		:else
+		<code>
+		:end
+	*/
+
+	hash_node_t *else_label_sym = hash_label();
+	hash_node_t *end_label_sym = hash_label();
+
+	tac_t *if_z = tac_create(TAC_IFZ, else_label_sym, c0->res, NULL);
+	tac_t *jump = tac_create(TAC_JUMP, end_label_sym, NULL, NULL);
+	tac_t *else_label = tac_create(TAC_LABEL, else_label_sym, NULL, NULL);
+	tac_t *end_label = tac_create(TAC_LABEL, end_label_sym, NULL, NULL);
+	return tac_join(c0, tac_join(if_z, tac_join(c1, tac_join(jump, tac_join(else_label, tac_join(c2, end_label))))));
 }
 
 tac_t *tac_aritimetic(astree_t *node, tac_t *c0, tac_t *c1) {
@@ -105,27 +126,25 @@ tac_t *tac_aritimetic(astree_t *node, tac_t *c0, tac_t *c1) {
 
 tac_t *tac_boolean(astree_t *node, tac_t *c0, tac_t *c1) {
 
-	hash_node_t *b_true = hash_boolean("1");
-	hash_node_t *b_false = hash_boolean("0");
-	hash_node_t *label_1 = hash_label();
-	hash_node_t *label_2 = hash_label();
-	hash_node_t *temp = hash_temporary();
-
-	tac_t 		*branch;
-	tac_t 		*mov0		= tac_create(TAC_MOVE, temp, b_false, NULL);
-	tac_t 		*jump 		= tac_create(TAC_JUMP, label_2, NULL, NULL);
-	tac_t 		*label_1_t 	= tac_create(TAC_LABEL, label_1, NULL, NULL);
-	tac_t 		*mov1		= tac_create(TAC_MOVE, temp, b_true, NULL);
-	tac_t 		*label_2_t 	= tac_create(TAC_LABEL, label_2, NULL, NULL);
-
 	/*
-		beq label1, op1, op2
+		brc label1, op1, op2 (brc = ble, bge, beq, ...)
 		temp = 0
 		jmp = label2
 		:label1
 		temp = 1
 		:label2
 	*/
+
+	hash_node_t *label_1 = hash_label();
+	hash_node_t *label_2 = hash_label();
+	hash_node_t *temp = hash_temporary();
+
+	tac_t *branch;
+	tac_t *mov0			= tac_create(TAC_MOVE, temp, hash_false, NULL);
+	tac_t *jump 		= tac_create(TAC_JUMP, label_2, NULL, NULL);
+	tac_t *label_1_t 	= tac_create(TAC_LABEL, label_1, NULL, NULL);
+	tac_t *mov1			= tac_create(TAC_MOVE, temp, hash_true, NULL);
+	tac_t *label_2_t 	= tac_create(TAC_LABEL, label_2, NULL, NULL);
 
 	switch(node->type) {
 		case ASTREE_LEQ: branch = tac_create(TAC_BLE, label_1, c0->res, c1->res); break;
@@ -162,42 +181,65 @@ tac_t *tac_function(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 
 // }
 
-tac_t *tac_generate(astree_t *root) { // studying
+tac_t *tac_var_dec(astree_t *node, tac_t *c0, tac_t *c1) {
+	return NULL;
+}
+
+tac_t *tac_print(astree_t *node, tac_t *c0) {
+	tac_t *print = tac_create(TAC_PRINT, c0 ? c0->res : NULL, NULL, NULL);
+	return tac_join(c0, print);
+}
+
+tac_t *tac_read(astree_t *node) {
+	tac_t *read = tac_create(TAC_READ, node->symbol, NULL, NULL);
+	return read;
+}
+
+tac_t *tac_return(astree_t *node, tac_t *c0) {
+	tac_t *ret = tac_create(TAC_RET, c0->res, NULL, NULL);
+	return tac_join(c0, ret); 
+}
+
+tac_t *tac_generate(astree_t *root) {
 	
 	if (!root) return NULL;
 
 	int i = 0;
-	tac_t* cod[MAX_NUMBER_OF_CHILDREN];
-	tac_t* res = 0;
+	tac_t* c[MAX_NUMBER_OF_CHILDREN];
+	tac_t* r = 0;
 
 	for(i=0; i<MAX_NUMBER_OF_CHILDREN; ++i)
-		cod[i] = tac_generate(root->children[i]);
+		c[i] = tac_generate(root->children[i]);
 
 	switch (root->type) {
+		// case ASTREE_VAR_DEC:			r = tac_var_dec(root, c[0], c[1]);		
 		case ASTREE_LIT_INT:
 		case ASTREE_LIT_REAL:
 		case ASTREE_LIT_CHAR:
 		case ASTREE_LIT_STRING:
-		case ASTREE_TK_ID:				res = tac_create(TAC_SYMBOL, root->symbol, 0, 0); break;
-		case ASTREE_KW_WHEN_THEN:		res = tac_when(root, cod[0], cod[1]); break;
-		case ASTREE_KW_RETURN:			res = tac_join(cod[0], tac_create(TAC_RET, cod[0]->res, NULL, NULL)); break;
+		case ASTREE_TK_ID:				r = tac_create(TAC_SYMBOL, root->symbol, 0, 0); break;
+		case ASTREE_KW_WHEN_THEN:		r = tac_when(root, c[0], c[1]); break;
+		case ASTREE_KW_WHEN_THEN_ELSE:	r = tac_when_else(root, c[0], c[1], c[2]); break;
+		case ASTREE_KW_RETURN:			r = tac_return(root, c[0]); break;
 		case ASTREE_ADD:
 		case ASTREE_SUB:
 		case ASTREE_MUL:
-		case ASTREE_DIV:				res = tac_aritimetic(root, cod[0], cod[1]); break;
+		case ASTREE_DIV:				r = tac_aritimetic(root, c[0], c[1]); break;
 		case ASTREE_LEQ:
 		case ASTREE_GTE:
 		case ASTREE_EQU:
 		case ASTREE_NEQ:
 		case ASTREE_LES:
-		case ASTREE_GTR:				res = tac_boolean(root, cod[0], cod[1]); break;
-		// case ASTREE_AND:				res = ; break;
-		// case ASTREE_OR :				res = ; break;
-		case ASTREE_FUNC_DEC:			res = tac_function(root, cod[0], cod[1], cod[2]); break;
-		default: 						res = tac_join(tac_join(tac_join(cod[0], cod[1]), cod[2]), cod[3]);
+		case ASTREE_GTR:				r = tac_boolean(root, c[0], c[1]); break;
+		// case ASTREE_AND:				r = ; break;
+		// case ASTREE_OR :				r = ; break;
+		case ASTREE_FUNC_DEC:			r = tac_function(root, c[0], c[1], c[2]); break;
+		case ASTREE_KW_PRINT:			r = tac_print(root, c[0]); break;
+		case ASTREE_KW_READ:			r = tac_read(root); break;
+		default: 						r = tac_join(tac_join(tac_join(c[0], c[1]), c[2]), c[3]);
 	}
 
-	return res;
+	return r;
 }
 
 void tac_test() {

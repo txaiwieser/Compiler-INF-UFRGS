@@ -1,0 +1,13 @@
+
+b: short 0;
+c: short 0;
+d: short 0;
+a: short[5] 1 2 3 4 5;
+e: short 0;
+f: short 0;
+g: short 0;
+h: short 0;
+abc: short 0;
+asdasdasd: short 0;
+aasdad_asdasd: short 0;
+asda_13123_a: short 0;

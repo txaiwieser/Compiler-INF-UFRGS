@@ -120,7 +120,7 @@ char* decompile_tree(astree_t* ast) {
         case ASTREE_VAR_DEC: {
             char* child_0_text = decompile_tree(ast->children[0]);
             char* buffer = (char *) calloc(6 + strlen(ast->symbol->text) + strlen(child_0_text), sizeof(char));
-            sprintf(buffer, "%s : %s;\n",ast->symbol->text,child_0_text);
+            sprintf(buffer, "%s : %s;\n", ast->symbol->text,child_0_text);
             return buffer;
         }
 

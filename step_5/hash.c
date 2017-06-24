@@ -10,12 +10,6 @@ hash_node_t *hash_table[HASH_SIZE];
 unsigned int label_count = 0;
 unsigned int temporary_count = 0;
 
-void hash_init(void) {
-	int i;
-	for(i = 0; i < HASH_SIZE; i++)
-		hash_table[i] = 0;
-}
-
 int hash_address(char *text) {
 	int address = 1, i;
 	for(i = 0; i< strlen(text); i++)
@@ -135,4 +129,13 @@ hash_node_t *hash_temporary() {
 	free(sufix); free(temporary);
 
 	return new_node;
+}
+
+void hash_init(void) {
+	int i;
+	for(i = 0; i < HASH_SIZE; i++)
+		hash_table[i] = 0;
+
+	hash_true = hash_boolean("1");
+	hash_false = hash_boolean("0");
 }

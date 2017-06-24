@@ -29,6 +29,9 @@ typedef struct hash_node {
 #define EXPRESSION_STRING 4
 #define EXPRESSION_BOOLEAN 5
 
+hash_node_t *hash_true;
+hash_node_t *hash_false;
+
 void hash_init(void);
 int hash_address(char *text);
 hash_node_t *hash_find(hash_node_t *node);
@@ -37,6 +40,5 @@ void hash_print(void);
 
 hash_node_t *hash_label();
 hash_node_t *hash_temporary();
-hash_node_t *hash_boolean();
 
 #endif

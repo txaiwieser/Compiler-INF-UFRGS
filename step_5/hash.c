@@ -109,7 +109,7 @@ hash_node_t *hash_label() {
 	snprintf(sufix, 10, "%u", label_count);
 	label_count++;
 	char *label = malloc(8 +strlen(sufix));
-	sprintf(label, "_label_%s", sufix);
+	sprintf(label, "__label_%s", sufix);
 
 	hash_node_t *new_node = hash_aux_node(label);
 	free(sufix); free(label);
@@ -123,7 +123,7 @@ hash_node_t *hash_temporary() {
 	snprintf(sufix, 10, "%u", temporary_count);
 	temporary_count++;
 	char *temporary = malloc(8 +strlen(sufix));
-	sprintf(temporary, "_temporary_%s", sufix);
+	sprintf(temporary, "__temporary_%s", sufix);
 
 	hash_node_t *new_node = hash_aux_node(temporary);
 	free(sufix); free(temporary);

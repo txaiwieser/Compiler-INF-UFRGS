@@ -8,6 +8,7 @@ typedef enum tac_type_e { //@TODO: incomplete.
 	TAC_SYMBOL = 0,
 	TAC_MOVE,
 	
+	TAC_INC,
 	TAC_ADD,
 	TAC_SUB,
 	TAC_MUL,

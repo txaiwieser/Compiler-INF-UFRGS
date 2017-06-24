@@ -6,6 +6,7 @@
 char *tac_type_str[] = { //@TODO: this is only the template.
 	"TAC_SYMBOL",
 	"TAC_MOVE",
+	"TAC_INC",
 	"TAC_ADD",
 	"TAC_SUB",
 	"TAC_MUL",
@@ -200,6 +201,34 @@ tac_t *tac_return(astree_t *node, tac_t *c0) {
 	return tac_join(c0, ret); 
 }
 
+tac_t *tac_for(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
+
+	/*
+		for base to end 
+
+		mov tmp, base
+		:begin
+		<code>
+		inc rBse
+		beq end, tmp, end
+		jmp begin
+		:end
+	*/
+
+	hash_node_t *beg_l 	= hash_label();
+	hash_node_t *end_l 	= hash_label();
+	hash_node_t *temp	= hash_temporary();
+
+	tac_t *mov = tac_create(TAC_MOVE, temp, c0->res, NULL);
+	tac_t *beg = tac_create(TAC_LABEL, beg_l, NULL, NULL);
+	tac_t *inc = tac_create(TAC_INC, temp, temp, NULL);
+	tac_t *beq = tac_create(TAC_BEQ, end_l, temp, c1->res);
+	tac_t *jmp = tac_create(TAC_JUMP, beg_l, NULL, NULL);
+	tac_t *end = tac_create(TAC_LABEL, end_l, NULL, NULL);
+
+	return tac_join(c0, tac_join(c1, tac_join(mov, tac_join(beg, tac_join(c2, tac_join(inc, tac_join(beq, tac_join(jmp, end))))))));
+}
+
 tac_t *tac_generate(astree_t *root) {
 	
 	if (!root) return NULL;
@@ -236,6 +265,7 @@ tac_t *tac_generate(astree_t *root) {
 		case ASTREE_FUNC_DEC:			r = tac_function(root, c[0], c[1], c[2]); break;
 		case ASTREE_KW_PRINT:			r = tac_print(root, c[0]); break;
 		case ASTREE_KW_READ:			r = tac_read(root); break;
+		case ASTREE_KW_FOR:				r = tac_for(root, c[0], c[1], c[2]); break;
 		default: 						r = tac_join(tac_join(tac_join(c[0], c[1]), c[2]), c[3]);
 	}
 

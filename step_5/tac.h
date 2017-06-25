@@ -6,6 +6,10 @@
 
 typedef enum tac_type_e { //@TODO: incomplete.
 	TAC_SYMBOL = 0,
+
+	TAC_VAR,
+	TAC_ARR,
+
 	TAC_MOVE,
 	
 	TAC_INC,
@@ -26,6 +30,7 @@ typedef enum tac_type_e { //@TODO: incomplete.
 	TAC_LABEL,
 	TAC_BEGINFUN,
 	TAC_ENDFUN,
+	TAC_PARAM,
 	TAC_IFZ,
 	TAC_JUMP,
 	TAC_CALL,

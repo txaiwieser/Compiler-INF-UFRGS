@@ -1,0 +1,3 @@
+byte test(byte c, byte d) {
+	return c+d;
+};

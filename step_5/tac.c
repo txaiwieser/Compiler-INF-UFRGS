@@ -25,6 +25,9 @@ char *tac_type_str[] = {
 	"TAC_BEGINFUN",
 	"TAC_ENDFUN",
 	"TAC_PARAM",
+	"TAC_FCALL",
+	"TAC_ACALL",
+	"TAC_AATTRIB"
 	"TAC_IFZ",
 	"TAC_JUMP",
 	"TAC_CALL",
@@ -242,15 +245,45 @@ tac_t *tac_var_dec(astree_t *node, tac_t *c0) {
 	tac_t *dec;
 
 	switch(node->symbol->nature) {
-		case NATURE_VARIABLE:	dec = tac_create(TAC_VAR, node->symbol, c0 ? c0->res : NULL, NULL); break;
-		case NATURE_ARRAY:		dec = tac_create(TAC_ARR, node->symbol, c0 ? c0->res : NULL, NULL); break;
+		case NATURE_VARIABLE:	dec = tac_create(TAC_VAR, node->symbol, node->children[0] ? node->children[0]->symbol : NULL, NULL); break;
+		case NATURE_ARRAY:		dec = tac_create(TAC_ARR, node->symbol, c0 ? c0->res : NULL, NULL); break; //@TODO
 	}
 
     return tac_join(c0, dec);
 }
 
+tac_t *tac_id(astree_t *node, tac_t *c0) {
+	return tac_join(c0, tac_create(TAC_SYMBOL, node->symbol, 0, 0));
+}
+
 tac_t *tac_param(astree_t *node) {
 	return tac_create(TAC_PARAM, node->symbol, NULL, NULL);
+}
+
+tac_t *tac_func_call(astree_t *node, tac_t *c0) {
+	tac_t *cal = tac_create(TAC_FCALL, node->symbol, NULL, NULL);
+	return tac_join(c0, cal);
+}
+
+tac_t *tac_args(astree_t *node, tac_t *c0, tac_t *c1) {
+	tac_t *arg = tac_create(TAC_ARG, node->children[0]->symbol, NULL, NULL);
+	return c1 ? tac_join(c0, tac_join(c1, arg)) : tac_join(arg, c0);
+}
+
+tac_t *tac_array_call(astree_t *node, tac_t *c0) {
+	hash_node_t *tmp = hash_temporary();
+	tac_t *cal = tac_create(TAC_ACALL, tmp, node->symbol, node->children[0]->symbol);
+	return tac_join(c0, cal);
+}
+
+tac_t *tac_attrib(astree_t *node, tac_t *c0) {
+	tac_t *att = tac_create(TAC_MOVE, node->symbol, c0->res, NULL);
+	return tac_join(c0, att);
+}
+
+tac_t *tac_attrib_arr(astree_t *node, tac_t *c0, tac_t *c1) {
+	tac_t *att = tac_create(TAC_AATTRIB, node->symbol, c0->res, c1->res);
+	return tac_join(c0, tac_join(c1, att));
 }
 
 tac_t *tac_generate(astree_t *root) {
@@ -265,12 +298,12 @@ tac_t *tac_generate(astree_t *root) {
 		c[i] = tac_generate(root->children[i]);
 
 	switch (root->type) {
-		//TODO: case ASTREE_VAR_DEC:			r = tac_var_dec(root, c[0]); break; // also arrays
+	 	case ASTREE_VAR_DEC:			r = tac_var_dec(root, c[0]); break;
 		case ASTREE_LIT_INT:
 		case ASTREE_LIT_REAL:
 		case ASTREE_LIT_CHAR:
 		case ASTREE_LIT_STRING:
-		case ASTREE_TK_ID:				r = tac_create(TAC_SYMBOL, root->symbol, 0, 0); break;
+		case ASTREE_TK_ID:				r = tac_id(root, c[0]); break;
 		case ASTREE_ADD:
 		case ASTREE_SUB:
 		case ASTREE_MUL:
@@ -286,16 +319,18 @@ tac_t *tac_generate(astree_t *root) {
 		case ASTREE_FUNC_DEC:			r = tac_function(root, c[0], c[1], c[2]); break;
 		case ASTREE_PARAM:				r = tac_param(root); break;
 		case ASTREE_KW_RETURN:			r = tac_return(root, c[0]); break;
-		//TODO: case ASTREE_FUNC_CALL:			r = tac_func_call(root, c[0]); break;
-		//TODO: case ASTREE_FUNC_ARGS:
-		//TODO: case ASTREE_FUNC_ARGS_EXIT:		r = tac_func_args(root, c[0]); break;
-		//TODO: case ASTREE_ARRAY_CALL:			r = tac_array_call(root, c[0]); break;
+		case ASTREE_FUNC_CALL:			r = tac_func_call(root, c[0]); break;
+		case ASTREE_FUNC_ARGS:
+		case ASTREE_FUNC_ARGS_EXT:		r = tac_args(root, c[0], c[1]); break;
+		case ASTREE_ARRAY_CALL:			r = tac_array_call(root, c[0]); break;
 		case ASTREE_KW_WHEN_THEN:		r = tac_when(root, c[0], c[1]); break;
 		case ASTREE_KW_WHEN_THEN_ELSE:	r = tac_when_else(root, c[0], c[1], c[2]); break;
 		case ASTREE_KW_PRINT:			r = tac_print(root, c[0]); break;
 		case ASTREE_KW_READ:			r = tac_read(root); break;
 		case ASTREE_KW_FOR:				r = tac_for(root, c[0], c[1], c[2]); break;
 		case ASTREE_KW_WHILE:			r = tac_while(root, c[0], c[1]); break;
+		case ASTREE_ATTRIB:				r = tac_attrib(root, c[0]); break;
+		case ASTREE_ATTRIB_ARR:			r = tac_attrib_arr(root, c[0], c[1]); break;
 		default: 						r = tac_join(tac_join(tac_join(c[0], c[1]), c[2]), c[3]);
 	}
 

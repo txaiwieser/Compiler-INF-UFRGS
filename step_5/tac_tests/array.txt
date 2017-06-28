@@ -1,0 +1,7 @@
+a: byte[1] 1;
+b: long 0;
+
+byte test() {
+    a # 1 = a[1];
+	b = a[1];
+};

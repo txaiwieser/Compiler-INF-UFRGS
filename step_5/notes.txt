@@ -1,0 +1,2 @@
+Notas:
+• Print só pegando o último argumento;

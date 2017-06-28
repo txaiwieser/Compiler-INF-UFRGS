@@ -57,7 +57,5 @@ int main(int argc, char **argv) {
 
 	tac_print_backward(tac_reverse(tac_generate(root)));
 
-	tac_test();
-
 	return SUCCESS;
 }

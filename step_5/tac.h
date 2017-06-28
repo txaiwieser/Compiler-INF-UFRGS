@@ -54,6 +54,4 @@ tac_t *tac_reverse(tac_t *node);
 void tac_print_forward(tac_t *head_node);
 void tac_print_backward(tac_t *tail_node);
 
-void tac_test();
-
 #endif

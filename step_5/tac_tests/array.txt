@@ -1,4 +1,4 @@
-a: byte[1] 1;
+a: byte[4] 1 2 3 4;
 b: long 0;
 
 byte test() {

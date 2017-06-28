@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 // ATTENTION: this must math with tac_type_e at tac.h.
-char *tac_type_str[] = {
+const char *tac_type_str[] = {
 	"TAC_SYMBOL",
 	"TAC_VAR",
 	"TAC_ARR",
@@ -192,7 +192,7 @@ tac_t *tac_return(astree_t *node, tac_t *c0) {
 tac_t *tac_for(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 
 	/*
-		for base to end (only ascendent)
+		for base to end (ATTENTION: only ascendent)
 
 		mov tmp, base
 		:begin
@@ -246,7 +246,7 @@ tac_t *tac_var_dec(astree_t *node, tac_t *c0) {
 
 	switch(node->symbol->nature) {
 		case NATURE_VARIABLE:	dec = tac_create(TAC_VAR, node->symbol, node->children[0] ? node->children[0]->symbol : NULL, NULL); break;
-		case NATURE_ARRAY:		dec = tac_create(TAC_ARR, node->symbol, c0 ? c0->res : NULL, NULL); break; //@TODO
+		case NATURE_ARRAY:		dec = tac_create(TAC_ARR, node->symbol, node->children[0]->symbol, NULL); break;
 	}
 
     return tac_join(c0, dec);
@@ -341,23 +341,4 @@ tac_t *tac_generate(astree_t *root) {
 	}
 
 	return r;
-}
-
-void tac_test() {
-	// tac_t *tac[10];
-	
-	// for(int i = 0; i<10; i++)
-	// 	tac[i] = tac_create(i, NULL, NULL, NULL);
-
-	// tac_t *aux_1 = tac_join(tac[0], tac_join(tac[1], tac_join(tac[2], tac_join(tac[3], tac[4]))));
-	// tac_t *aux_2 = tac_join(tac[5], tac_join(tac[6], tac_join(tac[7], tac_join(tac[8], tac[9]))));
-
-	// tac_print_backward(tac_join(aux_1, aux_2));
-	// printf("\n");
-	// tac_print_forward(tac[0]);
-
-	// printf("%d - %s\n", TAC_MOVE, tac_type_str[TAC_MOVE]);
-
-	// astree_t *n = astree_create(ASTREE_LES, NULL, NULL, NULL, NULL, NULL);
-	// tac_print_backward(tac_boolean(n, NULL, NULL));
 }

@@ -29,8 +29,8 @@ int string_to_file(char *filePath, char *string) {
 #define SEMANTIC_ERROR 4
 
 int main(int argc, char **argv) {
-	if (argc < 3) {
-        printf("Error: invalid arguments.\nUsage: <input file> <output file>\n");
+	if (argc < 2) {
+        printf("Error: invalid arguments.\nUsage: <input file> <output file (optional)>\n");
         return FILE_NOT_INFORMED;
     }
 
@@ -45,17 +45,22 @@ int main(int argc, char **argv) {
 	yyparse();
 
 	astree_print(tree, 0);
-	astree_t *root = tree;
 
-	char *decompiledTree = decompile_tree(root);
-	string_to_file(argv[2], decompiledTree);
+	if(argc == 3) {
+		printf("Printing ASTREE generated from %s into %s... ", argv[1], argv[2]);
+		char *decompiledTree = decompile_tree(tree);
+		string_to_file(argv[2], decompiledTree);
+		printf("done!\n");
+	}
 
-	semantic_set_declarations(root);
-	semantic_check(root);
+	semantic_set_declarations(tree);
+	semantic_check(tree);
 
 	fprintf(stderr, "Program accepted!\n");
 
-	tac_print_backward(tac_reverse(tac_generate(root)));
+	printf("Printing intermediary code from source file into stdout: %s...\n", argv[1]);
+	tac_print_backward(tac_reverse(tac_generate(tree)));
+	printf("Done!\n");
 
 	return SUCCESS;
 }

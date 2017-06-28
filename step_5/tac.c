@@ -27,7 +27,7 @@ char *tac_type_str[] = {
 	"TAC_PARAM",
 	"TAC_FCALL",
 	"TAC_ACALL",
-	"TAC_AATTRIB"
+	"TAC_AATTRIB",
 	"TAC_IFZ",
 	"TAC_JUMP",
 	"TAC_CALL",
@@ -286,6 +286,12 @@ tac_t *tac_attrib_arr(astree_t *node, tac_t *c0, tac_t *c1) {
 	return tac_join(c0, tac_join(c1, att));
 }
 
+tac_t *tac_logical(astree_t *node, tac_t *c0, tac_t *c1) {
+	hash_node_t *tmp = hash_temporary();
+	tac_t *log = tac_create(node->type == ASTREE_AND ? TAC_AND : TAC_OR, tmp, c0->res, c1->res);
+	return tac_join(c0, tac_join(c1, log));
+}
+
 tac_t *tac_generate(astree_t *root) {
 	
 	if (!root) return NULL;
@@ -314,8 +320,8 @@ tac_t *tac_generate(astree_t *root) {
 		case ASTREE_NEQ:
 		case ASTREE_LES:
 		case ASTREE_GTR:				r = tac_boolean(root, c[0], c[1]); break;
-		// case ASTREE_AND:				r = ; break; //@TODO: placeholder for this case.
-		// case ASTREE_OR :				r = ; break; //@TODO: placeholder for this case.
+		case ASTREE_AND:
+		case ASTREE_OR :				r = tac_logical(root, c[0], c[1]); break;
 		case ASTREE_FUNC_DEC:			r = tac_function(root, c[0], c[1], c[2]); break;
 		case ASTREE_PARAM:				r = tac_param(root); break;
 		case ASTREE_KW_RETURN:			r = tac_return(root, c[0]); break;
@@ -338,7 +344,6 @@ tac_t *tac_generate(astree_t *root) {
 }
 
 void tac_test() {
-
 	// tac_t *tac[10];
 	
 	// for(int i = 0; i<10; i++)

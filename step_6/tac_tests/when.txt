@@ -1,0 +1,6 @@
+a: byte 1;
+
+byte test() {
+	when (1<1 || 2<2 && 3<3) then print "print" else read a;
+	return a;
+};

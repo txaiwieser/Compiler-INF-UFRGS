@@ -1,0 +1,10 @@
+a: byte 1;
+b: byte 10;
+
+byte test() {
+	for (a = a to b) {
+		read a;
+		print "oh yeah";
+	};
+	return a;
+};

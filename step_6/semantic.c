@@ -101,6 +101,18 @@ void semantic_variable_declaration(astree_t* node) {
       } 
 
       node->symbol->isVariableOrFuncionDeclared = 1;
+      
+      // Bad code added to identify with imediate values must be transformed into a variable:
+      node->children[0]->symbol->isVariableOrFuncionDeclared = 1;
+      switch(node->children[0]->type) {
+        case ASTREE_ARR_INT:
+        case ASTREE_ARR_CHAR:
+        case ASTREE_ARR_FLOAT:
+          for(astree_t *aux = node->children[0]->children[1]; aux; aux = aux->children[0])
+            aux->symbol->isVariableOrFuncionDeclared = 1;
+      }
+      // Outra estrategia: criar TAC_IMEDIATE pra declarar. Varre TAC_IMEDIATE's e TAC_VARDEC's pra criar a seção de dados.
+
       switch(node->children[0]->type) {
         case ASTREE_CHAR:
           node->symbol->expressionType = EXPRESSION_CHAR;

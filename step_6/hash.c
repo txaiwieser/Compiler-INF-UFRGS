@@ -1,12 +1,9 @@
-
-#define HASH_SIZE 997
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include "hash.h"
 #include "symcodes.h"
 
-hash_node_t *hash_table[HASH_SIZE];
 unsigned int label_count = 0;
 unsigned int temporary_count = 0;
 
@@ -72,7 +69,8 @@ void hash_print(void) {
 	hash_node_t *node = 0;
 	for(i = 0; i < HASH_SIZE; i++)
 		for(node = hash_table[i]; node; node =  node->next)
-			printf("Table[%d] = %s\n", i, node->text);
+			printf("Table[%d].text\t %s\t type %d dataType %d nature %d exprType %d isDeclared %d\n",
+			 i, node->text, node->type, node->dataType, node->nature, node->expressionType, node->isVariableOrFuncionDeclared);
 }
 
 hash_node_t *hash_aux_node(char *text) {
@@ -84,11 +82,11 @@ hash_node_t *hash_aux_node(char *text) {
 	strcpy(new_node->text, text);
 
 	new_node->type = SYMBOL_IDENTIFIER;
-	new_node->dataType = -1;
-	new_node->nature = -1;
-	new_node->parametersNumber = -1;
-	new_node->isVariableOrFuncionDeclared = -1;
-	new_node->expressionType = -1;
+	new_node->dataType = 0;
+	new_node->nature = 0;
+	new_node->parametersNumber = 0;
+	new_node->isVariableOrFuncionDeclared = 0;
+	new_node->expressionType = 0;
 
 	return new_node;
 }
@@ -126,7 +124,16 @@ hash_node_t *hash_temporary() {
 	sprintf(temporary, "__temporary_%s", sufix);
 
 	hash_node_t *new_node = hash_aux_node(temporary);
+	new_node->nature = NATURE_TEMPORARY;
 	free(sufix); free(temporary);
+
+	hash_node_t *aux = hash_find(new_node);
+	int address = hash_address(new_node->text);
+	if(aux == NULL) {
+		new_node->next = hash_table[address];
+		hash_table[address] = new_node;
+		return new_node;
+	}
 
 	return new_node;
 }

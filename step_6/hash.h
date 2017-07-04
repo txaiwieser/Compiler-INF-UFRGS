@@ -22,6 +22,7 @@ typedef struct hash_node {
 #define NATURE_ARRAY 2
 #define NATURE_FUNCTION 3
 #define NATURE_BOOLEAN 4
+#define NATURE_TEMPORARY 5
 
 #define EXPRESSION_INTEGER 1
 #define EXPRESSION_REAL 2
@@ -29,6 +30,9 @@ typedef struct hash_node {
 #define EXPRESSION_STRING 4
 #define EXPRESSION_BOOLEAN 5
 
+#define HASH_SIZE 997
+
+hash_node_t *hash_table[HASH_SIZE];
 hash_node_t *hash_true;
 hash_node_t *hash_false;
 

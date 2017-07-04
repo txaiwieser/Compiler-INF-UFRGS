@@ -4,6 +4,7 @@
 #include "astree.h"
 #include "semantic.h"
 #include "tac.h"
+#include "compiler.h"
 
 extern int 	yyparse();
 extern int  getLineNumber();
@@ -27,6 +28,7 @@ int string_to_file(char *filePath, char *string) {
 #define FILE_NOT_FOUND 2
 #define SINTAX_ERROR 3
 #define SEMANTIC_ERROR 4
+#define COMPILATION_ERROR 5
 
 int main(int argc, char **argv) {
 	if (argc < 2) {
@@ -46,21 +48,26 @@ int main(int argc, char **argv) {
 
 	astree_print(tree, 0);
 
-	if(argc == 3) {
-		printf("Printing ASTREE generated from %s into %s... ", argv[1], argv[2]);
-		char *decompiledTree = decompile_tree(tree);
-		string_to_file(argv[2], decompiledTree);
-		printf("done!\n");
-	}
-
 	semantic_set_declarations(tree);
 	semantic_check(tree);
 
 	fprintf(stderr, "Program accepted!\n");
 
 	printf("Printing intermediary code from source file into stdout: %s...\n", argv[1]);
-	tac_print_backward(tac_reverse(tac_generate(tree)));
+	tac_t *intermediary_code; 
+	tac_print_backward(intermediary_code = tac_reverse(tac_generate(tree)));
 	printf("Done!\n");
+
+	if(argc == 3) {
+		fprintf(stderr, "Printing assembly generated from %s into %s... ", argv[1], argv[2]);
+		if(comp_asm_generate(intermediary_code, argv[2]) > 0) {
+			printf("Compiler error: unknown intermediary code found.\n");
+			return COMPILATION_ERROR;
+		}
+		printf("done!\n");
+	}
+
+	hash_print();
 
 	return SUCCESS;
 }

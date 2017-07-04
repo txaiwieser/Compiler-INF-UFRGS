@@ -1,6 +1,7 @@
 #include "tac.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // ATTENTION: this must math with tac_type_e at tac.h.
 const char *tac_type_str[] = {
@@ -170,7 +171,7 @@ tac_t *tac_boolean(astree_t *node, tac_t *c0, tac_t *c1) {
 
 tac_t *tac_function(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 	tac_t *tac_begin = tac_create(TAC_BEGINFUN, node->symbol, NULL, NULL);
-	tac_t *tac_end = tac_create(TAC_ENDFUN, node->symbol, NULL, NULL);
+	tac_t *tac_end = tac_create(TAC_ENDFUN, NULL, NULL, NULL);
 	return tac_join(tac_begin, tac_join(c1, tac_join(c2, tac_end)));
 }
 
@@ -261,7 +262,7 @@ tac_t *tac_param(astree_t *node) {
 }
 
 tac_t *tac_func_call(astree_t *node, tac_t *c0) {
-	tac_t *cal = tac_create(TAC_FCALL, node->symbol, NULL, NULL);
+	tac_t *cal = tac_create(TAC_FCALL, node->symbol, node->symbol, NULL);
 	return tac_join(c0, cal);
 }
 
@@ -292,7 +293,30 @@ tac_t *tac_logical(astree_t *node, tac_t *c0, tac_t *c1) {
 	return tac_join(c0, tac_join(c1, log));
 }
 
-tac_t *tac_generate(astree_t *root) {
+void tac_fill_func_calls(tac_t* code) {
+	
+	for(tac_t *call = code; call; call = call->prev) {
+		if(call->type == TAC_FCALL) {
+			tac_t *dec, *ret;
+			for(dec = code; !(dec->type == TAC_BEGINFUN && strcmp(call->op1->text, dec->res->text) == 0); dec = dec->prev);
+			for(ret = dec; ret->type != TAC_RET; ret = ret->next);
+			call->res = ret->res;
+			for(tac_t *tac = code; tac; tac = tac->prev) {
+				if(tac->type != TAC_BEGINFUN && tac->type != TAC_FCALL) {
+					if(tac->res && strcmp(tac->res->text, call->op1->text) == 0) {
+						tac->res = ret->res;
+					} else if(tac->op1 && strcmp(tac->op1->text, call->op1->text) == 0) {
+						tac->op1 = ret->res;
+					} else if(tac->op2 && strcmp(tac->op2->text, call->op1->text) == 0) {
+						tac->op2 = ret->res;
+					}
+				}
+			}
+		}
+	}
+}
+
+tac_t *tac_parse_astree(astree_t *root) {
 	
 	if (!root) return NULL;
 
@@ -301,7 +325,7 @@ tac_t *tac_generate(astree_t *root) {
 	tac_t* r = 0;
 
 	for(i=0; i<MAX_NUMBER_OF_CHILDREN; ++i)
-		c[i] = tac_generate(root->children[i]);
+		c[i] = tac_parse_astree(root->children[i]);
 
 	switch (root->type) {
 	 	case ASTREE_VAR_DEC:			r = tac_var_dec(root, c[0]); break;
@@ -341,4 +365,10 @@ tac_t *tac_generate(astree_t *root) {
 	}
 
 	return r;
+}
+
+tac_t *tac_generate(astree_t *root) {
+	tac_t *code = tac_parse_astree(root);
+	tac_fill_func_calls(code);
+	return code;
 }

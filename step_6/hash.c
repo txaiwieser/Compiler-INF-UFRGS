@@ -101,7 +101,15 @@ hash_node_t *hash_boolean(char *text) {
 	new_node->nature = NATURE_BOOLEAN;
 	new_node->expressionType = EXPRESSION_BOOLEAN;
 
-	return new_node;
+	hash_node_t *aux = hash_find(new_node);
+	int address = hash_address(new_node->text);
+	if(aux == NULL) {
+		new_node->next = hash_table[address];
+		hash_table[address] = new_node;
+		return new_node;
+	}
+
+	return aux;
 }
 
 hash_node_t *hash_label() {
@@ -138,7 +146,7 @@ hash_node_t *hash_temporary() {
 		return new_node;
 	}
 
-	return new_node;
+	return aux;
 }
 
 void hash_init(void) {

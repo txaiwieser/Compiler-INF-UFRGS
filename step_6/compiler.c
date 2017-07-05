@@ -25,23 +25,28 @@ char *comp_imediate_sec_str() {
 	char *imediate_decs = malloc(25);
 	sprintf(imediate_decs, ".section	__TEXT,__const\n");
 
+	printf("\nDebug: comp_imediate_sec_str() (' = added as \"global immediate\")\n"); // @TODO: comment/remove this.
 	for(int i = 0; i<HASH_SIZE; i++) {
 
 		if(!hash_table[i]) continue;
 
-		hash_node_t *node = hash_table[i];
-
-		do {
+		hash_node_t *node;
+		for(node = hash_table[i]; node; node = node->next) {
+			printf("%s", node->text); // @TODO: comment/remove this.
 			if(node->isVariableOrFuncionDeclared == 0 && node->nature != NATURE_TEMPORARY) {
+				printf("\'"); // @TODO: comment/remove this.
 				char *addition = (char *)malloc(+1 +2*strlen(node->text) +10);
 				sprintf(addition, "_%s: .long\t%s\n", node->text, node->text);
 				imediate_decs = comp_append_str(imediate_decs, addition);
 				free(addition);
+				break;
 			}
-			node = node->next;
-		} while (node && node->isVariableOrFuncionDeclared != 0);
+			printf(" "); // @TODO: comment/remove this.
+		}
+		printf("\n"); // @TODO: comment/remove this.
 	}
 
+	printf("\n"); // @TODO: comment/remove this.
 	return imediate_decs;
 }
 

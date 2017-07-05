@@ -83,12 +83,14 @@ tac_t *tac_reverse(tac_t *node) {
 }
 
 void tac_print_forward(tac_t *head_node) {
-	for(tac_t *i = head_node; i; i = i->next)
+	tac_t *i;
+	for(i = head_node; i; i = i->next)
 		printf("TAC(%s, %s, %s, %s)\n", tac_type_str[i->type], i->res ? i->res->text : "", i->op1 ? i->op1->text : "", i->op2 ? i->op2->text : "");
 }
 
 void tac_print_backward(tac_t *tail_node) {
-	for(tac_t *i = tail_node; i; i = i->prev)
+	tac_t *i;
+	for(i = tail_node; i; i = i->prev)
 		printf("TAC(%s, %s, %s, %s)\n", tac_type_str[i->type], i->res ? i->res->text : "", i->op1 ? i->op1->text : "", i->op2 ? i->op2->text : "");
 }
 
@@ -297,21 +299,22 @@ tac_t *tac_logical(astree_t *node, tac_t *c0, tac_t *c1) {
 
 void tac_fill_func_calls(tac_t* code) {
 	
-	for(tac_t *call = code; call; call = call->prev) {
+	tac_t *call;
+	for(call = code; call; call = call->prev) {
 		if(call->type == TAC_FCALL) {
 			tac_t *dec, *ret;
 			for(dec = code; !(dec->type == TAC_BEGINFUN && strcmp(call->op1->text, dec->res->text) == 0); dec = dec->prev);
 			for(ret = dec; ret->type != TAC_RET; ret = ret->next);
 			call->res = ret->res;
-			for(tac_t *tac = code; tac; tac = tac->prev) {
+			tac_t *tac;
+			for(tac = code; tac; tac = tac->prev) {
 				if(tac->type != TAC_BEGINFUN && tac->type != TAC_FCALL) {
-					if(tac->res && strcmp(tac->res->text, call->op1->text) == 0) {
+					if(tac->res && strcmp(tac->res->text, call->op1->text) == 0)
 						tac->res = ret->res;
-					} else if(tac->op1 && strcmp(tac->op1->text, call->op1->text) == 0) {
+					else if(tac->op1 && strcmp(tac->op1->text, call->op1->text) == 0)
 						tac->op1 = ret->res;
-					} else if(tac->op2 && strcmp(tac->op2->text, call->op1->text) == 0) {
+					else if(tac->op2 && strcmp(tac->op2->text, call->op1->text) == 0)
 						tac->op2 = ret->res;
-					}
 				}
 			}
 		}

@@ -32,7 +32,8 @@ char *comp_imediate_sec_str() {
 	sprintf(imediate_decs, ".section	__TEXT,__const\n");
 
 	printf("\nDebug: comp_imediate_sec_str() (' = added as \"global immediate\")\n"); // @TODO: comment/remove this.
-	for(int i = 0; i<HASH_SIZE; i++) {
+	int i;
+	for(i = 0; i<HASH_SIZE; i++) {
 
 		if(!hash_table[i]) continue;
 
@@ -61,7 +62,8 @@ char *comp_variable_sec_str() {
 	char *variable_decs = malloc(24);
 	sprintf(variable_decs, ".section	__DATA,__data\n");
 
-	for(int i = 0; i<HASH_SIZE; i++) {
+	int i;
+	for(i = 0; i<HASH_SIZE; i++) {
 		if(hash_table[i] && hash_table[i]->nature == NATURE_TEMPORARY) {
 			char *addition = (char *)malloc(+1 +2*strlen(hash_table[i]->text) +10);
 			sprintf(addition, "_%s: .long\t%s\n", hash_table[i]->text, "0");
@@ -85,7 +87,8 @@ tac_t *comp_fill_parameter(tac_t *arg) {
 	tac_t *func_dec;
 	for(func_dec = arg; !(func_dec->type == TAC_BEGINFUN && strcmp(func_call->op1->text, func_dec->res->text) == 0); func_dec = func_dec->next);
 	tac_t *param = func_dec;
-	for(int j = 0; j<=i; j++) {
+	int j;
+	for(j = 0; j<=i; j++) {
 		param = param->prev;
 	}
 
@@ -105,7 +108,8 @@ int comp_asm_generate(tac_t *head, char *output) {
 
 	fprintf(fout, ".section	__TEXT,__text,regular,pure_instructions\n.globl _main\n");
 
-	for(tac_t *tac = head; tac; tac = tac->prev) {
+	tac_t *tac;
+	for(tac = head; tac; tac = tac->prev) {
 
 		switch(tac->type) {
 

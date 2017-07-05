@@ -276,7 +276,7 @@ tac_t *tac_args(astree_t *node, tac_t *c0, tac_t *c1) {
 
 tac_t *tac_array_call(astree_t *node, tac_t *c0) {
 	hash_node_t *tmp = hash_temporary();
-	tac_t *cal = tac_create(TAC_ACALL, tmp, node->symbol, node->children[0]->symbol);
+	tac_t *cal = tac_create(TAC_ACALL, tmp, node->symbol, c0->res);
 	return tac_join(c0, cal);
 }
 
@@ -337,6 +337,9 @@ tac_t *tac_parse_astree(astree_t *root) {
 		case ASTREE_LIT_REAL:
 		case ASTREE_LIT_CHAR:
 		case ASTREE_LIT_STRING:
+		case ASTREE_INT_LST:
+		case ASTREE_CHAR_LST:
+		case ASTREE_FLOAT_LST:
 		case ASTREE_TK_ID:				r = tac_id(root, c[0]); break;
 		case ASTREE_ADD:
 		case ASTREE_SUB:

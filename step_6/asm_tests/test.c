@@ -1,9 +1,8 @@
 #include <stdio.h>
-
-int a;
-
+int new = 100;
+int array[4] = {1, 2, 3, 4};
+int i = 2;
 int main() {
-	scanf("%d",&a);
-	printf("%d\n", a);
-	return a;
+	array[i] = new;
+	return 0;
 }

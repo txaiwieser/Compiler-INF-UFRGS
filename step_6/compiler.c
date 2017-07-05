@@ -1,7 +1,6 @@
 //@TODO: booleans should be solved here, not in tac.c;
 //@TODO: function should return in a register. How to make it work in expressions and attribuitions?
 //@TODO: it should work with different data types. Now it only works with integers (as longs);
-//@TODO: array support.
 //@TODO: final tests.
 
 #include "compiler.h"
@@ -96,6 +95,24 @@ tac_t *comp_fill_parameter(tac_t *arg) {
 	return param;
 }
 
+char *comp_build_array_asm(tac_t *arr) {
+
+	char* str = malloc(+1 +strlen(arr->res->text) +3);
+	sprintf(str, "_%s:\n", arr->res->text);
+
+	int i;
+	tac_t *tac = arr->next;
+	for(i = 0; i < atoi(arr->op1->text); i++) {
+		char* tail = malloc(+1 +strlen(tac->res->text) +9);
+		sprintf(tail, "\t.long\t%s\n", tac->res->text);
+		str = comp_append_str(str, tail);
+		free(tail);
+		tac = tac->next;
+	}
+
+	return str;
+}
+
 int comp_asm_generate(tac_t *head, char *output) {
 
 	FILE *fout = fopen(output, "w");
@@ -122,7 +139,11 @@ int comp_asm_generate(tac_t *head, char *output) {
 				variable_decs = comp_append_str(variable_decs, addition);
 				free(addition);
 				break;
-			case TAC_ARR: fprintf(fout,	"\t# TAC_ARR\n"); break;
+			case TAC_ARR:
+				addition = comp_build_array_asm(tac);
+				variable_decs = comp_append_str(variable_decs, addition);
+				free(addition);
+				break;
 			case TAC_MOVE: fprintf(fout,	"\t# TAC_MOVE\n"
 											"\tmovl\t_%s(%%rip), %%eax\n"
 											"\tmovl\t%%eax, _%s(%%rip)\n",
@@ -208,8 +229,18 @@ int comp_asm_generate(tac_t *head, char *output) {
 											"\t.cfi_endproc\n"); break;
 			case TAC_FCALL: fprintf(fout,	"\t# TAC_FCALL\n"
 											"\tcallq\t_%s\n", tac->op1->text); break;
-			case TAC_ACALL: fprintf(fout,	"\t# TAC_ACALL\n"); break;		//@TODO
-			case TAC_AATTRIB: fprintf(fout,	"\t# TAC_AATTRIB\n"); break;	//@TODO
+			case TAC_ACALL: fprintf(fout,	"\t# TAC_ACALL\n"
+											"\tleaq\t_%s(%%rip), %%rcx\n"
+											"\tmovslq\t_%s(%%rip), %%rdx\n"
+											"\tmovl\t(%%rcx,%%rdx,4), %%esi\n"
+											"\tmovl\t%%esi, _%s(%%rip)\n", tac->op1->text,
+											tac->op2->text, tac->res->text); break;
+			case TAC_AATTRIB: fprintf(fout,	"\t# TAC_AATTRIB\n"
+											"\tleaq\t_%s(%%rip), %%rcx\n"
+											"\tmovl\t_%s(%%rip), %%edx\n"
+											"\tmovslq\t_%s(%%rip), %%rsi\n"
+											"\tmovl\t%%edx, (%%rcx,%%rsi,4)\n", tac->res->text,
+											tac->op2->text, tac->op1->text); break;
 			case TAC_IFZ: fprintf(fout,	"\t# TAC_IFZ\n"
 										"\tcmpl\t$0, _%s(%%rip)\n"
 										"\tje\t\t_%s\n", tac->op1->text, tac->res->text); break;

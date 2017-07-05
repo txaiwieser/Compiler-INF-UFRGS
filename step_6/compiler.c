@@ -15,7 +15,8 @@ char *comp_print_section_str() {
 
 	char* new = malloc(66);
 	sprintf(new, 	".section	__TEXT,__cstring,cstring_literals\n"
-					"L_.str:	.asciz	\"%%d\\n\"\n");
+					"L_.str:	.asciz	\"%%d\\n\"\n"
+					"L_.str.1:	.asciz	\"%%d\"\n");
 	return new;
 }
 
@@ -228,7 +229,10 @@ int comp_asm_generate(tac_t *head, char *output) {
 											"\tmovl\t_%s(%%rip), %%esi\n"
 											"\tleaq\tL_.str(%%rip), %%rdi\n"
 											"\tcallq\t_printf\n", tac->res->text); break;
-			case TAC_READ: fprintf(fout, "\t# TAC_READ\n"); break; // @TODO
+			case TAC_READ: fprintf(fout, "\t# TAC_READ\n"
+											"\tleaq\tL_.str.1(%%rip), %%rdi\n"
+											"\tleaq\t_%s(%%rip), %%rsi\n"
+											"\tcallq\t_scanf\n", tac->res->text); break;
 			default: r++; fprintf(stderr, "Compiler error: unknown intermediary code.\n"); break;
 		}
 	}

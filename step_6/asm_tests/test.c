@@ -1,10 +1,9 @@
-int a = 0;
+#include <stdio.h>
 
-int func() {
-	return 999;
-}
+int a;
 
 int main() {
-	a = func();
+	scanf("%d",&a);
+	printf("%d\n", a);
 	return a;
 }

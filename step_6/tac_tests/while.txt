@@ -1,9 +1,10 @@
 a: byte 1;
 b: byte 10;
 
-byte test() {
-	while (a>b) {
-		print "whileando...";
+byte main() {
+	while (a<=b) {
+		print a;
+		a = a + 1;
 	};
 	return a;
 };

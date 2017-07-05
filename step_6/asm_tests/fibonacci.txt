@@ -1,4 +1,4 @@
-n: byte 10; // number of terms
+n: byte 0;
 first: byte 0;
 second: byte 1;
 next: byte 0;
@@ -16,6 +16,5 @@ byte main() {
       };
       print next;
    };
- 
    return 0;
 };

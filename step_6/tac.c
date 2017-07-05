@@ -34,7 +34,6 @@ const char *tac_type_str[] = {
 	"TAC_AATTRIB",
 	"TAC_IFZ",
 	"TAC_JUMP",
-	"TAC_CALL",
 	"TAC_ARG",
 	"TAC_RET",
 	"TAC_PRINT",
@@ -242,7 +241,7 @@ tac_t *tac_while(astree_t *node, tac_t *c0, tac_t *c1) {
 	tac_t *jmp = tac_create(TAC_JUMP, beg_l, NULL, NULL);
 	tac_t *end = tac_create(TAC_LABEL, end_l, NULL, NULL);
 
-	return tac_join(c0, tac_join(beg, tac_join(ifz, tac_join(c1 ,tac_join(jmp, end)))));
+	return tac_join(beg, tac_join(c0, tac_join(ifz, tac_join(c1 ,tac_join(jmp, end)))));
 }
 
 tac_t *tac_var_dec(astree_t *node, tac_t *c0) {
@@ -271,8 +270,8 @@ tac_t *tac_func_call(astree_t *node, tac_t *c0) {
 }
 
 tac_t *tac_args(astree_t *node, tac_t *c0, tac_t *c1) {
-	tac_t *arg = tac_create(TAC_ARG, node->children[0]->symbol, NULL, NULL);
-	return c1 ? tac_join(c0, tac_join(c1, arg)) : tac_join(arg, c0);
+	tac_t *arg = tac_create(TAC_ARG, c0->res, NULL, NULL);
+	return c1 ? tac_join(c0, tac_join(c1, arg)) : tac_join(c0, arg);
 }
 
 tac_t *tac_array_call(astree_t *node, tac_t *c0) {

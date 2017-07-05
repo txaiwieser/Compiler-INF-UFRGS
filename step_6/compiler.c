@@ -14,9 +14,9 @@
 char *comp_print_section_str() {
 
 	char* new = malloc(66);
-	sprintf(new, 	".section	__TEXT,__cstring,cstring_literals\n"
-					"L_.str:	.asciz	\"%%d\\n\"\n"
-					"L_.str.1:	.asciz	\"%%d\"\n");
+	sprintf(new, 	".section\t__TEXT,__cstring,cstring_literals\n"
+					"L_.str:\t\t.asciz\t\"%%d\\n\"\n"
+					"L_.str.1:\t.asciz\t\"%%d\"\n");
 	return new;
 }
 
@@ -30,7 +30,7 @@ char *comp_append_str(char* string, char* addition) {
 char *comp_imediate_sec_str() {
 
 	char *imediate_decs = malloc(25);
-	sprintf(imediate_decs, ".section	__TEXT,__const\n");
+	sprintf(imediate_decs, ".section\t__TEXT,__const\n");
 
 	printf("\nDebug: comp_imediate_sec_str() (' = added as \"global immediate\")\n"); // @TODO: comment/remove this.
 	int i;
@@ -61,7 +61,7 @@ char *comp_imediate_sec_str() {
 char *comp_variable_sec_str() {
 
 	char *variable_decs = malloc(24);
-	sprintf(variable_decs, ".section	__DATA,__data\n");
+	sprintf(variable_decs, ".section\t__DATA,__data\n");
 
 	int i;
 	for(i = 0; i<HASH_SIZE; i++) {
@@ -122,79 +122,79 @@ int comp_asm_generate(tac_t *head, char *output) {
 				variable_decs = comp_append_str(variable_decs, addition);
 				free(addition);
 				break;
-			case TAC_ARR: fprintf(fout, "\t# TAC_ARR\n"); break;
+			case TAC_ARR: fprintf(fout,	"\t# TAC_ARR\n"); break;
 			case TAC_MOVE: fprintf(fout,	"\t# TAC_MOVE\n"
 											"\tmovl\t_%s(%%rip), %%eax\n"
 											"\tmovl\t%%eax, _%s(%%rip)\n",
 											tac->op1->text, tac->res->text); break;
-			case TAC_INC: fprintf(fout, 	"\t# TAC_INC\n"
-											"\tincl _%s(%%rip)\n", tac->res->text); break;
+			case TAC_INC: fprintf(fout,	"\t# TAC_INC\n"
+										"\tincl\t_%s(%%rip)\n", tac->res->text); break;
 			case TAC_ADD: fprintf(fout, "\t# TAC_ADD\n"
-										"\tmovl _%s(%%rip), %%eax\n"
-										"\taddl _%s(%%rip), %%eax\n"
-										"\tmovl %%eax, _%s(%%rip)\n",
+										"\tmovl\t_%s(%%rip), %%eax\n"
+										"\taddl\t_%s(%%rip), %%eax\n"
+										"\tmovl\t%%eax, _%s(%%rip)\n",
 										tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_SUB: fprintf(fout, "\t# TAC_SUB\n"
-										"\tmovl _%s(%%rip), %%eax\n"
-										"\tsubl _%s(%%rip), %%eax\n"
-										"\tmovl %%eax, _%s(%%rip)\n",
+										"\tmovl\t_%s(%%rip), %%eax\n"
+										"\tsubl\t_%s(%%rip), %%eax\n"
+										"\tmovl\t%%eax, _%s(%%rip)\n",
 										tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_MUL: fprintf(fout, "\t# TAC_MUL\n"
-										"\tmovl _%s(%%rip), %%eax\n"
-										"\timull _%s(%%rip), %%eax\n"
-										"\tmovl %%eax, _%s(%%rip)\n",
+										"\tmovl\t_%s(%%rip), %%eax\n"
+										"\timull\t_%s(%%rip), %%eax\n"
+										"\tmovl\t%%eax, _%s(%%rip)\n",
 										tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_DIV: fprintf(fout, "\t# TAC_DIV\n"
-										"\tmovl _%s(%%rip), %%eax\n"
-										"\tidivl _%s(%%rip), %%eax\n"
-										"\tmovl %%eax, _%s(%%rip)\n",
+										"\tmovl\t_%s(%%rip), %%eax\n"
+										"\tidivl\t_%s(%%rip), %%eax\n"
+										"\tmovl\t%%eax, _%s(%%rip)\n",
 										tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BLE: fprintf(fout, "\t# TAC_BLE\n"
-										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl _%s(%%rip), %%edx\n"
-										"\tjle _%s\n", tac->op1->text, tac->op2->text,
+										"\tmovl\t_%s(%%rip), %%edx\n"
+										"\tcmpl\t_%s(%%rip), %%edx\n"
+										"\tjle\t\t_%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BGE: fprintf(fout, "\t# TAC_BGE\n"
-										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl _%s(%%rip), %%edx\n"
-										"\tjge _%s\n", tac->op1->text, tac->op2->text,
+										"\tmovl\t_%s(%%rip), %%edx\n"
+										"\tcmpl\t_%s(%%rip), %%edx\n"
+										"\tjge\t\t_%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BEQ: fprintf(fout, "\t# TAC_BEQ\n"
-										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl _%s(%%rip), %%edx\n"
-										"\tje _%s\n", tac->op1->text, tac->op2->text,
+										"\tmovl\t_%s(%%rip), %%edx\n"
+										"\tcmpl\t_%s(%%rip), %%edx\n"
+										"\tje\t\t_%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BNE: fprintf(fout, "\t# TAC_BNE\n"
-										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl _%s(%%rip), %%edx\n"
-										"\tjne _%s\n", tac->op1->text, tac->op2->text,
+										"\tmovl\t_%s(%%rip), %%edx\n"
+										"\tcmpl\t_%s(%%rip), %%edx\n"
+										"\tjne\t\t_%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_AND: fprintf(fout,	"\t# TAC_AND\n"
-										"\tmovl _%s(%%rip), %%eax\n"
-										"\tmovl _%s(%%rip), %%edx\n"
-										"\tandl %%edx, %%eax\n"
-										"\tmovl %%eax, _%s(%%rip)", tac->op1->text,
+										"\tmovl\t_%s(%%rip), %%eax\n"
+										"\tmovl\t_%s(%%rip), %%edx\n"
+										"\tandl\t%%edx, %%eax\n"
+										"\tmovl\t%%eax, _%s(%%rip)", tac->op1->text,
 										tac->op2->text, tac->res->text); break;
 
 			case TAC_OR : fprintf(fout,	"\t# TAC_OR\n"
-										"\tmovl _%s(%%rip), %%eax\n"
-										"\tmovl _%s(%%rip), %%edx\n"
-										"\torl  %%edx, %%eax\n"
-										"\tmovl %%eax, _%s(%%rip)\n", tac->op1->text,
+										"\tmovl\t_%s(%%rip), %%eax\n"
+										"\tmovl\t_%s(%%rip), %%edx\n"
+										"\torl\t\t %%edx, %%eax\n"
+										"\tmovl\t%%eax, _%s(%%rip)\n", tac->op1->text,
 										tac->op2->text, tac->res->text); break;
 			case TAC_BLT: fprintf(fout, "\t# TAC_BLT\n"
-										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl _%s(%%rip), %%edx\n"
-										"\tjl _%s\n", tac->op1->text, tac->op2->text,
+										"\tmovl\t_%s(%%rip), %%edx\n"
+										"\tcmpl\t_%s(%%rip), %%edx\n"
+										"\tjl\t\t_%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BGT: fprintf(fout, "\t# TAC_BGT\n"
-										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl _%s(%%rip), %%edx\n"
-										"\tjg _%s\n", tac->op1->text, tac->op2->text,
+										"\tmovl\t_%s(%%rip), %%edx\n"
+										"\tcmpl\t_%s(%%rip), %%edx\n"
+										"\tjg\t\t_%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_LABEL: fprintf(fout, 	"\t# TAC_LABEL\n"
 											"_%s:\n", tac->res->text); break;
@@ -208,18 +208,17 @@ int comp_asm_generate(tac_t *head, char *output) {
 											"\t.cfi_endproc\n"); break;
 			case TAC_FCALL: fprintf(fout,	"\t# TAC_FCALL\n"
 											"\tcallq\t_%s\n", tac->op1->text); break;
-			case TAC_ACALL: fprintf(fout, "\t# TAC_ACALL\n"); break;
-			case TAC_AATTRIB: fprintf(fout, "\t# TAC_AATTRIB\n"); break;
+			case TAC_ACALL: fprintf(fout,	"\t# TAC_ACALL\n"); break;		//@TODO
+			case TAC_AATTRIB: fprintf(fout,	"\t# TAC_AATTRIB\n"); break;	//@TODO
 			case TAC_IFZ: fprintf(fout,	"\t# TAC_IFZ\n"
-										"\tcmpl $0, _%s(%%rip)\n"
-										"\tje _%s\n", tac->op1->text, tac->res->text); break;
+										"\tcmpl\t$0, _%s(%%rip)\n"
+										"\tje\t\t_%s\n", tac->op1->text, tac->res->text); break;
 			case TAC_JUMP: fprintf(fout,	"\t# TAC_JUMP\n"
-											"\tjmp _%s\n",
+											"\tjmp\t\t_%s\n",
 											tac->res->text); break;
-			case TAC_CALL: fprintf(fout, "\t# TAC_CALL\n"); break;
 			case TAC_ARG: fprintf(fout,	"\t# TAC_ARG\n"
-										"\tmovl _%s(%%rip), %%eax\n"
-										"\tmovl %%eax, _%s(%%rip)\n", tac->res->text,
+										"\tmovl\t_%s(%%rip), %%eax\n"
+										"\tmovl\t%%eax, _%s(%%rip)\n", tac->res->text,
 										comp_fill_parameter(tac)->res->text); break;
 			case TAC_RET: fprintf(fout,	"\t# TAC_RET\n"
 										"\tmovl\t_%s(%%rip), %%eax\n"
@@ -229,7 +228,7 @@ int comp_asm_generate(tac_t *head, char *output) {
 											"\tmovl\t_%s(%%rip), %%esi\n"
 											"\tleaq\tL_.str(%%rip), %%rdi\n"
 											"\tcallq\t_printf\n", tac->res->text); break;
-			case TAC_READ: fprintf(fout, "\t# TAC_READ\n"
+			case TAC_READ: fprintf(fout,	"\t# TAC_READ\n"
 											"\tleaq\tL_.str.1(%%rip), %%rdi\n"
 											"\tleaq\t_%s(%%rip), %%rsi\n"
 											"\tcallq\t_scanf\n", tac->res->text); break;

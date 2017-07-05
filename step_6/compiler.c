@@ -1,3 +1,9 @@
+//@TODO: booleans should be solved here, not in tac.c;
+//@TODO: function should return in a register. How to make it work in expressions and attribuitions?
+//@TODO: it should work with different data types. Now it only works with integers (as longs);
+//@TODO: array support.
+//@TODO: final tests.
+
 #include "compiler.h"
 #include "hash.h"
 #include "symcodes.h"
@@ -144,34 +150,45 @@ int comp_asm_generate(tac_t *head, char *output) {
 										tac->res->text); break;
 			case TAC_BLE: fprintf(fout, "\t# TAC_BLE\n"
 										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl %%edx, _%s(%%rip)\n"
+										"\tcmpl _%s(%%rip), %%edx\n"
 										"\tjle _%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BGE: fprintf(fout, "\t# TAC_BGE\n"
 										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl %%edx, _%s(%%rip)\n"
+										"\tcmpl _%s(%%rip), %%edx\n"
 										"\tjge _%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BEQ: fprintf(fout, "\t# TAC_BEQ\n"
 										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl %%edx, _%s(%%rip)\n"
+										"\tcmpl _%s(%%rip), %%edx\n"
 										"\tje _%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BNE: fprintf(fout, "\t# TAC_BNE\n"
 										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl %%edx, _%s(%%rip)\n"
+										"\tcmpl _%s(%%rip), %%edx\n"
 										"\tjne _%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
-			case TAC_AND: fprintf(fout, "\t# TAC_AND\n"); break;
-			case TAC_OR : fprintf(fout, "\t# TAC_OR\n"); break;
+			case TAC_AND: fprintf(fout,	"\t# TAC_AND\n"
+										"\tmovl _%s(%%rip), %%eax\n"
+										"\tmovl _%s(%%rip), %%edx\n"
+										"\tandl %%edx, %%eax\n"
+										"\tmovl %%eax, _%s(%%rip)", tac->op1->text,
+										tac->op2->text, tac->res->text); break;
+
+			case TAC_OR : fprintf(fout,	"\t# TAC_OR\n"
+										"\tmovl _%s(%%rip), %%eax\n"
+										"\tmovl _%s(%%rip), %%edx\n"
+										"\torl  %%edx, %%eax\n"
+										"\tmovl %%eax, _%s(%%rip)\n", tac->op1->text,
+										tac->op2->text, tac->res->text); break;
 			case TAC_BLT: fprintf(fout, "\t# TAC_BLT\n"
 										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl %%edx, _%s(%%rip)\n"
+										"\tcmpl _%s(%%rip), %%edx\n"
 										"\tjl _%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_BGT: fprintf(fout, "\t# TAC_BGT\n"
 										"\tmovl _%s(%%rip), %%edx\n"
-										"\tcmpl %%edx, _%s(%%rip)\n"
+										"\tcmpl _%s(%%rip), %%edx\n"
 										"\tjg _%s\n", tac->op1->text, tac->op2->text,
 										tac->res->text); break;
 			case TAC_LABEL: fprintf(fout, 	"\t# TAC_LABEL\n"
@@ -189,8 +206,8 @@ int comp_asm_generate(tac_t *head, char *output) {
 			case TAC_ACALL: fprintf(fout, "\t# TAC_ACALL\n"); break;
 			case TAC_AATTRIB: fprintf(fout, "\t# TAC_AATTRIB\n"); break;
 			case TAC_IFZ: fprintf(fout,	"\t# TAC_IFZ\n"
-										// "\tcmp _%s(%%rip), _%s(%%rip)"
-										"\tjz _%s\n", tac->res->text); break;
+										"\tcmpl $0, _%s(%%rip)\n"
+										"\tje _%s\n", tac->op1->text, tac->res->text); break;
 			case TAC_JUMP: fprintf(fout,	"\t# TAC_JUMP\n"
 											"\tjmp _%s\n",
 											tac->res->text); break;
@@ -207,7 +224,7 @@ int comp_asm_generate(tac_t *head, char *output) {
 											"\tmovl\t_%s(%%rip), %%esi\n"
 											"\tleaq\tL_.str(%%rip), %%rdi\n"
 											"\tcallq\t_printf\n", tac->res->text); break;
-			case TAC_READ: fprintf(fout, "\t# TAC_READ\n"); break;
+			case TAC_READ: fprintf(fout, "\t# TAC_READ\n"); break; // @TODO
 			default: r++; fprintf(stderr, "Compiler error: unknown intermediary code.\n"); break;
 		}
 	}

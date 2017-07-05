@@ -3,6 +3,6 @@ b: byte 0;
 
 byte main() {
 	//when (1<1 || 2<2 && 3<3) then print "print" else read a;
-	when (3<2) then print a else print b;
+	when (4>3 || 3<3 && 1==1) then print a else print b;
 	return a;
 };

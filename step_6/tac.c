@@ -1,3 +1,6 @@
+//@TODO: inside for declarations should be externalized;
+//@TODO: TAC_SYMBOLS shouldn't be printed.
+
 #include "tac.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -195,27 +198,26 @@ tac_t *tac_for(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 	/*
 		for base to end (ATTENTION: only ascendent)
 
-		mov tmp, base
+		mov c0->res, base
 		:begin
 		<code>
-		inc rBse
-		beq end, tmp, end
+		inc c0->res
+		beq end, c0->res, end
 		jmp begin
 		:end
 	*/
 
 	hash_node_t *beg_l 	= hash_label();
 	hash_node_t *end_l 	= hash_label();
-	hash_node_t *temp	= hash_temporary();
 
-	tac_t *mov = tac_create(TAC_MOVE, temp, c0->res, NULL);
+	tac_t *mov = tac_create(TAC_MOVE, node->symbol, c0->res, NULL);
 	tac_t *beg = tac_create(TAC_LABEL, beg_l, NULL, NULL);
-	tac_t *inc = tac_create(TAC_INC, temp, temp, NULL);
-	tac_t *beq = tac_create(TAC_BEQ, end_l, temp, c1->res);
+	tac_t *inc = tac_create(TAC_INC, node->symbol, NULL, NULL);
+	tac_t *beq = tac_create(TAC_BEQ, end_l, node->symbol, c1->res);
 	tac_t *jmp = tac_create(TAC_JUMP, beg_l, NULL, NULL);
 	tac_t *end = tac_create(TAC_LABEL, end_l, NULL, NULL);
 
-	return tac_join(c0, tac_join(c1, tac_join(mov, tac_join(beg, tac_join(c2, tac_join(inc, tac_join(beq, tac_join(jmp, end))))))));
+	return tac_join(c0, tac_join(c1, tac_join(mov, tac_join(beg, tac_join(c2, tac_join(beq, tac_join(inc, tac_join(jmp, end))))))));
 }
 
 tac_t *tac_while(astree_t *node, tac_t *c0, tac_t *c1) {

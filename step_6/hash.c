@@ -16,7 +16,7 @@ int hash_address(char *text) {
 
 int hash_equal(hash_node_t *n1, hash_node_t *n2) {
 
-	if(n1->type == n2->type && !strcmp(n1->text, n2->text))
+	if(n1->type == SYMBOL_IDENTIFIER && n2->type == SYMBOL_IDENTIFIER && !strcmp(n1->text, n2->text))
 		return 1;
 	else
 		return 0;
@@ -55,9 +55,12 @@ hash_node_t *hash_insert(char *text, int type, int dataType, int nature) {
 
 	hash_node_t *aux = hash_find(new_node);
 
+	printf("Debug: trying to insert in hash %s\n", text);
+
 	if(aux == NULL) {
 		new_node->next = hash_table[address];
 		hash_table[address] = new_node;
+		printf("Debug: inserting in hash %s\n", new_node->text);
 		return new_node;
 	}
 

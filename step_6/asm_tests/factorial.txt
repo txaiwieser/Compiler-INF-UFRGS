@@ -1,4 +1,4 @@
-//@TODO: It doesn't work. Should it work?
+//@TODO: It doesn't work. Should it work? (n is handled as a global variable)
 byte factorial(byte n) {
    when(n == 0) then
       return 1
@@ -9,6 +9,6 @@ byte factorial(byte n) {
 };
 
 byte main() {
-   temp = factorial(5);
+   print factorial(5);
    return 0;
 };

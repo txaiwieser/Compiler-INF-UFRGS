@@ -85,13 +85,16 @@ tac_t *comp_fill_parameter(tac_t *arg) {
 	}
 
 	tac_t *func_dec;
-	for(func_dec = arg; !(func_dec->type == TAC_BEGINFUN && strcmp(func_call->op1->text, func_dec->res->text) == 0); func_dec = func_dec->next);
+	for(func_dec = arg; func_dec && !(func_dec->type == TAC_BEGINFUN && strcmp(func_call->op1->text, func_dec->res->text) == 0); func_dec = func_dec->next);
+	
+	if(!func_dec)
+		for(func_dec = arg; func_dec && !(func_dec->type == TAC_BEGINFUN && strcmp(func_call->op1->text, func_dec->res->text) == 0); func_dec = func_dec->prev);
+
 	tac_t *param = func_dec;
 	int j;
 	for(j = 0; j<=i; j++) {
 		param = param->prev;
 	}
-
 	return param;
 }
 
@@ -200,7 +203,6 @@ int comp_asm_generate(tac_t *head, char *output) {
 										"\tandl\t%%edx, %%eax\n"
 										"\tmovl\t%%eax, _%s(%%rip)", tac->op1->text,
 										tac->op2->text, tac->res->text); break;
-
 			case TAC_OR : fprintf(fout,	"\t# TAC_OR\n"
 										"\tmovl\t_%s(%%rip), %%eax\n"
 										"\tmovl\t_%s(%%rip), %%edx\n"

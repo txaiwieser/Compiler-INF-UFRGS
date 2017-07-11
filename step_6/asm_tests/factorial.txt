@@ -3,7 +3,7 @@ byte factorial(byte n) {
    when(n == 0) then
       return 1
    else {
-      print n;
+      //print n;
       return factorial(n-1) * n;
    };
 };

@@ -10,12 +10,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *comp_print_section_str() {
+#define NUM_PARAM_REGS 6
 
-	char* new = malloc(66);
-	sprintf(new, 	".section\t__TEXT,__cstring,cstring_literals\n"
-					"L_.str:\t\t.asciz\t\"%%d\\n\"\n"
-					"L_.str.1:\t.asciz\t\"%%d\"\n");
+const char *param_regs_64[] = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+const char *param_regs_32[] = { "%edi", "%esi", "%edx", "%ecx", "%r8d", "%r9d" };
+
+unsigned int con_str_count = 0;
+unsigned int lit_str_count = 0;
+
+char *comp_literal_str_sec_str() {
+
+	char* new = malloc(44);
+	sprintf(new, ".section\t__TEXT,__cstring,cstring_literals\n");
 	return new;
 }
 
@@ -24,6 +30,60 @@ char *comp_append_str(char* string, char* addition) {
 	new = strcpy(new, string);
 	strcat(new, addition);
 	return new;
+}
+
+
+char *com_generate_print(tac_t *print, char **imediate_decs, char **lit_str_section) {
+
+	char *assemby = malloc(sizeof(""));
+	assemby[0] = '\0';
+
+	char lit_srt_sec_dec[30];
+	sprintf(lit_srt_sec_dec, "L_.str.%d: .asciz\t\"", lit_str_count);
+	char *lit_srt_sec_dec_p = &lit_srt_sec_dec[0];
+	char s[] = "%s";
+	char d[] = "%d";
+
+	char *addition = NULL;
+	int regc = 1;
+	tac_t *arg;
+	for(arg = print->next; arg->type == TAC_PRARG && regc < NUM_PARAM_REGS; arg = arg->next) {
+
+		hash_node_t* symbol = arg->res;
+		switch(symbol->type) {
+			case SYMBOL_LIT_STRING:
+				addition = realloc(addition, +strlen(symbol->text) +30);
+				sprintf(addition, "_string_%d: .asciz\t%s\n", con_str_count, symbol->text);
+				*imediate_decs = comp_append_str(*imediate_decs, addition);
+				
+				addition = realloc(addition, +strlen(param_regs_64[regc]) +34);
+				sprintf(addition, "\tleaq\t_string_%d(%%rip), %s\n", con_str_count, param_regs_64[regc]);
+				assemby = comp_append_str(assemby, addition);
+
+				lit_srt_sec_dec_p = comp_append_str(lit_srt_sec_dec_p, s);
+				
+				con_str_count++;
+				break;
+			default:
+				addition = realloc(addition, +17 +strlen(symbol->text) +strlen(param_regs_32[regc]));
+				sprintf(addition, "\tmovl\t_%s(%%rip), %s\n", symbol->text, param_regs_32[regc]);
+				assemby = comp_append_str(assemby, addition);
+				lit_srt_sec_dec_p = comp_append_str(lit_srt_sec_dec_p, d);
+		}
+		regc++;
+	}
+
+	addition = realloc(addition, 54);
+	sprintf(addition,	"\tleaq\tL_.str.%d(%%rip), %%rdi\n"
+						"\tcallq\t_printf\n", lit_str_count);
+	assemby = comp_append_str(assemby, addition);
+
+	lit_srt_sec_dec_p = comp_append_str(lit_srt_sec_dec_p, "\\n\"\n");
+	*lit_str_section = comp_append_str(*lit_str_section, lit_srt_sec_dec_p);
+
+	lit_str_count++;
+	free(addition);
+	return assemby;
 }
 
 char *comp_imediate_sec_str() {
@@ -40,7 +100,7 @@ char *comp_imediate_sec_str() {
 		hash_node_t *node;
 		for(node = hash_table[i]; node; node = node->next) {
 			printf("%s", node->text); // @TODO: comment/remove this.
-			if(node->isVariableOrFuncionDeclared == 0 && node->nature != NATURE_TEMPORARY) {
+			if(node->isVariableOrFuncionDeclared == 0 && node->nature != NATURE_TEMPORARY && node->type != SYMBOL_LIT_STRING) {
 				printf("\'"); // @TODO: comment/remove this.
 				char *addition = (char *)malloc(+1 +2*strlen(node->text) +10);
 				sprintf(addition, "_%s: .long\t%s\n", node->text, node->text);
@@ -121,10 +181,9 @@ int comp_asm_generate(tac_t *head, char *output) {
 	FILE *fout = fopen(output, "w");
 	int r = 0;
 
-	char *variable_decs;
-	char *imediate_decs;
-	variable_decs = comp_variable_sec_str();
-	imediate_decs = comp_imediate_sec_str();
+	char *variable_decs		= comp_variable_sec_str();
+	char *imediate_decs		= comp_imediate_sec_str();
+	char *lit_str_section	= comp_literal_str_sec_str();
 	char *addition;
 
 	fprintf(fout, ".section	__TEXT,__text,regular,pure_instructions\n.globl _main\n");
@@ -258,9 +317,8 @@ int comp_asm_generate(tac_t *head, char *output) {
 										"\tpopq\t%%rbp\n"
 										"\tretq\n", tac->res->text); break;
 			case TAC_PRINT: fprintf(fout, 	"\t# TAC_PRINT\n"
-											"\tmovl\t_%s(%%rip), %%esi\n"
-											"\tleaq\tL_.str(%%rip), %%rdi\n"
-											"\tcallq\t_printf\n", tac->res->text); break;
+											"%s", com_generate_print(tac, &imediate_decs, &lit_str_section)); break;
+			case TAC_PRARG: break;
 			case TAC_READ: fprintf(fout,	"\t# TAC_READ\n"
 											"\tleaq\tL_.str.1(%%rip), %%rdi\n"
 											"\tleaq\t_%s(%%rip), %%rsi\n"
@@ -269,7 +327,7 @@ int comp_asm_generate(tac_t *head, char *output) {
 		}
 	}
 	
-	fprintf(fout, "\n%s\n%s\n%s\n", variable_decs, imediate_decs, comp_print_section_str());
+	fprintf(fout, "\n%s\n%s\n%s\n", variable_decs, imediate_decs, lit_str_section);
 	fclose(fout);
 	return r;
 }

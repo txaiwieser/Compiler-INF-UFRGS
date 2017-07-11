@@ -34,6 +34,7 @@ typedef enum tac_type_e { //@TODO: incomplete.
 	TAC_ARG,
 	TAC_RET,
 	TAC_PRINT,
+	TAC_PRARG,
 	TAC_READ
 } tac_type_t;
 

@@ -1,5 +1,4 @@
 //@TODO: inside for declarations should be externalized;
-//@TODO: TAC_SYMBOLS shouldn't be printed.
 
 #include "tac.h"
 #include <stdlib.h>
@@ -37,6 +36,7 @@ const char *tac_type_str[] = {
 	"TAC_ARG",
 	"TAC_RET",
 	"TAC_PRINT",
+	"TAC_PRARG",
 	"TAC_READ"
 };
 
@@ -83,14 +83,18 @@ tac_t *tac_reverse(tac_t *node) {
 
 void tac_print_forward(tac_t *head_node) {
 	tac_t *i;
-	for(i = head_node; i; i = i->next)
+	for(i = head_node; i; i = i->next) {
+		if(i->type == TAC_SYMBOL) continue;
 		printf("TAC(%s, %s, %s, %s)\n", tac_type_str[i->type], i->res ? i->res->text : "", i->op1 ? i->op1->text : "", i->op2 ? i->op2->text : "");
+	}
 }
 
 void tac_print_backward(tac_t *tail_node) {
 	tac_t *i;
-	for(i = tail_node; i; i = i->prev)
+	for(i = tail_node; i; i = i->prev) {
+		if(i->type == TAC_SYMBOL) continue;
 		printf("TAC(%s, %s, %s, %s)\n", tac_type_str[i->type], i->res ? i->res->text : "", i->op1 ? i->op1->text : "", i->op2 ? i->op2->text : "");
+	}
 }
 
 tac_t *tac_when(astree_t *node, tac_t *c0, tac_t *c1) {
@@ -180,8 +184,28 @@ tac_t *tac_function(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 }
 
 tac_t *tac_print(astree_t *node, tac_t *c0) {
-	tac_t *print = tac_create(TAC_PRINT, c0 ? c0->res : NULL, NULL, NULL);
-	return tac_join(c0, print);
+
+	tac_t *print = tac_create(TAC_PRINT, NULL, NULL, NULL);
+	tac_t *list = print;
+
+	if(node->children[0]->type != ASTREE_PRINT_LST)
+		list = tac_join(tac_create(TAC_PRARG, c0->res, NULL, NULL), list);
+
+	return tac_join(c0, list);
+}
+
+tac_t *tac_print_args(astree_t *node, tac_t *c0, tac_t *c1) {
+
+	tac_t *prags;
+
+	if(node->children[1]->type != ASTREE_PRINT_LST) {
+		prags = tac_create(TAC_PRARG, c0->res, NULL, NULL);
+		prags = tac_join(tac_create(TAC_PRARG, c1->res, NULL, NULL), prags);
+	} else {
+		prags = tac_create(TAC_PRARG, c0->res, NULL, NULL);
+	}
+
+	return c1 ? tac_join(c0, tac_join(c1, prags)) : tac_join(c0, prags);
 }
 
 tac_t *tac_read(astree_t *node) {
@@ -363,6 +387,7 @@ tac_t *tac_parse_astree(astree_t *root) {
 		case ASTREE_KW_WHEN_THEN:		r = tac_when(root, c[0], c[1]); break;
 		case ASTREE_KW_WHEN_THEN_ELSE:	r = tac_when_else(root, c[0], c[1], c[2]); break;
 		case ASTREE_KW_PRINT:			r = tac_print(root, c[0]); break;
+		case ASTREE_PRINT_LST:			r = tac_print_args(root, c[0], c[1]); break;
 		case ASTREE_KW_READ:			r = tac_read(root); break;
 		case ASTREE_KW_FOR:				r = tac_for(root, c[0], c[1], c[2]); break;
 		case ASTREE_KW_WHILE:			r = tac_while(root, c[0], c[1]); break;

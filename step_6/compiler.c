@@ -91,7 +91,6 @@ char *comp_imediate_sec_str() {
 	char *imediate_decs = malloc(25);
 	sprintf(imediate_decs, ".section\t__TEXT,__const\n");
 
-	printf("\nDebug: comp_imediate_sec_str() (' = added as \"global immediate\")\n"); // @TODO: comment/remove this.
 	int i;
 	for(i = 0; i<HASH_SIZE; i++) {
 
@@ -99,21 +98,16 @@ char *comp_imediate_sec_str() {
 
 		hash_node_t *node;
 		for(node = hash_table[i]; node; node = node->next) {
-			printf("%s", node->text); // @TODO: comment/remove this.
 			if(node->isVariableOrFuncionDeclared == 0 && node->nature != NATURE_TEMPORARY && node->type != SYMBOL_LIT_STRING) {
-				printf("\'"); // @TODO: comment/remove this.
 				char *addition = (char *)malloc(+1 +2*strlen(node->text) +10);
 				sprintf(addition, "_%s: .long\t%s\n", node->text, node->text);
 				imediate_decs = comp_append_str(imediate_decs, addition);
 				free(addition);
 				break;
 			}
-			printf(" "); // @TODO: comment/remove this.
 		}
-		printf("\n"); // @TODO: comment/remove this.
 	}
-
-	printf("\n"); // @TODO: comment/remove this.
+	
 	return imediate_decs;
 }
 

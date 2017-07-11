@@ -1,6 +1,11 @@
 n: byte 987;
 
 byte main() {
-	print "Testando";
+	print "Linha 1";
+	print " - continução da linha 1";
+	print "\n\n";
+	print "Linha 3 espaçada\n";
+	print "\n";
+	print "Final";
 	return 0;
 };

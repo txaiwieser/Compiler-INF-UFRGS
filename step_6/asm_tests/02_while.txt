@@ -1,0 +1,8 @@
+k: byte 0;
+
+byte main() {
+    while(k < 10) {
+        print k;
+        k = k + 1;
+    };
+};

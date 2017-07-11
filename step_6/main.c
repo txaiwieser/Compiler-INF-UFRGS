@@ -47,7 +47,9 @@ int main(int argc, char **argv) {
 	yyin = file;	
 	yyparse();
 
-	// astree_print(tree, 0);
+	printf("\n\nPrinting astree\n");
+	astree_print(tree, 0);
+	printf("--DONE--!\n\n\n");
 
 	semantic_set_declarations(tree);
 	semantic_check(tree);
@@ -69,9 +71,9 @@ int main(int argc, char **argv) {
 	}
 
 
-	printf("Printing hash:\n");
-	hash_print();
-	printf("--DONE--!\n\n\n");
+	// printf("Printing hash:\n");
+	// hash_print();
+	// printf("--DONE--!\n\n\n");
 
 	return SUCCESS;
 }

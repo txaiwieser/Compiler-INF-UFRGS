@@ -1,13 +1,12 @@
 byte main() {
-   return recursion(1);
+   return recursion(10);
 };
 
 byte recursion(byte param) {
-   when (param >= 10) then {
-      print param;
-      return param;
+   print param-1;
+   when (param > 1) then {
+      return recursion(param-1);
    } else {
-      print param;
-      return recursion(param+1);
+      return param;
    };
 };

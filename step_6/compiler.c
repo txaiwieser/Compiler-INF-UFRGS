@@ -232,7 +232,8 @@ int comp_asm_generate(tac_t *head, char *output) {
 										tac->res->text); break;
 			case TAC_DIV: fprintf(fout, "\t# TAC_DIV\n"
 										"\tmovl\t_%s(%%rip), %%eax\n"
-										"\tidivl\t_%s(%%rip), %%eax\n"
+										"\tcltd\n"
+										"\tidivl\t_%s(%%rip)\n"
 										"\tmovl\t%%eax, _%s(%%rip)\n",
 										tac->op1->text, tac->op2->text,
 										tac->res->text); break;

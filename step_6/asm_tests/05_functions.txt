@@ -1,23 +1,13 @@
-//byte func(byte p1, short p2, long p3, float p4, double p5) {
-//	print p1;
-//	print p2;
-//	print p3;
-//	print p4;
-//	return 0;
-//};
-//
-//n: long 0;
-//
-//byte main() {
-//	//return func(1111, 2222222, 333333, 0.4444, 55.5555);
-//	n = 42.21;
-//	print n;
-//	return 0;
-//
-//};
+byte func(byte p1, short p2, long p3, float p4, double p5) {
+	print "Soma: ";
+	print p1 p2 p3 p4 p5;
+	return p1+p2+p3+p4+p5;
+};
 
 n: byte 0;
+
 byte main() {
-	//a: byte 0;
-	return 0;	
+	n = func(1, 2, 3, 4, 5);
+	print "Resultado: " n;
+	return 0;
 };

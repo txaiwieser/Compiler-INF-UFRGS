@@ -1,0 +1,23 @@
+k: byte 0;
+temp: byte 0;
+
+byte main() {
+	read k;
+	temp = k;
+	
+	print "\n\nWhile: ";
+    while(temp >= 0*4+5+4-3*3) {
+        print temp;
+        temp = temp - 1;
+    };
+
+    print "\n\nFor: ";
+    for(temp = zero() to k) {
+		print temp;
+    };
+};
+
+
+byte zero() {
+	return 0;
+};

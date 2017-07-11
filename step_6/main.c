@@ -46,17 +46,17 @@ int main(int argc, char **argv) {
 	yyin = file;	
 	yyparse();
 
-	astree_print(tree, 0);
+	// astree_print(tree, 0);
 
 	semantic_set_declarations(tree);
 	semantic_check(tree);
 
-	fprintf(stderr, "Program accepted!\n");
+	fprintf(stderr, "Program Accepted!\n");
 
 	printf("Printing intermediary code from source file into stdout: %s...\n", argv[1]);
-	tac_t *intermediary_code; 
-	tac_print_backward(intermediary_code = tac_reverse(tac_generate(tree)));
-	printf("Done!\n");
+	tac_t *intermediary_code = tac_reverse(tac_generate(tree));
+	// tac_print_backward(intermediary_code);
+	printf("DONE!\n");
 
 	if(argc == 3) {
 		fprintf(stderr, "Printing assembly generated from %s into %s... ", argv[1], argv[2]);
@@ -64,10 +64,10 @@ int main(int argc, char **argv) {
 			printf("Compiler error: unknown intermediary code found.\n");
 			return COMPILATION_ERROR;
 		}
-		printf("done!\n");
+		printf("DONE!\n");
 	}
 
-	hash_print();
+	// hash_print();
 
 	return SUCCESS;
 }

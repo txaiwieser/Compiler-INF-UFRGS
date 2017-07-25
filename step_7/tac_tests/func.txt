@@ -1,0 +1,13 @@
+a: byte 10;
+
+byte func(byte b, byte c) {
+	return b+c;
+};
+
+byte main() {
+	print 123;
+	a = func(1, 2);
+	print func(3, 4);
+	print a;
+	return a;
+};

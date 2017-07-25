@@ -1,0 +1,5 @@
+
+byte main() {
+	print "Testando";
+	return 0;
+};

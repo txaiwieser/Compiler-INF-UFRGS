@@ -1,0 +1,10 @@
+input: byte 0;
+password: byte 1337;
+
+byte main() {
+	while (input != password) {
+		read input;
+		print password;
+	};
+	return 0;
+};

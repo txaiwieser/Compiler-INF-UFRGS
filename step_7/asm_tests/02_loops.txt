@@ -15,6 +15,7 @@ byte main() {
     for(temp = zero() to k) {
 		print temp;
     };
+
     return 0;
 };
 

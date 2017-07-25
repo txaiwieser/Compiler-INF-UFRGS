@@ -1,0 +1,25 @@
+rows: byte 0;
+i: byte 0;
+space: byte 0;
+k: byte 0;
+
+byte main() {
+    print "Pyramid of *";
+    read rows;
+
+    for(i = 1 to rows-1) {
+        for(space = 1 to rows-i) {
+            print "  ";
+        };
+
+        while(k != 2*i-1) {
+            print "* ";
+            k = k + 1;
+        };
+
+        print "\n";
+        k = 0;
+    };
+    
+    return 0;
+};

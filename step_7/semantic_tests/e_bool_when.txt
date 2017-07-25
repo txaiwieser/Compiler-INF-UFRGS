@@ -1,0 +1,4 @@
+byte test() {
+  when (1 != (2>=3)) then print "e_boolean_comparsion";
+  return 0;
+};

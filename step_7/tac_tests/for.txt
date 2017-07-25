@@ -1,0 +1,10 @@
+a: byte 1;
+b: byte 10;
+i: byte 15;
+
+byte main() {
+	for (i = a to 10) {
+		print i;
+	};
+	return a;
+};

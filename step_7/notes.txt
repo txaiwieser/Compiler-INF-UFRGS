@@ -1,0 +1,3 @@
+Notas:
+• Print só pegando o último argumento;
+• Casos mais complexos precisam ser testados;

@@ -1,0 +1,4 @@
+byte test() {
+  b = 0;
+  return b;
+};

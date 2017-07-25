@@ -1,0 +1,20 @@
+n: byte 10;
+first: byte 0;
+second: byte 1;
+next: byte 0;
+c: byte 0;
+
+byte main() {
+   read n;
+   for(c = 0 to n) {
+      when (c<=1) then
+      	next = c
+      else {
+         next = first + second;
+         first = second;
+         second = next;
+      };
+      print next;
+   };
+   return 0;
+};

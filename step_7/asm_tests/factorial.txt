@@ -1,0 +1,14 @@
+//@TODO: It doesn't work. Should it work? (n is handled as a global variable)
+byte factorial(byte n) {
+   when(n == 0) then
+      return 1
+   else {
+      //print n;
+      return factorial(n-1) * n;
+   };
+};
+
+byte main() {
+   print factorial(5);
+   return 0;
+};

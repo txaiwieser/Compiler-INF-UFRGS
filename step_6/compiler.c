@@ -103,7 +103,16 @@ char *comp_imediate_sec_str() {
 			if(node->isVariableOrFuncionDeclared == 0 && node->nature != NATURE_TEMPORARY && node->type != SYMBOL_LIT_STRING) {
 				printf("\'"); // @TODO: comment/remove this.
 				char *addition = (char *)malloc(+1 +2*strlen(node->text) +10);
-				sprintf(addition, "_%s: .long\t%s\n", node->text, node->text);
+		
+				char *mode = malloc(strlen(node->text)+1);
+				strcpy(mode, node->text);
+				if(node->type == SYMBOL_LIT_REAL) {
+					mode = strtok(mode, ".");
+					sprintf(addition, "_%s: .long\t%s\n", node->text, mode);
+				} else {
+					sprintf(addition, "_%s: .long\t%s\n", node->text, node->text);
+				}
+				
 				imediate_decs = comp_append_str(imediate_decs, addition);
 				free(addition);
 				break;
@@ -197,7 +206,16 @@ int comp_asm_generate(tac_t *head, char *output) {
 			case TAC_VAR:
 			case TAC_PARAM:
 				addition = (char *)malloc(+1 +2*strlen(tac->res->text) +10);
-				sprintf(addition, "_%s: .long\t%s\n", tac->res->text, tac->op1 ? tac->op1->text : "0");
+				
+				if(tac->op1 && tac->op1->type == SYMBOL_LIT_REAL) {
+					char *mode = malloc(strlen(tac->op1->text)+1);
+					strcpy(mode, tac->op1->text);
+					mode = strtok(mode, ".");
+					sprintf(addition, "_%s: .long\t%s\n", tac->res->text, tac->op1 ? mode : "0");
+				} else {
+					sprintf(addition, "_%s: .long\t%s\n", tac->res->text, tac->op1 ? tac->op1->text : "0");
+				}
+				// sprintf(addition, "_%s: .long\t%s\n", tac->res->text, tac->op1 ? tac->op1->text : "0");
 				variable_decs = comp_append_str(variable_decs, addition);
 				free(addition);
 				break;

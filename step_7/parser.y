@@ -64,6 +64,7 @@
 %type <astree> printElement
 %type <astree> arguments
 %type <astree> extraArgument
+%type <astree> panicMode
 
 %left OPERATOR_AND OPERATOR_OR
 %left OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
@@ -85,6 +86,10 @@ declarationList: declaration declarationList    { $$ = astree_create(ASTREE_DECL
 
 declaration: functionDeclaration    { fprintf(stderr, "reduziu [functionDeclaration] para [declaration]\n"); }
     | variableDeclaration           { fprintf(stderr, "reduziu [variableDeclaration] para [declaration]\n"); }
+    | panicMode                     { $$ = 0; }
+    ;
+
+panicMode: error ';' { yyerrok; fprintf(stderr, "Panic Mode!\n"); } 
     ;
 
 variableDeclaration: TK_IDENTIFIER ':' variableTypeAndValue ';' { $$ = astree_create(ASTREE_VAR_DEC, $1, $3, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s : variableTypeAndValue ;] para [variableDeclaration]\n", $1->text); }
@@ -133,6 +138,7 @@ param: variableType TK_IDENTIFIER   { $$ = astree_create(ASTREE_PARAM, $2, $1, 0
     ;
 
 commandList: commandList command ';'    { $$ = astree_create(ASTREE_CMD_LST, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [commandList command ;] para [commandList]\n"); }
+    | commandList panicMode
     |                                   { $$ = 0; }
     ;
 
@@ -197,5 +203,4 @@ extraArgument: ',' expression extraArgument { $$ = astree_create(ASTREE_FUNC_ARG
 
 void yyerror(char *s) {
     fprintf(stderr, "\nSyntax error at line number: %d.\n\n", getLineNumber());
-    exit(3);
 }

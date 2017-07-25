@@ -1,0 +1,8 @@
+
+byte main() {
+	plint "0";
+	print "1";
+	print "2";
+	plint "3";
+	return 0;
+};

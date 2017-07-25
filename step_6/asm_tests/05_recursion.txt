@@ -1,0 +1,12 @@
+byte main() {
+   return recursion(10);
+};
+
+byte recursion(byte param) {
+   print param-1;
+   when (param > 1) then {
+      return recursion(param-1);
+   } else {
+      return param;
+   };
+};

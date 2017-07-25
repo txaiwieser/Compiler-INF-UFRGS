@@ -22,6 +22,7 @@ char *comp_literal_str_sec_str() {
 
 	char* new = malloc(44);
 	sprintf(new, ".section\t__TEXT,__cstring,cstring_literals\n");
+	sprintf(new, "L_.str.read:\t.asciz\t\"%%d\"\n");
 	return new;
 }
 
@@ -91,7 +92,6 @@ char *comp_imediate_sec_str() {
 	char *imediate_decs = malloc(25);
 	sprintf(imediate_decs, ".section\t__TEXT,__const\n");
 
-	printf("\nDebug: comp_imediate_sec_str() (' = added as \"global immediate\")\n"); // @TODO: comment/remove this.
 	int i;
 	for(i = 0; i<HASH_SIZE; i++) {
 
@@ -99,9 +99,7 @@ char *comp_imediate_sec_str() {
 
 		hash_node_t *node;
 		for(node = hash_table[i]; node; node = node->next) {
-			printf("%s", node->text); // @TODO: comment/remove this.
 			if(node->isVariableOrFuncionDeclared == 0 && node->nature != NATURE_TEMPORARY && node->type != SYMBOL_LIT_STRING) {
-				printf("\'"); // @TODO: comment/remove this.
 				char *addition = (char *)malloc(+1 +2*strlen(node->text) +10);
 		
 				char *mode = malloc(strlen(node->text)+1);
@@ -117,12 +115,9 @@ char *comp_imediate_sec_str() {
 				free(addition);
 				break;
 			}
-			printf(" "); // @TODO: comment/remove this.
 		}
-		printf("\n"); // @TODO: comment/remove this.
 	}
-
-	printf("\n"); // @TODO: comment/remove this.
+	
 	return imediate_decs;
 }
 
@@ -339,7 +334,7 @@ int comp_asm_generate(tac_t *head, char *output) {
 											"%s", com_generate_print(tac, &imediate_decs, &lit_str_section)); break;
 			case TAC_PRARG: break;
 			case TAC_READ: fprintf(fout,	"\t# TAC_READ\n"
-											"\tleaq\tL_.str.1(%%rip), %%rdi\n"
+											"\tleaq\tL_.str.read(%%rip), %%rdi\n"
 											"\tleaq\t_%s(%%rip), %%rsi\n"
 											"\tcallq\t_scanf\n", tac->res->text); break;
 			default: r++; fprintf(stderr, "Compiler error: unknown intermediary code.\n"); break;

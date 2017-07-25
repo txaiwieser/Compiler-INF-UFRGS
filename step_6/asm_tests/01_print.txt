@@ -1,4 +1,3 @@
-n: byte 987;
 
 byte main() {
 	print "Testando";

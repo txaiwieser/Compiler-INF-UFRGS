@@ -3,6 +3,7 @@
 
 #include "hash.h"
 #include "astree.h"
+#include "symcodes.h"
 
 typedef enum tac_type_e { //@TODO: incomplete.
 	TAC_SYMBOL = 0,

@@ -121,6 +121,7 @@ hash_node_t *hash_label() {
 	sprintf(label, "__label_%s", sufix);
 
 	hash_node_t *new_node = hash_aux_node(label);
+	new_node->nature = NATURE_LABEL;
 	free(sufix); free(label);
 
 	return new_node;

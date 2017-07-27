@@ -67,12 +67,69 @@ tac_t *tac_tail(tac_t *node) {
 }
 
 tac_t *tac_join(tac_t *c0, tac_t *c1) {
+
+	if(!c0 && !c1)
+		return NULL;
+	else if(!c0)
+		return c1;
+	else if(!c1)
+		return c0;
+
 	tac_t *i;
-	if(!c0 && !c1) return NULL; else if(!c0) return c1; else if(!c1) return c0;
 	for(i = c1; i->prev; i = i->prev);
+	
 	i->prev = c0;
 	c0->next = i;
+	
 	return c1;
+}
+
+tac_t *tac_copy(tac_t *tac) {
+	
+	if(!tac) return NULL;
+
+	tac_t *cpy = NULL;
+	tac_t *aux;
+
+	for(aux = tac_head(tac); aux; aux = aux->next)
+		cpy = tac_join(cpy, tac_create(aux->type, aux->res, aux->op1, aux->op2));
+
+	for(aux = tac_head(cpy); aux; aux = aux->next) {
+		if(aux->type == TAC_LABEL) {
+			printf("encontrou label\n");
+			int out = 0;
+			tac_t *tmp = tac_head(cpy);
+			hash_node_t *new = hash_label();
+			while(tmp && !out) {
+				switch(tmp->type) {
+					case TAC_BLE:
+					case TAC_BGE:
+					case TAC_BEQ:
+					case TAC_BNE:
+					case TAC_BLT:
+					case TAC_BGT:
+					case TAC_IFZ:
+					case TAC_JUMP:
+						printf("AHAM\n");
+						if(tmp->res && hash_equal(aux->res, tmp->res)) {
+							tmp->res = new;
+						} else if(tmp->op1 && hash_equal(aux->res, tmp->op1)) {
+							tmp->op1 = new;
+						} else if(tmp->op2 && hash_equal(aux->res, tmp->op2)) {
+							tmp->op2 = new;
+						}
+						out = 0;
+						break;
+					default:
+						out = 0;
+				}
+				tmp = tmp->next;
+			}
+			aux->res = new;
+		}
+	}
+	
+	return cpy;
 }
 
 tac_t *tac_reverse(tac_t *node) {
@@ -232,17 +289,37 @@ tac_t *tac_for(astree_t *node, tac_t *c0, tac_t *c1, tac_t *c2) {
 		:end
 	*/
 
-	hash_node_t *beg_l 	= hash_label();
-	hash_node_t *end_l 	= hash_label();
+	if(c0->res->type != SYMBOL_IDENTIFIER && c1->res->type != SYMBOL_IDENTIFIER) {
 
-	tac_t *mov = tac_create(TAC_MOVE, node->symbol, c0->res, NULL);
-	tac_t *beg = tac_create(TAC_LABEL, beg_l, NULL, NULL);
-	tac_t *inc = tac_create(TAC_INC, node->symbol, NULL, NULL);
-	tac_t *beq = tac_create(TAC_BEQ, end_l, node->symbol, c1->res);
-	tac_t *jmp = tac_create(TAC_JUMP, beg_l, NULL, NULL);
-	tac_t *end = tac_create(TAC_LABEL, end_l, NULL, NULL);
+		int from 	= atoi(c0->res->text);
+		int to		= atoi(c1->res->text);
 
-	return tac_join(c0, tac_join(c1, tac_join(mov, tac_join(beg, tac_join(c2, tac_join(beq, tac_join(inc, tac_join(jmp, end))))))));
+		tac_t *mov = tac_create(TAC_MOVE, node->symbol, c0->res, NULL);
+		tac_t *foo = mov;
+
+		int i;
+		for(i = from; i <= to; i++) {
+			tac_t *cod = tac_copy(c2);
+			tac_t *inc = tac_create(TAC_INC, node->symbol, NULL, NULL);
+			foo = tac_join(foo, tac_join(cod, inc));
+		}
+
+		return tac_join(c0, tac_join(c1, foo));
+
+	} else {
+
+		hash_node_t *beg_l 	= hash_label();
+		hash_node_t *end_l 	= hash_label();
+
+		tac_t *mov = tac_create(TAC_MOVE, node->symbol, c0->res, NULL);
+		tac_t *beg = tac_create(TAC_LABEL, beg_l, NULL, NULL);
+		tac_t *inc = tac_create(TAC_INC, node->symbol, NULL, NULL);
+		tac_t *beq = tac_create(TAC_BEQ, end_l, node->symbol, c1->res);
+		tac_t *jmp = tac_create(TAC_JUMP, beg_l, NULL, NULL);
+		tac_t *end = tac_create(TAC_LABEL, end_l, NULL, NULL);
+
+		return tac_join(c0, tac_join(c1, tac_join(mov, tac_join(beg, tac_join(c2, tac_join(beq, tac_join(inc, tac_join(jmp, end))))))));
+	}
 }
 
 tac_t *tac_while(astree_t *node, tac_t *c0, tac_t *c1) {

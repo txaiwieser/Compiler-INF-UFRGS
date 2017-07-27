@@ -10,7 +10,7 @@ extern int 	yyparse();
 extern int  getLineNumber();
 extern void initMe();
 extern int  isRunning();
-
+extern int	err;
 
 int string_to_file(char *filePath, char *string) {
 	FILE* f;
@@ -46,6 +46,11 @@ int main(int argc, char **argv) {
 	initMe();
 	yyin = file;	
 	yyparse();
+
+	if(!tree) {
+		fprintf(stderr, "[COMPILATION FAILURE]\n %d error(s) detected\n", err);
+		return SINTAX_ERROR;
+	}
 
 	printf("\n\nPrinting astree\n");
 	astree_print(tree, 0);

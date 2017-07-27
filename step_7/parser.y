@@ -8,6 +8,7 @@
     void yyerror(char *s);
     int  yylex(void);
     int  getLineNumber(void);
+    int  err = 0;
 %}
 
 %token KW_BYTE
@@ -77,7 +78,7 @@
 
 %%
 
-program: declarationList { tree = $1; fprintf(stderr, "reduziu [declarationList] para [program]\n"); }
+program: declarationList { tree = err ? NULL : $1; fprintf(stderr, "reduziu [declarationList] para [program]\n"); }
     ;
 
 declarationList: declaration declarationList    { $$ = astree_create(ASTREE_DECL_LIST, NULL, $1, $2, 0, 0); fprintf(stderr, "reduziu [declaration declarationList] para [declarationList]\n"); }
@@ -89,7 +90,7 @@ declaration: functionDeclaration    { fprintf(stderr, "reduziu [functionDeclarat
     | panicMode                     { $$ = 0; }
     ;
 
-panicMode: error ';' { yyerrok; fprintf(stderr, "Panic Mode!\n"); } 
+panicMode: error ';' { yyerrok; err++; fprintf(stderr, "Panic Mode!\n"); } 
     ;
 
 variableDeclaration: TK_IDENTIFIER ':' variableTypeAndValue ';' { $$ = astree_create(ASTREE_VAR_DEC, $1, $3, 0, 0, 0); fprintf(stderr, "reduziu [TK_IDENTIFIER=%s : variableTypeAndValue ;] para [variableDeclaration]\n", $1->text); }

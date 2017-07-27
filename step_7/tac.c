@@ -96,7 +96,6 @@ tac_t *tac_copy(tac_t *tac) {
 
 	for(aux = tac_head(cpy); aux; aux = aux->next) {
 		if(aux->type == TAC_LABEL) {
-			printf("encontrou label\n");
 			int out = 0;
 			tac_t *tmp = tac_head(cpy);
 			hash_node_t *new = hash_label();
@@ -110,7 +109,6 @@ tac_t *tac_copy(tac_t *tac) {
 					case TAC_BGT:
 					case TAC_IFZ:
 					case TAC_JUMP:
-						printf("AHAM\n");
 						if(tmp->res && hash_equal(aux->res, tmp->res)) {
 							tmp->res = new;
 						} else if(tmp->op1 && hash_equal(aux->res, tmp->op1)) {

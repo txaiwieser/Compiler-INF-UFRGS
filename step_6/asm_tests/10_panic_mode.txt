@@ -1,0 +1,12 @@
+a: byte 0;
+
+byte main() {
+   read a;
+   when (a == 0) then
+      print "zero";
+   else {
+      print "not zero";
+   };
+
+   return 0;
+};

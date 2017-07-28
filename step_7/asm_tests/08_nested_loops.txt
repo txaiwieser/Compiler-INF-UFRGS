@@ -1,0 +1,18 @@
+a: byte 0;
+b: byte 0;
+c: byte 0;
+
+byte main() {
+   for(a = 0 to 2) {
+      when (a < 1) then
+         for(b = 0 to 3) {
+            print "nested_a" "_" a "_" b;
+         }
+      else {
+         for(c = 0 to 3) {
+            print "nested_b" "_" a "_" c;
+         };
+      };
+   };
+   return 0;
+};
